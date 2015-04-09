@@ -11,7 +11,6 @@
   "latedef": true,
   "newcap": true,
   "noarg": true,
-  "quotmark": "single",
   "regexp": true,
   "undef": true,
   "unused": true,
@@ -20,6 +19,8 @@
   "smarttabs": true,
   "globals" : {
     "chrome": true,
-    "crypto": true
+    "crypto": true,
+    // TODO: Remove once we have proper modules:
+    "ko": true
   }
 }

@@ -2,22 +2,39 @@
 <html>
   <head>
     <!-- build:css styles/vendor.css -->
-    <!-- bower:css -->
-    <!-- endbower -->
+      <!-- bower:css -->
+      <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css styles/main.css -->
     <link href="styles/main.css" rel="stylesheet">
     <!-- endbuild -->
   </head>
   <body>
-    <h1>'Allo, 'Allo!</h1>
+    <h1>Focus Here Settings Page</h1>
 
     <!-- build:js scripts/vendor.js -->
-    <!-- bower:js -->
-    <!-- endbower -->
+      <!-- bower:js -->
+        <script src="bower_components/knockout/dist/knockout.debug.js"></script>
+        <script src="bower_components/lodash/lodash.js"></script>
+      <!-- endbower -->
     <!-- endbuild -->
 
+    <ul data-bind="foreach: badDomains">
+      <li>
+        <span data-bind="text: pattern"></span>
+        <button data-bind="click: $parent.deleteBadDomain">Delete</button>
+      </li>
+    </ul>
+
+    Add domain:
+    <form data-bind="submit: saveEnteredBadDomain">
+      <input type="text" data-bind="textInput: enteredBadDomainPattern" />
+      <br/>
+      <button type="submit" data-bind="enable: enteredBadDomain().isValid">Add Domain</button>
+    </form>
+
     <!-- build:js scripts/options.js -->
+    <script src="scripts/models/domain.js"></script>
     <script src="scripts/options.js"></script>
     <!-- endbuild -->
   </body>
