@@ -13,6 +13,7 @@
       "scripts/chromereload.js",
       "bower_components/knockout/dist/knockout.debug.js",
       "bower_components/lodash/lodash.js",
+      "bower_components/uri.js/src/URI.js",
       "scripts/models/domain.js",
       "scripts/background.js"
     ]

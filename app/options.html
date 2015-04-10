@@ -14,14 +14,16 @@
 
     <!-- build:js scripts/vendor.js -->
       <!-- bower:js -->
-        <script src="bower_components/knockout/dist/knockout.debug.js"></script>
-        <script src="bower_components/lodash/lodash.js"></script>
+      <script src="bower_components/jquery/dist/jquery.js"></script>
+      <script src="bower_components/knockout/dist/knockout.js"></script>
+      <script src="bower_components/lodash/lodash.js"></script>
+      <script src="bower_components/uri.js/src/URI.js"></script>
       <!-- endbower -->
     <!-- endbuild -->
 
     <ul data-bind="foreach: badDomains">
       <li>
-        <span data-bind="text: pattern"></span>
+        <span data-bind="text: $data.toString()"></span>
         <button data-bind="click: $parent.deleteBadDomain">Delete</button>
       </li>
     </ul>

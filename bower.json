@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "dependencies": {
     "knockout": "~3.3.0",
-    "lodash": "~3.6.0"
+    "lodash": "~3.6.0",
+    "uri.js": "~1.15.0"
   },
   "devDependencies": {}
 }

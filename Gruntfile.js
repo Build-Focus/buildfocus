@@ -86,6 +86,16 @@ module.exports = function (grunt) {
             '<%= config.app %>'
           ]
         }
+      },
+      manualtest: {
+        options: {
+          open: true,
+          keepalive: true,
+          base: [
+            'test',
+            '<%= config.app %>'
+          ]
+        }
       }
     },
 

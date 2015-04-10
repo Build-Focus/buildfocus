@@ -19,7 +19,7 @@
       self.badDomains(_.reject(self.badDomains(), badDomain));
     };
 
-    chrome.storage.sync.get("badDomains", function(storedData) {
+    chrome.storage.sync.get("badDomainPatterns", function(storedData) {
       var badDomainPatterns = storedData.badDomainPatterns || [];
       self.badDomains(_.map(badDomainPatterns, function (pattern) {
         return new Domain(pattern);
