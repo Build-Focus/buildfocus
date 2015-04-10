@@ -21,6 +21,8 @@
     "chrome": true,
     "crypto": true,
     // TODO: Remove once we have proper modules:
-    "ko": true
+    "ko": true,
+    "_": true,
+    "Domain": true
   }
 }

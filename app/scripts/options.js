@@ -20,11 +20,14 @@
     };
 
     chrome.storage.sync.get("badDomains", function(storedData) {
-      self.badDomains(storedData.badDomains || []);
+      var badDomainPatterns = storedData.badDomainPatterns || [];
+      self.badDomains(_.map(badDomainPatterns, function (pattern) {
+        return new Domain(pattern);
+      }));
     });
 
     self.badDomains.subscribe(function (badDomains) {
-      chrome.storage.sync.set({"badDomains": badDomains});
+      chrome.storage.sync.set({"badDomainPatterns": _.map(badDomains, "pattern")});
     });
   };
 
