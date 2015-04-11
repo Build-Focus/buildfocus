@@ -13,11 +13,6 @@
     <h1>Focus Here Settings Page</h1>
 
     <!-- build:js scripts/vendor.js -->
-      <!-- bower:js -->
-      <script src="bower_components/requirejs/require.js"></script>
-      <script src="scripts/require-config.js"></script>
-      <script src="scripts/options.js"></script>
-      <!-- endbower -->
     <!-- endbuild -->
 
     <ul data-bind="foreach: badDomains">
@@ -33,5 +28,9 @@
       <br/>
       <button type="submit" data-bind="enable: enteredBadDomain().isValid">Add Domain</button>
     </form>
+
+    <script src="bower_components/requirejs/require.js"></script>
+    <script src="scripts/require-config.js"></script>
+    <script src="scripts/options.js"></script>
   </body>
 </html>

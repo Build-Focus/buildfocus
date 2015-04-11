@@ -23,8 +23,11 @@
 
     "define": true,
 
+    // TODO: Make these test specific globals to apply only to tests
     "before": true,
+    "after": true,
     "expect": true,
-    "it": true
+    "it": true,
+    "sinon": true
   }
 }

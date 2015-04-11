@@ -33,7 +33,7 @@ module.exports = function (grunt) {
         tasks: ['bowerInstall']
       },
       js: {
-        files: ['<%= config.app %>/scripts/{,*/}*.js'],
+        files: ['<%= config.app %>/scripts/{,*/}*.js', 'test/**/*.js'],
         tasks: ['jshint'],
         options: {
           livereload: '<%= connect.options.livereload %>'
@@ -89,6 +89,7 @@ module.exports = function (grunt) {
       },
       manualtest: {
         options: {
+          port: 8080,
           open: true,
           keepalive: true,
           base: [
