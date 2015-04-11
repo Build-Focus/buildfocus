@@ -1,6 +1,6 @@
 'use strict';
 
-window.Domain = (function () {
+define(["URI.js/URI", "lodash"], function (URI, _) {
   function hasProtocol(urlString) {
     return urlString.match(/^\w+:\/\//);
   }
@@ -47,4 +47,4 @@ window.Domain = (function () {
       return patternUrl.host() + patternUrl.path();
     };
   };
-}());
+});

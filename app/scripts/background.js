@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+require(["knockout", "lodash", "models/domain"], function (ko, _, Domain) {
   var currentUrls = ko.observableArray();
   var badDomains = ko.observableArray();
 
@@ -46,4 +46,4 @@
       chrome.browserAction.setBadgeText({"text": ""});
     }
   });
-}());
+});

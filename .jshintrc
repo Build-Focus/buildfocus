@@ -20,12 +20,11 @@
   "globals" : {
     "chrome": true,
     "crypto": true,
+
+    "define": true,
+
+    "before": true,
     "expect": true,
-    "it": true,
-    // TODO: Remove once we have proper modules:
-    "ko": true,
-    "_": true,
-    "URI": true,
-    "Domain": true
+    "it": true
   }
 }

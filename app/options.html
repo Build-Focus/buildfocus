@@ -14,10 +14,9 @@
 
     <!-- build:js scripts/vendor.js -->
       <!-- bower:js -->
-      <script src="bower_components/jquery/dist/jquery.js"></script>
-      <script src="bower_components/knockout/dist/knockout.js"></script>
-      <script src="bower_components/lodash/lodash.js"></script>
-      <script src="bower_components/uri.js/src/URI.js"></script>
+      <script src="bower_components/requirejs/require.js"></script>
+      <script src="scripts/require-config.js"></script>
+      <script src="scripts/options.js"></script>
       <!-- endbower -->
     <!-- endbuild -->
 
@@ -34,10 +33,5 @@
       <br/>
       <button type="submit" data-bind="enable: enteredBadDomain().isValid">Add Domain</button>
     </form>
-
-    <!-- build:js scripts/options.js -->
-    <script src="scripts/models/domain.js"></script>
-    <script src="scripts/options.js"></script>
-    <!-- endbuild -->
   </body>
 </html>

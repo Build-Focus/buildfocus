@@ -1,7 +1,7 @@
 'use strict';
 
-(function() {
-  var SettingsViewModel = function () {
+require(["knockout", "lodash", "models/domain"], function (ko, _, Domain) {
+  function OptionsViewModel() {
     var self = this;
 
     self.badDomains = ko.observableArray([]);
@@ -19,7 +19,7 @@
       self.badDomains(_.reject(self.badDomains(), badDomain));
     };
 
-    chrome.storage.sync.get("badDomainPatterns", function(storedData) {
+    chrome.storage.sync.get("badDomainPatterns", function (storedData) {
       var badDomainPatterns = storedData.badDomainPatterns || [];
       self.badDomains(_.map(badDomainPatterns, function (pattern) {
         return new Domain(pattern);
@@ -29,9 +29,7 @@
     self.badDomains.subscribe(function (badDomains) {
       chrome.storage.sync.set({"badDomainPatterns": _.map(badDomains, "pattern")});
     });
-  };
+  }
 
-  var viewModel = new SettingsViewModel();
-
-  ko.applyBindings(viewModel);
-}());
+  ko.applyBindings(new OptionsViewModel());
+});
