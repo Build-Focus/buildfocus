@@ -16,7 +16,14 @@ define(["knockout", "lodash"], function (ko, _) {
       return callback; // for later deregistration
     };
     this.removeBadBehaviourCallback = function(callback) {
-      badBehaviourCallbacks = _.reject(badBehaviourCallbacks, callback);
+      var callbackIndex = badBehaviourCallbacks.indexOf(callback);
+      if (callbackIndex > -1) {
+        badBehaviourCallbacks = _.reject(badBehaviourCallbacks, function (value, index) {
+          return index === callbackIndex;
+        });
+      } else {
+        throw new Error("Attempted to remove bad behaviour callback that wasn't registered");
+      }
     };
 
     currentlyOnBadDomain.subscribe(function () {
