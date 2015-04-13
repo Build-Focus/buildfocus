@@ -25,6 +25,8 @@
 
     // TODO: Make these test specific globals to apply only to tests
     "before": true,
+    "beforeEach": true,
+    "afterEach": true,
     "after": true,
     "expect": true,
     "it": true,

@@ -7,7 +7,7 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
     var pomodoroService = new PomodoroService(badBehaviourMonitor);
 
     var points = ko.observable(0);
-    var button = new FocusButton(points, pomodoroService.isPomodoroActive);
+    var button = new FocusButton(points, pomodoroService.isActive);
 
     function onSuccess() {
       points(points() + 1);
