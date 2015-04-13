@@ -7,16 +7,15 @@
   var clockStub;
 
   describe('A timer', function () {
-    before(function (done) {
+    beforeEach(function (done) {
       require(["pomodoro/timer"], function (loadedClass) {
+        clockStub = sinon.useFakeTimers();
         Timer = loadedClass;
         done();
       });
-
-      clockStub = sinon.useFakeTimers();
     });
 
-    after(function () {
+    afterEach(function () {
       clockStub.restore();
     });
 

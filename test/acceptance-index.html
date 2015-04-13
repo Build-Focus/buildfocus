@@ -29,6 +29,11 @@
     <script src="/scripts/background.js"></script>
     <script src="spec/acceptance/pomodoro-acceptance.js"></script>
 
-    <script>mocha.run()</script>
+    <script>
+      if (!window.PHANTOMJS) {
+        // PhantomJS Mocha runner does this itself
+        mocha.run()
+      }
+    </script>
 </body>
 </html>

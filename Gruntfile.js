@@ -132,7 +132,10 @@ module.exports = function (grunt) {
       all: {
         options: {
           run: true,
-          urls: ['http://localhost:<%= connect.options.port %>/index.html']
+          log: true,
+          logErrors: true,
+          urls: ['http://localhost:<%= connect.options.port %>/index.html',
+                 'http://localhost:<%= connect.options.port %>/acceptance-index.html']
         }
       }
     },

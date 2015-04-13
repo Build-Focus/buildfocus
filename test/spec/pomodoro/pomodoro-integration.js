@@ -22,11 +22,10 @@
       };
 
       require(["pomodoro/pomodoro-service"], function (PomodoroService) {
+        clockStub = sinon.useFakeTimers();
         pomodoroService = new PomodoroService(badBehaviourMonitorFake);
         done();
       });
-
-      clockStub = sinon.useFakeTimers();
     });
 
     afterEach(function () {

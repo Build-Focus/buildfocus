@@ -25,6 +25,11 @@
     <script src="spec/pomodoro/timer-test.js"></script>
     <script src="spec/pomodoro/pomodoro-integration.js"></script>
 
-    <script>mocha.run()</script>
+    <script>
+      if (!window.PHANTOMJS) {
+        // PhantomJS Mocha runner does this itself
+        mocha.run()
+      }
+    </script>
 </body>
 </html>
