@@ -8,7 +8,7 @@
 
   describe('A timer', function () {
     before(function (done) {
-      require(["timer"], function (loadedClass) {
+      require(["pomodoro/timer"], function (loadedClass) {
         Timer = loadedClass;
         done();
       });

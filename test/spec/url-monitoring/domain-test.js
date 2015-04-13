@@ -7,7 +7,7 @@
 
   describe('Domain model', function () {
     before(function (done) {
-      require(["models/domain"], function (loadedDomainClass) {
+      require(["url-monitoring/domain"], function (loadedDomainClass) {
         Domain = loadedDomainClass;
         done();
       });

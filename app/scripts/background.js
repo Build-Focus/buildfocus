@@ -1,40 +1,24 @@
 'use strict';
 
-require(["knockout", "lodash", "repositories/settings-repository", "current-urls", "timer"],
-  function (ko, _, settings, currentUrls, Timer) {
-    var timer = new Timer();
+require(["knockout", "lodash", "repositories/settings-repository", "url-monitoring/current-urls",
+         "pomodoro/pomodoro-service", "focus-button", "url-monitoring/bad-behaviour-monitor"],
+  function (ko, _, settings, currentUrls, PomodoroService, FocusButton, BadBehaviourMonitor) {
+    var badBehaviourMonitor = new BadBehaviourMonitor(currentUrls, settings);
+    var pomodoroService = new PomodoroService(badBehaviourMonitor);
 
-    var onBadDomain = ko.computed(function () {
-      return _.any(currentUrls(), function (url) {
-        return _.any(settings.badDomains(), function (domain) {
-          return domain.matches(url);
-        });
-      });
-    });
+    var points = ko.observable(0);
+    var button = new FocusButton(points, pomodoroService.isPomodoroActive);
 
-    function updateIcon() {
-      var text;
-      if (onBadDomain()) {
-        text = "!!!!";
-      } else if (timer.isRunning()) {
-        text = "...";
-      } else {
-        text = "";
-      }
-      chrome.browserAction.setBadgeText({"text": text});
+    function onSuccess() {
+      points(points() + 1);
     }
 
-    chrome.browserAction.onClicked.addListener(function () {
-      timer.start(1000 * 60 * 20);
-    });
+    function onFailure() {
+      points(points() - 1);
+    }
 
-    timer.isRunning.subscribe(updateIcon);
-    onBadDomain.subscribe(updateIcon);
-
-    onBadDomain.subscribe(function () {
-      if (onBadDomain()) {
-        timer.reset();
-      }
+    button.onClick(function () {
+      pomodoroService.start(onSuccess, onFailure);
     });
   }
 );

@@ -1,6 +1,6 @@
 'use strict';
 
-define(["knockout", "lodash", "models/domain"], function (ko, _, Domain) {
+define(["knockout", "lodash", "url-monitoring/domain"], function (ko, _, Domain) {
   function SettingsRepository() {
     var syncedValues = {
       "badDomainPatterns": ko.observableArray([])
