@@ -17,6 +17,8 @@
   "strict": true,
   "trailing": true,
   "smarttabs": true,
+  "scripturl": true,
+
   "globals" : {
     "chrome": true,
     "crypto": true,

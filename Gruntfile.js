@@ -129,13 +129,19 @@ module.exports = function (grunt) {
       ]
     },
     mocha: {
-      all: {
+      options: {
+        run: true,
+        log: true,
+        logErrors: true
+      },
+      unit: {
         options: {
-          run: true,
-          log: true,
-          logErrors: true,
-          urls: ['http://localhost:<%= connect.options.port %>/index.html',
-                 'http://localhost:<%= connect.options.port %>/acceptance-index.html']
+          urls: ['http://localhost:<%= connect.options.port %>/index.html']
+        }
+      },
+      system: {
+        options: {
+          urls: ['http://localhost:<%= connect.options.port %>/acceptance-index.html']
         }
       }
     },
@@ -319,8 +325,10 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('test', [
+    'jshint',
     'connect:test',
-    'mocha'
+    'mocha:unit',
+    'mocha:system'
   ]);
 
   grunt.registerTask('build', [
