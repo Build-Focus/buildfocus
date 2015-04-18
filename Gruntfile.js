@@ -34,13 +34,14 @@ module.exports = function (grunt) {
       },
       js: {
         files: ['<%= config.app %>/scripts/{,*/}*.js', 'test/**/*.js'],
-        tasks: ['jshint'],
+        tasks: ['run-tests'],
         options: {
           livereload: '<%= connect.options.livereload %>'
         }
       },
       gruntfile: {
-        files: ['Gruntfile.js']
+        files: ['Gruntfile.js'],
+        tasks: ['jshint']
       },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
@@ -65,13 +66,13 @@ module.exports = function (grunt) {
     // Grunt server and debug server setting
     connect: {
       options: {
-        port: 9000,
         livereload: 35729,
         // change this to '0.0.0.0' to access the server from outside
         hostname: 'localhost'
       },
       chrome: {
         options: {
+          port: 9001,
           open: false,
           base: [
             '<%= config.app %>'
@@ -80,6 +81,7 @@ module.exports = function (grunt) {
       },
       test: {
         options: {
+          port: 9002,
           open: false,
           base: [
             'test',
@@ -132,16 +134,17 @@ module.exports = function (grunt) {
       options: {
         run: true,
         log: true,
-        logErrors: true
+        logErrors: true,
+        growlOnSuccess: false
       },
       unit: {
         options: {
-          urls: ['http://localhost:<%= connect.options.port %>/index.html']
+          urls: ['http://localhost:<%= connect.test.options.port %>/index.html']
         }
       },
       system: {
         options: {
-          urls: ['http://localhost:<%= connect.options.port %>/acceptance-index.html']
+          urls: ['http://localhost:<%= connect.test.options.port %>/acceptance-index.html']
         }
       }
     },
@@ -296,7 +299,7 @@ module.exports = function (grunt) {
       }
     },
 
-    // Compres dist files to package
+    // Compress dist files to package
     compress: {
       dist: {
         options: {
@@ -317,7 +320,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('debug', function () {
     grunt.task.run([
-      'jshint',
+      'test',
       'concurrent:chrome',
       'connect:chrome',
       'watch'
@@ -325,8 +328,12 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('test', [
-    'jshint',
     'connect:test',
+    'run-tests'
+  ]);
+
+  grunt.registerTask('run-tests', [
+    'jshint',
     'mocha:unit',
     'mocha:system'
   ]);
@@ -345,7 +352,6 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'jshint',
     'test',
     'build'
   ]);
