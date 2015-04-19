@@ -51,6 +51,15 @@
       expect(errorCallback.called).to.equal(false);
     });
 
+    it("should not call the success callback until the end of the pomodoro", function () {
+      var successCallback = sinon.stub(), errorCallback = sinon.stub();
+
+      pomodoroService.start(successCallback, errorCallback);
+      clockStub.tick(POMODORO_DURATION - 1);
+
+      expect(successCallback.called).to.equal(false);
+    });
+
     it("should call the error callback if a bad URL is opened", function () {
       var successCallback = sinon.stub(), errorCallback = sinon.stub();
 
