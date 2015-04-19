@@ -6,7 +6,6 @@ define(["lodash", "knockout"], function (_, ko) {
     self.points = ko.observable(0);
 
     chrome.storage.sync.get("points", function (loadedData) {
-      // TODO: Breaking this doesn't break the acceptance tests!
       self.points(loadedData.points || 0);
     });
 

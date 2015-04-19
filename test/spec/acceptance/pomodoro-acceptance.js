@@ -6,6 +6,11 @@
   var POMODORO_DURATION = 1000 * 60 * 20;
   var clockStub;
 
+  function setupStorageStubs() {
+    chrome.storage.sync.get.yields({});
+    chrome.storage.local.get.yields({});
+  }
+
   function clickButton() {
     chrome.browserAction.onClicked.trigger();
   }
@@ -39,6 +44,8 @@
 
   describe('Acceptance: Pomodoros', function () {
     before(function (done) {
+      setupStorageStubs();
+
       // Have to wait a little to let require load, and need to stub clock only after that
       setTimeout(function () {
         clockStub = sinon.useFakeTimers();
