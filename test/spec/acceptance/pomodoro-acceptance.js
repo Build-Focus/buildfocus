@@ -14,6 +14,8 @@
   function resetSpies() {
     chrome.notifications.clear.reset();
     chrome.notifications.create.reset();
+    activateTab("http://google.com");
+    givenBadDomains([]);
   }
 
   function clickButton() {
@@ -44,7 +46,11 @@
   }
 
   function givenBadDomain(urlPattern) {
-    chrome.storage.onChanged.trigger({"badDomainPatterns": {"newValue": [urlPattern]}});
+    givenBadDomains([urlPattern]);
+  }
+
+  function givenBadDomains(urlPatterns) {
+    chrome.storage.onChanged.trigger({"badDomainPatterns": {"newValue": urlPatterns}});
   }
 
   describe('Acceptance: Pomodoros', function () {
