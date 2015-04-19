@@ -11,6 +11,11 @@
     chrome.storage.local.get.yields({});
   }
 
+  function resetSpies() {
+    chrome.notifications.clear.reset();
+    chrome.notifications.create.reset();
+  }
+
   function clickButton() {
     chrome.browserAction.onClicked.trigger();
   }
@@ -44,8 +49,6 @@
 
   describe('Acceptance: Pomodoros', function () {
     before(function (done) {
-      setupStorageStubs();
-
       // Have to wait a little to let require load, and need to stub clock only after that
       setTimeout(function () {
         clockStub = sinon.useFakeTimers();
@@ -55,6 +58,11 @@
 
     after(function () {
       clockStub.restore();
+    });
+
+    beforeEach(function () {
+      setupStorageStubs();
+      resetSpies();
     });
 
     it("should give a point for successful pomodoros", function () {
@@ -77,6 +85,13 @@
 
       var resultingPoints = getPointsOnBadge();
       expect(resultingPoints).to.equal(initialPoints - 1);
+    });
+
+    it("should show a notification when completed successfully", function () {
+      clickButton();
+      clockStub.tick(POMODORO_DURATION);
+
+      expect(chrome.notifications.create.calledOnce).to.equal(true);
     });
   });
 })();

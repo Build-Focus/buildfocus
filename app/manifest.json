@@ -40,6 +40,7 @@
   "permissions": [
     "tabs",
     "storage",
+    "notifications",
     "http://*/*",
     "https://*/*"
   ],
