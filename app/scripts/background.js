@@ -11,12 +11,13 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
     var button = new FocusButton(score.points, pomodoroService.isActive);
 
     function onSuccess() {
-      notificationService.showSuccessNotification(pomodoroService.start);
       score.addSuccess();
+      notificationService.showSuccessNotification(pomodoroService.start);
     }
 
     function onFailure() {
       score.addFailure();
+      chrome.tabs.executeScript(null, {file: "scripts/failure-content-script.js"});
     }
 
     button.onClick(function () {

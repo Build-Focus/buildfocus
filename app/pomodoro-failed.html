@@ -1,0 +1,30 @@
+<html>
+<head>
+  <title>Pomodoro Failed</title>
+  <style>
+    body {
+      text-align: center;
+    }
+
+    .score {
+      font-size: 14em;
+    }
+
+    button {
+      font-size: 4em;
+    }
+  </style>
+</head>
+<body style="display: none" data-bind="visible: true">
+
+<h1 class="score">
+  <span data-bind="text: points"></span> Points
+</h1>
+
+<button>Go again</button>
+
+<script src="bower_components/requirejs/require.js"></script>
+<script src="scripts/require-config.js"></script>
+<script src="scripts/pomodoro-failed.js"></script>
+</body>
+</html>
