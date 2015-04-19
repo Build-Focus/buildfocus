@@ -11,10 +11,12 @@ define(["knockout", "lodash"], function (ko, _) {
     });
 
     var badBehaviourCallbacks = [];
+
     this.onBadBehaviour = function(callback) {
       badBehaviourCallbacks.push(callback);
       return callback; // for later deregistration
     };
+
     this.removeBadBehaviourCallback = function(callback) {
       var callbackIndex = badBehaviourCallbacks.indexOf(callback);
       if (callbackIndex > -1) {

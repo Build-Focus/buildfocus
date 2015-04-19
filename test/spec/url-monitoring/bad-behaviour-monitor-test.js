@@ -107,5 +107,25 @@
 
       expect(badBehaviourCallback.called).to.equal(false);
     });
+
+    it("should not trigger callbacks that have been unregistered", function () {
+      var currentUrls = ko.observableArray(["google.com"]);
+      var monitor = new BadBehaviourMonitor(currentUrls, matchBadDomain("facebook.com"));
+      var callback = monitor.onBadBehaviour(badBehaviourCallback);
+
+      monitor.removeBadBehaviourCallback(callback);
+      currentUrls.push("facebook.com");
+
+      expect(badBehaviourCallback.called).to.equal(false);
+    });
+
+    it("should fail loudly if you attempt to remove an unregistered callback", function () {
+      var currentUrls = ko.observableArray(["google.com"]);
+      var monitor = new BadBehaviourMonitor(currentUrls, noBadDomains());
+
+      expect(function () {
+        monitor.removeBadBehaviourCallback(badBehaviourCallback);
+      }).to.throw(/wasn't registered/);
+    });
   });
 }());
