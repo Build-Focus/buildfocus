@@ -17,7 +17,8 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
 
     function onFailure() {
       score.addFailure();
-      chrome.tabs.executeScript(null, {file: "scripts/failure-content-script.js"});
+      chrome.tabs.executeScript(null, {file: "scripts/failure-content-script.js",
+                                       runAt: "document_start"});
     }
 
     button.onClick(function () {
