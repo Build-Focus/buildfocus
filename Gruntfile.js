@@ -144,7 +144,8 @@ module.exports = function (grunt) {
       },
       system: {
         options: {
-          urls: ['http://localhost:<%= connect.test.options.port %>/pomodoro-acceptance.html']
+          urls: ['http://localhost:<%= connect.test.options.port %>/pomodoro-acceptance.html',
+                 'http://localhost:<%= connect.test.options.port %>/failure-page-acceptance.html']
         }
       }
     },
@@ -288,7 +289,7 @@ module.exports = function (grunt) {
           buildnumber: true,
           indentSize: 2,
           background: {
-            target: 'scripts/background.js',
+            target: 'scripts/pages/background-page.js',
             exclude: [
               'scripts/chromereload.js'
             ]
