@@ -139,12 +139,12 @@ module.exports = function (grunt) {
       },
       unit: {
         options: {
-          urls: ['http://localhost:<%= connect.test.options.port %>/index.html']
+          urls: ['http://localhost:<%= connect.test.options.port %>/unit-tests.html']
         }
       },
       system: {
         options: {
-          urls: ['http://localhost:<%= connect.test.options.port %>/acceptance-index.html']
+          urls: ['http://localhost:<%= connect.test.options.port %>/pomodoro-acceptance.html']
         }
       }
     },
