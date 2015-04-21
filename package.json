@@ -1,5 +1,6 @@
 {
-  "name": "focus-here",
+  "name": "rivet",
+  "private": true,
   "version": "0.0.0",
   "dependencies": {},
   "devDependencies": {

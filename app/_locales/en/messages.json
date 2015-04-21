@@ -1,10 +1,10 @@
 {
   "appName": {
-    "message": "focus-here",
-    "description": "The name of the application"
+    "message": "Rivet",
+    "description": "App name"
   },
   "appDescription": {
-    "message": "Focus Here",
-    "description": "The description of the application"
+    "message": "Build focus, by addicting yourself to concentrating and getting things done",
+    "description": "Short app description"
   }
 }

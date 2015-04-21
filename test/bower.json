@@ -1,5 +1,5 @@
 {
-  "name": "focus-here",
+  "name": "rivet",
   "private": true,
   "dependencies": {
     "chai": "~1.8.0",
