@@ -21,8 +21,11 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
                                        runAt: "document_start"});
     }
 
-    button.onClick(function () {
+    function startPomodoro() {
       pomodoroService.start(onSuccess, onFailure);
-    });
+    }
+
+    button.onClick(startPomodoro);
+    notificationService.onClick(startPomodoro);
   }
 );

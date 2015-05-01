@@ -1,10 +1,12 @@
 'use strict';
 
-define(function () {
+define(["lodash"], function (_) {
+  var successNotificationId = "pomodoro-success";
+
   return function NotificationService() {
     this.showSuccessNotification = function () {
-      chrome.notifications.clear("pomodoro-success", function () { });
-      chrome.notifications.create("pomodoro-success", {
+      chrome.notifications.clear(successNotificationId, function () { });
+      chrome.notifications.create(successNotificationId, {
         "type": "basic",
         "title": "Success! Go again?",
         "message": "Click to start a new Pomodoro",
@@ -15,5 +17,19 @@ define(function () {
         "isClickable": true
       }, function () {});
     };
+
+    var onClickCallbacks = [];
+
+    this.onClick = function (callback) {
+      onClickCallbacks.push(callback);
+    };
+
+    chrome.notifications.onClicked.addListener(function (notificationId) {
+      if (notificationId === successNotificationId) {
+        _.forEach(onClickCallbacks, function (callback) {
+          callback();
+        });
+      }
+    });
   };
 });

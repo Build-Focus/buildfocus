@@ -34,11 +34,26 @@
     }
   }
 
+  function getBadgeColor() {
+    var lastBadgeCall = chrome.browserAction.setBadgeBackgroundColor.lastCall;
+
+    if (lastBadgeCall) {
+      var badgeColorArgs = lastBadgeCall.args;
+      return badgeColorArgs[0].color;
+    } else {
+      return "";
+    }
+  }
+
   function getPointsOnBadge() {
     var badgeText = getBadgeText();
 
     // Assumes points are the only numbers in the badge
     return parseInt(badgeText.replace(/[^\-0-9]/g, ''), 10);
+  }
+
+  function isPomodoroActiveOnBadge() {
+    return getBadgeColor() === "#0F0";
   }
 
   function activateTab(url) {
@@ -68,6 +83,9 @@
     });
 
     beforeEach(function () {
+      // Make sure any active pomodoros are definitely finished
+      clockStub.tick(POMODORO_DURATION);
+
       setupStorageStubs();
       resetSpies();
     });
@@ -99,6 +117,15 @@
       clockStub.tick(POMODORO_DURATION);
 
       expect(chrome.notifications.create.calledOnce).to.equal(true);
+    });
+
+    it("should start a new pomodoro if the notification is clicked", function () {
+      clickButton();
+      clockStub.tick(POMODORO_DURATION);
+
+      chrome.notifications.onClicked.trigger("pomodoro-success");
+
+      expect(isPomodoroActiveOnBadge()).to.equal(true);
     });
 
     it("should show a failure page when a pomodoro is failed", function () {
