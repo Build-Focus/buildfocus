@@ -12,7 +12,7 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
 
     function onSuccess() {
       score.addSuccess();
-      notificationService.showSuccessNotification(pomodoroService.start);
+      notificationService.showSuccessNotification();
     }
 
     function onFailure() {
@@ -22,12 +22,14 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
     }
 
     function startPomodoro() {
-      pomodoroService.start(onSuccess, onFailure);
+      if (!pomodoroService.isActive()) {
+        pomodoroService.start(onSuccess, onFailure);
+      }
     }
 
     function takeABreak() {
       pomodoroService.takeABreak(function () {
-        notificationService.showSuccessNotification(pomodoroService.start);
+        notificationService.showSuccessNotification();
       });
     }
 

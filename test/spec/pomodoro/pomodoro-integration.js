@@ -87,6 +87,14 @@
       expect(errorCallback.calledOnce).to.equal(true);
     });
 
+    it("should throw an exception if a pomodoro is started while one is in progress", function () {
+      pomodoroService.start(sinon.stub(), sinon.stub());
+
+      expect(function () {
+        pomodoroService.start(sinon.stub(), sinon.stub());
+      }).to.throw();
+    });
+
     it("should take a break for 5 minutes", function () {
       var breakCallback = sinon.stub();
 

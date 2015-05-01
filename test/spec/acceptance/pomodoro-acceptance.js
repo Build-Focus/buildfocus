@@ -114,6 +114,21 @@
       expect(resultingPoints).to.equal(initialPoints - 1);
     });
 
+    it("should do nothing if the pomodoro button is pressed while one's already running", function () {
+      var initialPoints = getPointsOnBadge();
+
+      clickButton();
+      clickButton();
+      clockStub.tick(POMODORO_DURATION - 1);
+      clickButton();
+      clockStub.tick(1);
+
+      var resultingPoints = getPointsOnBadge();
+      expect(resultingPoints).to.equal(initialPoints + 1);
+      clockStub.tick(POMODORO_DURATION);
+      expect(resultingPoints).to.equal(initialPoints + 1);
+    });
+
     describe("Notifications", function () {
       it("should appear when a pomodoro is completed successfully", function () {
         clickButton();

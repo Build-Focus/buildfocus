@@ -9,6 +9,10 @@ define(["pomodoro/timer"], function (Timer) {
     var breakTimer = new Timer();
 
     this.start = function startPomodoro(onSuccess, onError) {
+      if (this.isActive()) {
+        throw new Error("Pomodoro started while one is already active!");
+      }
+
       breakTimer.reset();
       pomodoroTimer.start(POMODORO_DURATION, function () {
         badBehaviourMonitor.removeBadBehaviourCallback(badBehaviourRegistration);
