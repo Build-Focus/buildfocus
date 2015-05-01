@@ -25,7 +25,14 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
       pomodoroService.start(onSuccess, onFailure);
     }
 
+    function takeABreak() {
+      pomodoroService.takeABreak(function () {
+        notificationService.showSuccessNotification(pomodoroService.start);
+      });
+    }
+
     button.onClick(startPomodoro);
     notificationService.onClick(startPomodoro);
+    notificationService.onBreak(takeABreak);
   }
 );

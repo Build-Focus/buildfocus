@@ -4,6 +4,8 @@
   'use strict';
 
   var POMODORO_DURATION = 1000 * 60 * 20;
+  var BREAK_DURATION = 1000 * 60 * 5;
+
   var clockStub;
 
   function setupStorageStubs() {
@@ -112,20 +114,54 @@
       expect(resultingPoints).to.equal(initialPoints - 1);
     });
 
-    it("should show a notification when completed successfully", function () {
-      clickButton();
-      clockStub.tick(POMODORO_DURATION);
+    describe("Notifications", function () {
+      it("should appear when a pomodoro is completed successfully", function () {
+        clickButton();
+        clockStub.tick(POMODORO_DURATION);
 
-      expect(chrome.notifications.create.calledOnce).to.equal(true);
-    });
+        expect(chrome.notifications.create.calledOnce).to.equal(true);
+      });
 
-    it("should start a new pomodoro if the notification is clicked", function () {
-      clickButton();
-      clockStub.tick(POMODORO_DURATION);
+      it("should start a new pomodoro when clicked", function () {
+        clickButton();
+        clockStub.tick(POMODORO_DURATION);
 
-      chrome.notifications.onClicked.trigger("pomodoro-success");
+        chrome.notifications.onClicked.trigger("pomodoro-success");
 
-      expect(isPomodoroActiveOnBadge()).to.equal(true);
+        expect(isPomodoroActiveOnBadge()).to.equal(true);
+      });
+
+      it("should let you take a break after your pomodoro", function () {
+        clickButton();
+        clockStub.tick(POMODORO_DURATION);
+
+        chrome.notifications.onButtonClicked.trigger("pomodoro-success", 0);
+        clockStub.tick(BREAK_DURATION - 1);
+
+        expect(isPomodoroActiveOnBadge()).to.equal(false);
+        expect(chrome.notifications.create.callCount).to.equal(1);
+      });
+
+      it("should trigger again after your break is up", function () {
+        clickButton();
+        clockStub.tick(POMODORO_DURATION);
+
+        chrome.notifications.onButtonClicked.trigger("pomodoro-success", 0);
+        clockStub.tick(BREAK_DURATION);
+
+        expect(chrome.notifications.create.callCount).to.equal(2);
+      });
+
+      it("should cancel your break if you start a new pomodoro", function () {
+        clickButton();
+        clockStub.tick(POMODORO_DURATION);
+
+        chrome.notifications.onButtonClicked.trigger("pomodoro-success", 0);
+        clickButton();
+        clockStub.tick(BREAK_DURATION);
+
+        expect(chrome.notifications.create.callCount).to.equal(1);
+      });
     });
 
     it("should show a failure page when a pomodoro is failed", function () {

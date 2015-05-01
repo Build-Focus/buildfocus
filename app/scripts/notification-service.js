@@ -12,8 +12,7 @@ define(["lodash"], function (_) {
         "message": "Click to start a new Pomodoro",
         // Solid green block image:
         "iconUrl": "data:image/gif;base64,R0lGODlhAQABAPAAAADdAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==",
-        "buttons": [],
-        // TODO: "buttons": [{"title": "Take a break"}, {"title": "Not now"}],
+        "buttons": [{"title": "Take a break"}],
         "isClickable": true
       }, function () {});
     };
@@ -26,9 +25,21 @@ define(["lodash"], function (_) {
 
     chrome.notifications.onClicked.addListener(function (notificationId) {
       if (notificationId === successNotificationId) {
-        _.forEach(onClickCallbacks, function (callback) {
-          callback();
-        });
+        _.forEach(onClickCallbacks, function (callback) { callback(); });
+      }
+    });
+
+    var onBreakCallbacks = [];
+
+    this.onBreak = function (callback) {
+      onBreakCallbacks.push(callback);
+    };
+
+    chrome.notifications.onButtonClicked.addListener(function (notificationId, buttonIndex) {
+      if (notificationId === successNotificationId) {
+        if (buttonIndex === 0) {
+          _.forEach(onBreakCallbacks, function (callback) { callback(); });
+        }
       }
     });
   };
