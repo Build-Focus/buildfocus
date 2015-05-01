@@ -14,6 +14,7 @@
   function resetSpies() {
     chrome.notifications.clear.reset();
     chrome.notifications.create.reset();
+    chrome.tabs.executeScript.reset();
     activateTab("http://google.com");
     givenBadDomains([]);
   }
@@ -98,6 +99,15 @@
       clockStub.tick(POMODORO_DURATION);
 
       expect(chrome.notifications.create.calledOnce).to.equal(true);
+    });
+
+    it("should show a failure page when a pomodoro is failed", function () {
+      givenBadDomain("twitter.com");
+
+      clickButton();
+      activateTab("http://twitter.com");
+
+      expect(chrome.tabs.executeScript.calledOnce).to.equal(true);
     });
   });
 })();
