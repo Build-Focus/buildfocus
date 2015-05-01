@@ -177,6 +177,21 @@
 
         expect(chrome.notifications.create.callCount).to.equal(1);
       });
+
+      it("should let you cancel pomodoro-ing after your pomodoro", function () {
+        clickButton();
+        clockStub.tick(POMODORO_DURATION);
+
+        chrome.notifications.onButtonClicked.trigger("pomodoro-success", 1);
+
+        clockStub.tick(1);
+        expect(isPomodoroActiveOnBadge()).to.equal(false);
+        expect(chrome.notifications.create.callCount).to.equal(1);
+
+        clockStub.tick(BREAK_DURATION);
+        expect(isPomodoroActiveOnBadge()).to.equal(false);
+        expect(chrome.notifications.create.callCount).to.equal(1);
+      });
     });
 
     it("should show a failure page when a pomodoro is failed", function () {

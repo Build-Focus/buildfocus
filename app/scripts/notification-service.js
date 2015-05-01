@@ -12,7 +12,7 @@ define(["lodash"], function (_) {
         "message": "Click to start a new Pomodoro",
         // Solid green block image:
         "iconUrl": "data:image/gif;base64,R0lGODlhAQABAPAAAADdAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==",
-        "buttons": [{"title": "Take a break"}],
+        "buttons": [{"title": "Take a break"}, {"title": "Not now"}],
         "isClickable": true
       }, function () {});
     };
