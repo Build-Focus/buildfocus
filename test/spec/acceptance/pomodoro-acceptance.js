@@ -166,6 +166,7 @@
         clockStub.tick(BREAK_DURATION);
 
         expect(chrome.notifications.create.callCount).to.equal(2);
+        expect(chrome.notifications.create.args[1][1].title).to.equal("Break time's over");
       });
 
       it("should cancel your break if you start a new pomodoro", function () {
