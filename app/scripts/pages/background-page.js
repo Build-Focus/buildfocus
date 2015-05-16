@@ -29,7 +29,7 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
 
     function takeABreak() {
       pomodoroService.takeABreak(function () {
-        notificationService.showSuccessNotification();
+        notificationService.showBreakNotification();
       });
     }
 

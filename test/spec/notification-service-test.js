@@ -33,7 +33,7 @@
     });
 
     it('should call onClick callbacks when a pomodoro notification is clicked', function () {
-      chrome.notifications.onClicked.trigger("pomodoro-success");
+      chrome.notifications.onClicked.trigger("rivet-pomodoro-notification");
       expect(onClickCallback.calledOnce).to.equal(true);
     });
 
@@ -43,7 +43,7 @@
     });
 
     it('should call onBreak callbacks when a pomodoro break button is clicked', function () {
-      chrome.notifications.onButtonClicked.trigger("pomodoro-success", 0);
+      chrome.notifications.onButtonClicked.trigger("rivet-pomodoro-notification", 0);
       expect(onBreakCallback.calledOnce).to.equal(true);
     });
 

@@ -5,6 +5,7 @@
 
   var POMODORO_DURATION = 1000 * 60 * 20;
   var BREAK_DURATION = 1000 * 60 * 5;
+  var NOTIFICATION_ID = "rivet-pomodoro-notification";
 
   var clockStub;
 
@@ -141,7 +142,7 @@
         clickButton();
         clockStub.tick(POMODORO_DURATION);
 
-        chrome.notifications.onClicked.trigger("pomodoro-success");
+        chrome.notifications.onClicked.trigger(NOTIFICATION_ID);
 
         expect(isPomodoroActiveOnBadge()).to.equal(true);
       });
@@ -150,7 +151,7 @@
         clickButton();
         clockStub.tick(POMODORO_DURATION);
 
-        chrome.notifications.onButtonClicked.trigger("pomodoro-success", 0);
+        chrome.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 0);
         clockStub.tick(BREAK_DURATION - 1);
 
         expect(isPomodoroActiveOnBadge()).to.equal(false);
@@ -161,7 +162,7 @@
         clickButton();
         clockStub.tick(POMODORO_DURATION);
 
-        chrome.notifications.onButtonClicked.trigger("pomodoro-success", 0);
+        chrome.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 0);
         clockStub.tick(BREAK_DURATION);
 
         expect(chrome.notifications.create.callCount).to.equal(2);
@@ -171,7 +172,7 @@
         clickButton();
         clockStub.tick(POMODORO_DURATION);
 
-        chrome.notifications.onButtonClicked.trigger("pomodoro-success", 0);
+        chrome.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 0);
         clickButton();
         clockStub.tick(BREAK_DURATION);
 
@@ -182,7 +183,7 @@
         clickButton();
         clockStub.tick(POMODORO_DURATION);
 
-        chrome.notifications.onButtonClicked.trigger("pomodoro-success", 1);
+        chrome.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 1);
 
         clockStub.tick(1);
         expect(isPomodoroActiveOnBadge()).to.equal(false);
