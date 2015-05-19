@@ -31,9 +31,12 @@ define(["lodash", "knockout"], function (_, ko) {
       var canvas = document.createElement('canvas');
       var context = canvas.getContext('2d');
 
+      var totalDistance = 19*4 + 1;
+      var progressDistance = progressObservable() * (totalDistance / 100);
+
       context.beginPath();
 
-      context.setLineDash([progressObservable(), 19*4 + 1]);
+      context.setLineDash([progressDistance, totalDistance]);
       context.lineWidth = 3;
 
       context.moveTo(0, 0);

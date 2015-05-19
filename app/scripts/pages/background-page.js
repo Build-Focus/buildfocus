@@ -13,8 +13,8 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
     var button = new FocusButton(score.points, pomodoroService.isActive, progress);
 
     setInterval(function () {
-      progress((progress() + 1) % (19*4));
-    }, 500);
+      progress((progress() + 1) % 101);
+    }, 100);
 
     function onSuccess() {
       score.addSuccess();
