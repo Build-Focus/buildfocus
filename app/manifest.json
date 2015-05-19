@@ -17,10 +17,6 @@
     ]
   },
   "browser_action": {
-    "default_icon": {
-      "19": "images/icon-19.png",
-      "38": "images/icon-38.png"
-    },
     "default_title": "Rivet"
   },
   "options_page": "options.html",

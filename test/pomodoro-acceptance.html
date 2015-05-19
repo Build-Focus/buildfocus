@@ -15,6 +15,10 @@
     var assert = chai.assert;
     var expect = chai.expect;
     var should = chai.should();
+
+    // Stub setLineDash, as it's not defined in phantomjs
+    CanvasRenderingContext2D.prototype.setLineDash = CanvasRenderingContext2D.prototype.setLineDash ||
+                                                     function () { }
     </script>
 
     <script src="bower_components/sinonjs/sinon.js"></script>

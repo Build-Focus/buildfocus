@@ -5,10 +5,16 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
          "score", "notification-service"],
   function (ko, _, settings, currentUrls, PomodoroService, FocusButton,
             BadBehaviourMonitor, score, NotificationService) {
+    var progress = ko.observable(0);
+
     var notificationService = new NotificationService();
     var badBehaviourMonitor = new BadBehaviourMonitor(currentUrls, settings);
     var pomodoroService = new PomodoroService(badBehaviourMonitor);
-    var button = new FocusButton(score.points, pomodoroService.isActive);
+    var button = new FocusButton(score.points, pomodoroService.isActive, progress);
+
+    setInterval(function () {
+      progress((progress() + 1) % (19*4));
+    }, 500);
 
     function onSuccess() {
       score.addSuccess();
