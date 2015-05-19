@@ -11,6 +11,7 @@
     chrome.storage.local.get.yields({});
     chrome.notifications.clear.reset();
     chrome.notifications.create.reset();
+    chrome.extension.sendMessage.reset();
   }
 
   function openPageWithScript(scriptUrl) {
@@ -52,6 +53,7 @@
       clockStub.restore();
     });
 
+    // TODO: Find a useful way to test and thus reenable this
     xit("should be loaded when the failure script is injected", function (done) {
       var page = openPageWithScript("scripts/failure-content-script.js");
 
@@ -67,6 +69,22 @@
       var viewModel = new FailurePageViewModel();
 
       expect(viewModel.points()).to.equal(10);
+    });
+
+    it("should send a start-pomodoro message when start is clicked", function () {
+      var viewModel = new FailurePageViewModel();
+
+      viewModel.startPomodoro();
+
+      expect(chrome.extension.sendMessage.calledOnce).to.equal(true);
+    });
+
+    it("should send a start-break message when take a break is clicked", function () {
+      var viewModel = new FailurePageViewModel();
+
+      viewModel.startBreak();
+
+      expect(chrome.extension.sendMessage.calledOnce).to.equal(true);
     });
   });
 })();

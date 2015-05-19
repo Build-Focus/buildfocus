@@ -16,15 +16,15 @@
   </style>
 </head>
 <body style="display: none" data-bind="visible: true">
+  <h1 class="score">
+    <span data-bind="text: points"></span> Points
+  </h1>
 
-<h1 class="score">
-  <span data-bind="text: points"></span> Points
-</h1>
+  <button data-bind="click: startPomodoro">Try again</button>&nbsp;
+  <button data-bind="click: startBreak">Take a break</button>
 
-<button>Go again</button>
-
-<script src="bower_components/requirejs/require.js"></script>
-<script src="scripts/require-config.js"></script>
-<script src="scripts/pages/failed-page-binding.js"></script>
+  <script src="bower_components/requirejs/require.js"></script>
+  <script src="scripts/require-config.js"></script>
+  <script src="scripts/pages/failed-page-binding.js"></script>
 </body>
 </html>

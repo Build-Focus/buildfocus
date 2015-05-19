@@ -196,6 +196,26 @@
       });
     });
 
+    describe("OnMessage", function () {
+      it("should start a pomodoro when a start message is received", function () {
+        chrome.extension.onMessage.trigger({"action": "start-pomodoro"});
+
+        expect(isPomodoroActiveOnBadge()).to.equal(true);
+      });
+
+      it("should start a break when a break message is received", function () {
+        chrome.extension.onMessage.trigger({"action": "start-break"});
+
+        expect(isPomodoroActiveOnBadge()).to.equal(false);
+        expect(chrome.notifications.create.called).to.equal(false);
+
+        clockStub.tick(BREAK_DURATION);
+
+        expect(chrome.notifications.create.calledOnce).to.equal(true);
+        expect(chrome.notifications.create.args[0][1].title).to.equal("Break time's over");
+      });
+    });
+
     it("should show a failure page when a pomodoro is failed", function () {
       givenBadDomain("twitter.com");
 

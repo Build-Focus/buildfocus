@@ -36,5 +36,14 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
     button.onClick(startPomodoro);
     notificationService.onClick(startPomodoro);
     notificationService.onBreak(takeABreak);
+    chrome.extension.onMessage.addListener(function (message) {
+      if (message.action === "start-pomodoro") {
+        startPomodoro();
+      } else if (message.action === "start-break") {
+        takeABreak();
+      } else {
+        throw new Error("Message received with unknown action: " + message.action);
+      }
+    });
   }
 );
