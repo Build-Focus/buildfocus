@@ -31,7 +31,7 @@ define(["lodash", "knockout"], function (_, ko) {
       var canvas = document.createElement('canvas');
       var context = canvas.getContext('2d');
 
-      var totalDistance = 19*4 + 1;
+      var totalDistance = 19*4;
       var progressDistance = progressObservable() * (totalDistance / 100);
 
       context.beginPath();
