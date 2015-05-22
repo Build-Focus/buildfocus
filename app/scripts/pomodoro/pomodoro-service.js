@@ -1,6 +1,6 @@
 'use strict';
 
-define(["pomodoro/timer"], function (Timer) {
+define(["knockout", "pomodoro/timer"], function (ko, Timer) {
   var BREAK_DURATION = 1000 * 60 * 5;
   var POMODORO_DURATION = 1000 * 60 * 20;
 
@@ -34,5 +34,15 @@ define(["pomodoro/timer"], function (Timer) {
     };
 
     this.isActive = pomodoroTimer.isRunning;
+
+    this.progress = ko.computed(function () {
+      if (pomodoroTimer.isRunning()) {
+        return pomodoroTimer.progress();
+      } else if (breakTimer.isRunning()) {
+        return breakTimer.progress();
+      } else {
+        return 0;
+      }
+    });
   };
 });
