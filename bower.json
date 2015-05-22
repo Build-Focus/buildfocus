@@ -8,7 +8,7 @@
     "uri.js": "~1.15.0",
     "requirejs": "~2.1.17",
     "sinonjs": "~1.14.1",
-    "sinon-chrome": "git@github.com:vitalets/sinon-chrome.git#9005f5a2cc61b41cc038c0e34913092695e5e622"
+    "sinon-chrome": "vitalets/sinon-chrome#9005f5a2cc61b41cc038c0e34913092695e5e622"
   },
   "devDependencies": {}
 }
