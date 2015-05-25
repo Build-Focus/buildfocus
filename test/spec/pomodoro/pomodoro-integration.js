@@ -116,8 +116,8 @@
     });
 
     describe("progress", function () {
-      it("should be 0% initially", function () {
-        expect(pomodoroService.progress()).to.equal(0);
+      it("should be null initially", function () {
+        expect(pomodoroService.progress()).to.equal(null);
       });
 
       it("should be 0% when a pomodoro is first started", function () {
@@ -139,20 +139,20 @@
         expect(pomodoroService.progress()).to.equal(99);
       });
 
-      it("should be 0% when a pomodoro is completed", function () {
+      it("should be null when a pomodoro is completed", function () {
         pomodoroService.start(sinon.stub(), sinon.stub());
         clockStub.tick(POMODORO_DURATION);
 
-        expect(pomodoroService.progress()).to.equal(0);
+        expect(pomodoroService.progress()).to.equal(null);
       });
 
-      it("should be 0% if a pomodoro is failed half way", function () {
+      it("should be null if a pomodoro is failed half way", function () {
         pomodoroService.start(sinon.stub(), sinon.stub());
 
         clockStub.tick(POMODORO_DURATION / 2);
         announceBadBehaviour();
 
-        expect(pomodoroService.progress()).to.equal(0);
+        expect(pomodoroService.progress()).to.equal(null);
       });
 
       it("should be 0% when a break is first started", function () {
@@ -168,12 +168,12 @@
         expect(pomodoroService.progress()).to.equal(99);
       });
 
-      it("should be 0% when a break is completed", function () {
+      it("should be null when a break is completed", function () {
         pomodoroService.takeABreak(sinon.stub());
 
         clockStub.tick(BREAK_DURATION);
 
-        expect(pomodoroService.progress()).to.equal(0);
+        expect(pomodoroService.progress()).to.equal(null);
       });
     });
   });

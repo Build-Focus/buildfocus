@@ -60,10 +60,10 @@ define(["lodash", "knockout"], function (_, ko) {
         context.drawImage(badgeBackground(), 0, 0, 19, 19);
       }
 
-      var fullDistance = 19*4;
-      var progressDistance = progressObservable() * (fullDistance / 100);
+      if (progressObservable() !== null) {
+        var fullDistance = 19*4;
+        var progressDistance = progressObservable() * (fullDistance / 100);
 
-      if (progressDistance > 0) {
         context.globalCompositeOperation = "destination-out";
         drawOutline(context, "#000", fullDistance, 5);
         context.globalCompositeOperation = "source-over";

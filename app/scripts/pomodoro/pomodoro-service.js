@@ -41,7 +41,7 @@ define(["knockout", "pomodoro/timer"], function (ko, Timer) {
       } else if (breakTimer.isRunning()) {
         return breakTimer.progress();
       } else {
-        return 0;
+        return null;
       }
     });
   };
