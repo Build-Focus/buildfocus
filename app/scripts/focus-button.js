@@ -27,17 +27,20 @@ define(["lodash", "knockout"], function (_, ko) {
       return statusObservable() ? "#0F0" : "#F00";
     });
 
-    var badgeIcon = ko.computed(function () {
-      var canvas = document.createElement('canvas');
-      var context = canvas.getContext('2d');
+    var rawBackgroundImage = new Image();
+    rawBackgroundImage.src = "/images/icon-19.png";
+    rawBackgroundImage.onload = function () {
+      badgeBackground(rawBackgroundImage);
+    };
 
-      var totalDistance = 19*4;
-      var progressDistance = progressObservable() * (totalDistance / 100);
+    var badgeBackground = ko.observable();
 
+    function drawOutline(context, color, length, width) {
       context.beginPath();
 
-      context.setLineDash([progressDistance, totalDistance]);
-      context.lineWidth = 3;
+      context.strokeStyle = color;
+      context.setLineDash([length, 1000]);
+      context.lineWidth = width;
 
       context.moveTo(0, 0);
       context.lineTo(19, 0);
@@ -46,6 +49,26 @@ define(["lodash", "knockout"], function (_, ko) {
       context.lineTo(0, 0);
 
       context.stroke();
+    }
+
+    var badgeIcon = ko.computed(function () {
+      var canvas = document.createElement('canvas');
+      canvas.setAttribute("style", "width: 19px; height: 19px");
+
+      var context = canvas.getContext('2d');
+      if (badgeBackground()) {
+        context.drawImage(badgeBackground(), 0, 0, 19, 19);
+      }
+
+      var fullDistance = 19*4;
+      var progressDistance = progressObservable() * (fullDistance / 100);
+
+      if (progressDistance > 0) {
+        context.globalCompositeOperation = "destination-out";
+        drawOutline(context, "#000", fullDistance, 5);
+        context.globalCompositeOperation = "source-over";
+        drawOutline(context, "#f00", progressDistance, 3);
+      }
 
       return context.getImageData(0, 0, 19, 19);
     });

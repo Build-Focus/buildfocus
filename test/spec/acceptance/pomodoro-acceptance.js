@@ -59,6 +59,16 @@
     return getBadgeColor() === "#0F0";
   }
 
+  function getBadgeImageData() {
+    var lastSetIconCall = chrome.browserAction.setIcon.lastCall;
+
+    if (lastSetIconCall) {
+      return lastSetIconCall.args[0].imageData;
+    } else {
+      return null;
+    }
+  }
+
   function activateTab(url) {
     chrome.tabs.query.yields([{ "url": url }]);
     chrome.tabs.onActivated.trigger();
@@ -223,6 +233,33 @@
       activateTab("http://twitter.com");
 
       expect(chrome.tabs.executeScript.calledOnce).to.equal(true);
+    });
+
+    describe("Progress bar", function () {
+      describe("for pomodoros", function () {
+        it("should be 0% initially", function () {
+          getBadgeImageData();
+          // TODO: Work out how to read image data out here to check these
+        });
+
+        it("should be 0% after starting a pomodoro");
+
+        it("should be 50% half way through a pomodoro");
+
+        it("should be 99% when a pomodoro is nearly completed");
+
+        it("should be 0% after a pomodoro is completed");
+
+        it("should be 0% if a pomodoro failed half way");
+      });
+
+      describe("for breaks", function () {
+        it("should be 0% after starting a break");
+
+        it("should be 50% half way through a break");
+
+        it("should be 99% when a break is nearly completed");
+      });
     });
   });
 })();
