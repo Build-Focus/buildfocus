@@ -1,7 +1,7 @@
 'use strict';
 
-define(["lodash", "knockout"], function (_, ko) {
-  return function FocusButton(pointsObservable, statusObservable, progressObservable) {
+define(["lodash", "knockout", "observable-image"], function (_, ko, observableImage) {
+  return function FocusButton(progressObservable) {
     var onClickCallbacks = [];
 
     chrome.browserAction.onClicked.addListener(function () {
@@ -14,33 +14,35 @@ define(["lodash", "knockout"], function (_, ko) {
       onClickCallbacks.push(callback);
     };
 
-    var badgeText = ko.computed(function () {
-      var points = pointsObservable().toString();
-      if (statusObservable()) {
-        return "..." + points;
+    var rivetIcon = observableImage("/images/icon-19.png");
+    var pomodoroIcon = observableImage("/images/icon-19-red.png");
+    // TODO: var breakIcon = observableImage("/images/icon-19-green.png");
+
+    function drawBackground(context, image) {
+      if (image()) {
+        context.drawImage(image(), 0, 0, 19, 19);
       } else {
-        return points;
+        context.clearRect(0, 0, 19, 19);
       }
-    });
-
-    var badgeColor = ko.computed(function () {
-      return statusObservable() ? "#0F0" : "#F00";
-    });
-
-    var rawBackgroundImage = new Image();
-    rawBackgroundImage.src = "/images/icon-19.png";
-    rawBackgroundImage.onload = function () {
-      badgeBackground(rawBackgroundImage);
-    };
-
-    var badgeBackground = ko.observable();
+    }
 
     function drawOutline(context, color, length, width) {
-      context.beginPath();
-
+      context.globalCompositeOperation = "source-over";
       context.strokeStyle = color;
+
+      outlineBadge(context, length, width);
+    }
+
+    function clearOutline(context, length, width) {
+      context.globalCompositeOperation = "destination-out";
+      outlineBadge(context, length, width);
+    }
+
+    function outlineBadge(context, length, width) {
       context.setLineDash([length, 1000]);
       context.lineWidth = width;
+
+      context.beginPath();
 
       context.moveTo(0, 0);
       context.lineTo(19, 0);
@@ -56,42 +58,27 @@ define(["lodash", "knockout"], function (_, ko) {
       canvas.setAttribute("style", "width: 19px; height: 19px");
 
       var context = canvas.getContext('2d');
-      if (badgeBackground()) {
-        context.drawImage(badgeBackground(), 0, 0, 19, 19);
-      }
 
       if (progressObservable() !== null) {
+        drawBackground(context, pomodoroIcon);
+
         var fullDistance = 19*4;
         var progressDistance = progressObservable() * (fullDistance / 100);
 
-        context.globalCompositeOperation = "destination-out";
-        drawOutline(context, "#000", fullDistance, 5);
-        context.globalCompositeOperation = "source-over";
-        drawOutline(context, "#f00", progressDistance, 3);
+        clearOutline(context, fullDistance, 5);
+        drawOutline(context, "#e00505", progressDistance, 3);
+      } else {
+        drawBackground(context, rivetIcon);
       }
 
       return context.getImageData(0, 0, 19, 19);
     });
-
-    function updateBadgeText(badgeText) {
-      chrome.browserAction.setBadgeText({"text": badgeText});
-    }
-
-    function updateBadgeColor(badgeColor) {
-      chrome.browserAction.setBadgeBackgroundColor({"color": badgeColor});
-    }
 
     function updateBadgeIcon(imageData) {
       chrome.browserAction.setIcon({
         imageData: imageData
       });
     }
-
-    badgeText.subscribe(updateBadgeText);
-    updateBadgeText(badgeText());
-
-    badgeColor.subscribe(updateBadgeColor);
-    updateBadgeColor(badgeColor());
 
     badgeIcon.subscribe(updateBadgeIcon);
     updateBadgeIcon(badgeIcon());

@@ -1,4 +1,4 @@
-/* global describe, it */
+/* global describe, it, _ */
 
 (function () {
   'use strict';
@@ -26,37 +26,12 @@
     chrome.browserAction.onClicked.trigger();
   }
 
-  function getBadgeText() {
-    var lastBadgeCall = chrome.browserAction.setBadgeText.lastCall;
+  function getPoints() {
+    var lastStoredPoints = _(chrome.storage.sync.set.args).map(function (args) {
+      return args[0].points;
+    }).reject(_.isUndefined).last();
 
-    if (lastBadgeCall) {
-      var badgeTextArgs = lastBadgeCall.args;
-      return badgeTextArgs[0].text;
-    } else {
-      return "";
-    }
-  }
-
-  function getBadgeColor() {
-    var lastBadgeCall = chrome.browserAction.setBadgeBackgroundColor.lastCall;
-
-    if (lastBadgeCall) {
-      var badgeColorArgs = lastBadgeCall.args;
-      return badgeColorArgs[0].color;
-    } else {
-      return "";
-    }
-  }
-
-  function getPointsOnBadge() {
-    var badgeText = getBadgeText();
-
-    // Assumes points are the only numbers in the badge
-    return parseInt(badgeText.replace(/[^\-0-9]/g, ''), 10);
-  }
-
-  function isPomodoroActiveOnBadge() {
-    return getBadgeColor() === "#0F0";
+    return lastStoredPoints || 0;
   }
 
   function getBadgeImageData() {
@@ -67,6 +42,32 @@
     } else {
       return null;
     }
+  }
+
+  function getBadgePixel(x, y) {
+    var image = getBadgeImageData();
+    var data = image.data;
+
+    var pixelIndex = image.width * y + x;
+    var pixelByteIndex = pixelIndex * 4;
+    return [data[pixelByteIndex],
+            data[pixelByteIndex+1],
+            data[pixelByteIndex+2],
+            data[pixelByteIndex+3]];
+  }
+
+  function isPomodoroActive() {
+    var expectedPixelMatcher = _.matches([224, 5, 5, 255]); // Bright red
+    var pixelData = getBadgePixel(10, 3); // Top line of the R
+
+    return expectedPixelMatcher(pixelData);
+  }
+
+  function isBreakActive() {
+    var expectedPixelMatcher = _.matches([224, 5, 5, 255]); // Bright red
+    var pixelData = getBadgePixel(10, 3); // Top line of the R
+
+    return expectedPixelMatcher(pixelData);
   }
 
   function activateTab(url) {
@@ -104,29 +105,29 @@
     });
 
     it("should give a point for successful pomodoros", function () {
-      var initialPoints = getPointsOnBadge();
+      var initialPoints = getPoints();
 
       clickButton();
       clockStub.tick(POMODORO_DURATION);
 
-      var resultingPoints = getPointsOnBadge();
+      var resultingPoints = getPoints();
 
       expect(resultingPoints).to.equal(initialPoints + 1);
     });
 
     it("should subtract a point for failed pomodoros", function () {
       givenBadDomain("twitter.com");
-      var initialPoints = getPointsOnBadge();
+      var initialPoints = getPoints();
 
       clickButton();
       activateTab("http://twitter.com");
 
-      var resultingPoints = getPointsOnBadge();
+      var resultingPoints = getPoints();
       expect(resultingPoints).to.equal(initialPoints - 1);
     });
 
     it("should do nothing if the pomodoro button is pressed while one's already running", function () {
-      var initialPoints = getPointsOnBadge();
+      var initialPoints = getPoints();
 
       clickButton();
       clickButton();
@@ -134,7 +135,7 @@
       clickButton();
       clockStub.tick(1);
 
-      var resultingPoints = getPointsOnBadge();
+      var resultingPoints = getPoints();
       expect(resultingPoints).to.equal(initialPoints + 1);
       clockStub.tick(POMODORO_DURATION);
       expect(resultingPoints).to.equal(initialPoints + 1);
@@ -154,7 +155,7 @@
 
         chrome.notifications.onClicked.trigger(NOTIFICATION_ID);
 
-        expect(isPomodoroActiveOnBadge()).to.equal(true);
+        expect(isPomodoroActive()).to.equal(true);
       });
 
       it("should let you take a break after your pomodoro", function () {
@@ -164,7 +165,7 @@
         chrome.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 0);
         clockStub.tick(BREAK_DURATION - 1);
 
-        expect(isPomodoroActiveOnBadge()).to.equal(false);
+        expect(isBreakActive()).to.equal(true);
         expect(chrome.notifications.create.callCount).to.equal(1);
       });
 
@@ -197,11 +198,11 @@
         chrome.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 1);
 
         clockStub.tick(1);
-        expect(isPomodoroActiveOnBadge()).to.equal(false);
+        expect(isPomodoroActive()).to.equal(false);
         expect(chrome.notifications.create.callCount).to.equal(1);
 
         clockStub.tick(BREAK_DURATION);
-        expect(isPomodoroActiveOnBadge()).to.equal(false);
+        expect(isPomodoroActive()).to.equal(false);
         expect(chrome.notifications.create.callCount).to.equal(1);
       });
     });
@@ -210,13 +211,13 @@
       it("should start a pomodoro when a start message is received", function () {
         chrome.extension.onMessage.trigger({"action": "start-pomodoro"});
 
-        expect(isPomodoroActiveOnBadge()).to.equal(true);
+        expect(isPomodoroActive()).to.equal(true);
       });
 
       it("should start a break when a break message is received", function () {
         chrome.extension.onMessage.trigger({"action": "start-break"});
 
-        expect(isPomodoroActiveOnBadge()).to.equal(false);
+        expect(isBreakActive()).to.equal(true);
         expect(chrome.notifications.create.called).to.equal(false);
 
         clockStub.tick(BREAK_DURATION);

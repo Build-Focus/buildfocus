@@ -8,9 +8,7 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
     var notificationService = new NotificationService();
     var badBehaviourMonitor = new BadBehaviourMonitor(currentUrls, settings);
     var pomodoroService = new PomodoroService(badBehaviourMonitor);
-    var button = new FocusButton(score.points,
-                                 pomodoroService.isActive,
-                                 pomodoroService.progress);
+    var button = new FocusButton(pomodoroService.progress);
 
     function onSuccess() {
       score.addSuccess();
