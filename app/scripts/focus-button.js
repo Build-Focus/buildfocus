@@ -1,7 +1,7 @@
 'use strict';
 
 define(["lodash", "knockout", "observable-image"], function (_, ko, observableImage) {
-  return function FocusButton(progressObservable) {
+  return function FocusButton(progressObservable, pomodoroActiveObservable) {
     var onClickCallbacks = [];
 
     chrome.browserAction.onClicked.addListener(function () {
@@ -16,7 +16,7 @@ define(["lodash", "knockout", "observable-image"], function (_, ko, observableIm
 
     var rivetIcon = observableImage("/images/icon-19.png");
     var pomodoroIcon = observableImage("/images/icon-19-red.png");
-    // TODO: var breakIcon = observableImage("/images/icon-19-green.png");
+    var breakIcon = observableImage("/images/icon-19-green.png");
 
     function drawBackground(context, image) {
       if (image()) {
@@ -60,13 +60,18 @@ define(["lodash", "knockout", "observable-image"], function (_, ko, observableIm
       var context = canvas.getContext('2d');
 
       if (progressObservable() !== null) {
-        drawBackground(context, pomodoroIcon);
-
         var fullDistance = 19*4;
         var progressDistance = progressObservable() * (fullDistance / 100);
 
-        clearOutline(context, fullDistance, 5);
-        drawOutline(context, "#e00505", progressDistance, 3);
+        if (pomodoroActiveObservable()) {
+          drawBackground(context, pomodoroIcon);
+          clearOutline(context, fullDistance, 5);
+          drawOutline(context, "#e00505", progressDistance, 3);
+        } else {
+          drawBackground(context, breakIcon);
+          clearOutline(context, fullDistance, 5);
+          drawOutline(context, "#22bb04", progressDistance, 3);
+        }
       } else {
         drawBackground(context, rivetIcon);
       }

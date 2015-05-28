@@ -64,7 +64,7 @@
   }
 
   function isBreakActive() {
-    var expectedPixelMatcher = _.matches([224, 5, 5, 255]); // Bright red
+    var expectedPixelMatcher = _.matches([34, 187, 4, 255]); // Bright green
     var pixelData = getBadgePixel(10, 3); // Top line of the R
 
     return expectedPixelMatcher(pixelData);
