@@ -9,6 +9,7 @@
     <div id="mocha"></div>
     <script src="bower_components/mocha/mocha.js"></script>
     <script src="bower_components/chai/chai.js"></script>
+    <script src="helpers/colour-matchers.js"></script>
     <script>
     mocha.setup('bdd');
 
@@ -19,6 +20,7 @@
     // Stub setLineDash, as it's not defined in phantomjs
     CanvasRenderingContext2D.prototype.setLineDash = CanvasRenderingContext2D.prototype.setLineDash ||
                                                      function () { }
+    chai.use(ColourMatchers);
     </script>
 
     <script src="bower_components/sinonjs/sinon.js"></script>

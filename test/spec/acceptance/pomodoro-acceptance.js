@@ -56,19 +56,14 @@
             data[pixelByteIndex+3]];
   }
 
-  function isPomodoroActive() {
-    var expectedPixelMatcher = _.matches([224, 5, 5, 255]); // Bright red
-    var pixelData = getBadgePixel(10, 3); // Top line of the R
-
-    return expectedPixelMatcher(pixelData);
+  function badgeIconColour() {
+    return getBadgePixel(10, 3); // Top line of the R
   }
 
-  function isBreakActive() {
-    var expectedPixelMatcher = _.matches([34, 187, 4, 255]); // Bright green
-    var pixelData = getBadgePixel(10, 3); // Top line of the R
-
-    return expectedPixelMatcher(pixelData);
-  }
+  var POMODORO_COLOUR = [224, 5, 5];
+  var BREAK_COLOUR = [34, 187, 4];
+  var BADGE_BACKGROUND_COLOUR = [251, 189, 72];
+  var BADGE_R_COLOUR = [53, 40, 26];
 
   function activateTab(url) {
     chrome.tabs.query.yields([{ "url": url }]);
@@ -155,7 +150,7 @@
 
         chrome.notifications.onClicked.trigger(NOTIFICATION_ID);
 
-        expect(isPomodoroActive()).to.equal(true);
+        expect(badgeIconColour()).to.be.rgbPixel(POMODORO_COLOUR);
       });
 
       it("should let you take a break after your pomodoro", function () {
@@ -165,7 +160,7 @@
         chrome.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 0);
         clockStub.tick(BREAK_DURATION - 1);
 
-        expect(isBreakActive()).to.equal(true);
+        expect(badgeIconColour()).to.be.rgbPixel(BREAK_COLOUR);
         expect(chrome.notifications.create.callCount).to.equal(1);
       });
 
@@ -198,11 +193,11 @@
         chrome.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 1);
 
         clockStub.tick(1);
-        expect(isPomodoroActive()).to.equal(false);
+        expect(badgeIconColour()).to.be.rgbPixel(BADGE_R_COLOUR);
         expect(chrome.notifications.create.callCount).to.equal(1);
 
         clockStub.tick(BREAK_DURATION);
-        expect(isPomodoroActive()).to.equal(false);
+        expect(badgeIconColour()).to.be.rgbPixel(BADGE_R_COLOUR);
         expect(chrome.notifications.create.callCount).to.equal(1);
       });
     });
@@ -211,13 +206,13 @@
       it("should start a pomodoro when a start message is received", function () {
         chrome.extension.onMessage.trigger({"action": "start-pomodoro"});
 
-        expect(isPomodoroActive()).to.equal(true);
+        expect(badgeIconColour()).to.be.rgbPixel(POMODORO_COLOUR);
       });
 
       it("should start a break when a break message is received", function () {
         chrome.extension.onMessage.trigger({"action": "start-break"});
 
-        expect(isBreakActive()).to.equal(true);
+        expect(badgeIconColour()).to.be.rgbPixel(BREAK_COLOUR);
         expect(chrome.notifications.create.called).to.equal(false);
 
         clockStub.tick(BREAK_DURATION);
@@ -238,28 +233,84 @@
 
     describe("Progress bar", function () {
       describe("for pomodoros", function () {
-        it("should be 0% initially", function () {
-          getBadgeImageData();
-          // TODO: Work out how to read image data out here to check these
+        it("shouldn't be shown initially", function () {
+          expect(getBadgePixel(0, 0)).to.be.rgbPixel(BADGE_BACKGROUND_COLOUR);
         });
 
-        it("should be 0% after starting a pomodoro");
+        it("should be 0% after starting a pomodoro", function () {
+          clickButton();
 
-        it("should be 50% half way through a pomodoro");
+          expect(getBadgePixel(0, 0)).to.be.transparent();
+        });
 
-        it("should be 99% when a pomodoro is nearly completed");
+        it("should be 50% half way through a pomodoro", function () {
+          clickButton();
+          clockStub.tick(POMODORO_DURATION / 2);
 
-        it("should be 0% after a pomodoro is completed");
+          expect(getBadgePixel(0, 0)).to.be.rgbPixel(POMODORO_COLOUR);
+          expect(getBadgePixel(18, 18)).to.be.rgbPixel(POMODORO_COLOUR);
+          expect(getBadgePixel(0, 18)).to.be.transparent();
+        });
 
-        it("should be 0% if a pomodoro failed half way");
+        it("should be 99% when a pomodoro is nearly completed", function () {
+          clickButton();
+          clockStub.tick(POMODORO_DURATION - 1);
+
+          expect(getBadgePixel(0, 0)).to.be.rgbPixel(POMODORO_COLOUR);
+          expect(getBadgePixel(18, 18)).to.be.rgbPixel(POMODORO_COLOUR);
+          expect(getBadgePixel(0, 18)).to.be.rgbPixel(POMODORO_COLOUR);
+          expect(getBadgePixel(0, 5)).to.be.rgbPixel(POMODORO_COLOUR);
+        });
+
+        it("shouldn't be shown after a pomodoro is completed", function () {
+          clickButton();
+          clockStub.tick(POMODORO_DURATION);
+
+          expect(getBadgePixel(0, 0)).to.be.rgbPixel(BADGE_BACKGROUND_COLOUR);
+        });
+
+        it("shouldn't be shown after a pomodoro is failed", function () {
+          givenBadDomain("twitter.com");
+
+          clickButton();
+          clockStub.tick(POMODORO_DURATION / 2);
+          activateTab("http://twitter.com");
+
+          expect(getBadgePixel(0, 0)).to.be.rgbPixel(BADGE_BACKGROUND_COLOUR);
+        });
       });
 
       describe("for breaks", function () {
-        it("should be 0% after starting a break");
+        it("should be 0% after starting a break", function () {
+          chrome.extension.onMessage.trigger({"action": "start-break"});
+          expect(getBadgePixel(0, 0)).to.be.transparent();
+        });
 
-        it("should be 50% half way through a break");
+        it("should be 50% half way through a break", function () {
+          chrome.extension.onMessage.trigger({"action": "start-break"});
+          clockStub.tick(BREAK_DURATION / 2);
 
-        it("should be 99% when a break is nearly completed");
+          expect(getBadgePixel(0, 0)).to.be.rgbPixel(BREAK_COLOUR);
+          expect(getBadgePixel(18, 18)).to.be.rgbPixel(BREAK_COLOUR);
+          expect(getBadgePixel(0, 18)).to.be.transparent();
+        });
+
+        it("should be 99% when a break is nearly completed", function () {
+          chrome.extension.onMessage.trigger({"action": "start-break"});
+          clockStub.tick(BREAK_DURATION - 1);
+
+          expect(getBadgePixel(0, 0)).to.be.rgbPixel(BREAK_COLOUR);
+          expect(getBadgePixel(18, 18)).to.be.rgbPixel(BREAK_COLOUR);
+          expect(getBadgePixel(0, 18)).to.be.rgbPixel(BREAK_COLOUR);
+          expect(getBadgePixel(0, 5)).to.be.rgbPixel(BREAK_COLOUR);
+        });
+
+        it("shouldn't be shown after a break is completed", function () {
+          chrome.extension.onMessage.trigger({"action": "start-break"});
+          clockStub.tick(BREAK_DURATION);
+
+          expect(getBadgePixel(0, 0)).to.be.rgbPixel(BADGE_BACKGROUND_COLOUR);
+        });
       });
     });
   });
