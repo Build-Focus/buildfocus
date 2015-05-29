@@ -15,6 +15,10 @@ define(["lodash"], function (_) {
     };
   }
 
+  function clearNotification() {
+    chrome.notifications.clear(notificationId, function () { });
+  }
+
   return function NotificationService() {
     this.showSuccessNotification = function () {
       var notification = buildNotification(
@@ -23,7 +27,7 @@ define(["lodash"], function (_) {
         [{"title": "Take a break"}, {"title": "Not now"}]
       );
 
-      chrome.notifications.clear(notificationId, function () { });
+      clearNotification();
       chrome.notifications.create(notificationId, notification, function () {});
     };
 
@@ -34,7 +38,7 @@ define(["lodash"], function (_) {
         [{"title": "Just one more break"}, {"title": "Not now"}]
       );
 
-      chrome.notifications.clear(notificationId, function () { });
+      clearNotification();
       chrome.notifications.create(notificationId, notification, function () {});
     };
 
@@ -46,6 +50,7 @@ define(["lodash"], function (_) {
 
     chrome.notifications.onClicked.addListener(function (clickedNotificationId) {
       if (clickedNotificationId === notificationId) {
+        clearNotification();
         _.forEach(onClickCallbacks, function (callback) { callback(); });
       }
     });
@@ -58,7 +63,8 @@ define(["lodash"], function (_) {
 
     chrome.notifications.onButtonClicked.addListener(function (clickedNotificationId, buttonIndex) {
       if (clickedNotificationId === notificationId) {
-        if (buttonIndex === 0) {
+        clearNotification();
+        if (buttonIndex === 0) { // Ignore button 1 ('not now')
           _.forEach(onBreakCallbacks, function (callback) { callback(); });
         }
       }
