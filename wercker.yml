@@ -7,6 +7,6 @@ build:
             code: npm install -g bower
         - script:
             name: Install packages from Bower
-            code: bower install
+            code: bower install --allow-root
         - grunt:
             tasks: test
