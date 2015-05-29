@@ -35,7 +35,6 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "postinstall": "bower install && cd test && bower install",
     "test": "grunt test"
   }
 }
