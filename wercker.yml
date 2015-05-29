@@ -1,6 +1,9 @@
 box: node
 build:
     steps:
+        - script:
+            name: Print env (for debugging)
+            code: env
         - npm-install
         - script:
             name: Install bower
@@ -10,3 +13,6 @@ build:
             code: bower install --allow-root
         - grunt:
             tasks: test
+
+    services:
+        - selenium/standalone-chrome
