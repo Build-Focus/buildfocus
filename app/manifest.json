@@ -1,6 +1,6 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.1",
+  "version": "0.0.2.1",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
   "icons": {
@@ -28,6 +28,8 @@
     "http://*/*",
     "https://*/*"
   ],
-  "web_accessible_resources": ["pomodoro-failed.html"],
+  "web_accessible_resources": [
+    "pomodoro-failed.html"
+  ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

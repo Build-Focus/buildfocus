@@ -102,21 +102,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Empties folders to start fresh
-    clean: {
-      chrome: {
-      },
-      dist: {
-        files: [{
-          dot: true,
-          src: [
-            '<%= config.dist %>/*',
-            '!<%= config.dist %>/.git*'
-          ]
-        }]
-      }
-    },
-
     // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       options: {
@@ -130,6 +115,7 @@ module.exports = function (grunt) {
         'test/spec/{,*/}*.js'
       ]
     },
+
     mocha: {
       options: {
         run: true,
@@ -145,110 +131,25 @@ module.exports = function (grunt) {
       system: {
         options: {
           urls: ['http://localhost:<%= connect.test.options.port %>/pomodoro-acceptance.html',
-                 'http://localhost:<%= connect.test.options.port %>/failure-page-acceptance.html']
+            'http://localhost:<%= connect.test.options.port %>/failure-page-acceptance.html']
         }
       }
     },
 
-    // Automatically inject Bower components into the HTML file
-    bowerInstall: {
-      app: {
-        src: [
-          '<%= config.app %>/*.html'
-        ]
-      }
-    },
-
-    // Reads HTML for usemin blocks to enable smart builds that automatically
-    // concat, minify and revision files. Creates configurations in memory so
-    // additional tasks can operate on them
-    useminPrepare: {
-      options: {
-        dest: '<%= config.dist %>'
+    // Empties folders to start fresh
+    clean: {
+      chrome: {
       },
-      html: [
-        '<%= config.app %>/popup.html',
-        '<%= config.app %>/options.html'
-      ]
-    },
-
-    // Performs rewrites based on rev and the useminPrepare configuration
-    usemin: {
-      options: {
-        assetsDirs: ['<%= config.dist %>', '<%= config.dist %>/images']
-      },
-      html: ['<%= config.dist %>/{,*/}*.html'],
-      css: ['<%= config.dist %>/styles/{,*/}*.css']
-    },
-
-    // The following *-min tasks produce minifies files in the dist folder
-    imagemin: {
       dist: {
         files: [{
-          expand: true,
-          cwd: '<%= config.app %>/images',
-          src: '{,*/}*.{gif,jpeg,jpg,png}',
-          dest: '<%= config.dist %>/images'
+          dot: true,
+          src: [
+            '<%= config.dist %>/*',
+            '!<%= config.dist %>/.git*'
+          ]
         }]
       }
     },
-
-    svgmin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= config.app %>/images',
-          src: '{,*/}*.svg',
-          dest: '<%= config.dist %>/images'
-        }]
-      }
-    },
-
-    htmlmin: {
-      dist: {
-        options: {
-          // removeCommentsFromCDATA: true,
-          // collapseWhitespace: true,
-          // collapseBooleanAttributes: true,
-          // removeAttributeQuotes: true,
-          // removeRedundantAttributes: true,
-          // useShortDoctype: true,
-          // removeEmptyAttributes: true,
-          // removeOptionalTags: true
-        },
-        files: [{
-          expand: true,
-          cwd: '<%= config.app %>',
-          src: '*.html',
-          dest: '<%= config.dist %>'
-        }]
-      }
-    },
-
-    // By default, your `index.html`'s <!-- Usemin block --> will take care of
-    // minification. These next options are pre-configured if you do not wish
-    // to use the Usemin blocks.
-    // cssmin: {
-    //   dist: {
-    //     files: {
-    //       '<%= config.dist %>/styles/main.css': [
-    //         '<%= config.app %>/styles/{,*/}*.css'
-    //       ]
-    //     }
-    //   }
-    // },
-    // uglify: {
-    //   dist: {
-    //     files: {
-    //       '<%= config.dist %>/scripts/scripts.js': [
-    //         '<%= config.dist %>/scripts/scripts.js'
-    //       ]
-    //     }
-    //   }
-    // },
-    // concat: {
-    //   dist: {}
-    // },
 
     // Copies remaining files to places other tasks can use
     copy: {
@@ -259,44 +160,17 @@ module.exports = function (grunt) {
           cwd: '<%= config.app %>',
           dest: '<%= config.dist %>',
           src: [
+            'manifest.json',
             '*.{ico,png,txt}',
-            'images/{,*/}*.{webp,gif}',
-            '{,*/}*.html',
-            'styles/{,*/}*.css',
-            'styles/fonts/{,*/}*.*',
-            '_locales/{,*/}*.json',
+            'images/**/*.{webp,gif,png}',
+            '*.html',
+            'styles/**/*.css',
+            'styles/fonts/**/*.*',
+            '_locales/**/*.json',
+            'scripts/**/*.js',
+            'bower_components/**/*.js'
           ]
         }]
-      }
-    },
-
-    // Run some tasks in parallel to speed up build process
-    concurrent: {
-      chrome: [
-      ],
-      dist: [
-        'imagemin',
-        'svgmin'
-      ],
-      test: [
-      ]
-    },
-
-    // Auto buildnumber, exclude debug files. smart builds that event pages
-    chromeManifest: {
-      dist: {
-        options: {
-          buildnumber: true,
-          indentSize: 2,
-          background: {
-            target: 'scripts/pages/background-page.js',
-            exclude: [
-              'scripts/chromereload.js'
-            ]
-          }
-        },
-        src: '<%= config.app %>',
-        dest: '<%= config.dist %>'
       }
     },
 
@@ -306,7 +180,7 @@ module.exports = function (grunt) {
         options: {
           archive: function() {
             var manifest = grunt.file.readJSON('app/manifest.json');
-            return 'package/focus-here-' + manifest.version + '.zip';
+            return 'package/rivet-' + manifest.version + '.zip';
           }
         },
         files: [{
@@ -322,7 +196,6 @@ module.exports = function (grunt) {
   grunt.registerTask('debug', function () {
     grunt.task.run([
       'test',
-      'concurrent:chrome',
       'connect:chrome',
       'watch'
     ]);
@@ -341,14 +214,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'chromeManifest:dist',
-    'useminPrepare',
-    'concurrent:dist',
-    'cssmin',
-    'concat',
-    'uglify',
     'copy',
-    'usemin',
     'compress'
   ]);
 
