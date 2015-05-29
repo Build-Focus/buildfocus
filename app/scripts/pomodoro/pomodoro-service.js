@@ -1,9 +1,6 @@
 'use strict';
 
-define(["knockout", "pomodoro/timer"], function (ko, Timer) {
-  var BREAK_DURATION = 1000 * 60 * 5;
-  var POMODORO_DURATION = 1000 * 60 * 20;
-
+define(["knockout", "pomodoro/timer", "config"], function (ko, Timer, config) {
   return function PomodoroService(badBehaviourMonitor) {
     var pomodoroTimer = new Timer();
     var breakTimer = new Timer();
@@ -14,7 +11,7 @@ define(["knockout", "pomodoro/timer"], function (ko, Timer) {
       }
 
       breakTimer.reset();
-      pomodoroTimer.start(POMODORO_DURATION, function () {
+      pomodoroTimer.start(config.pomodoroDuration, function () {
         badBehaviourMonitor.removeBadBehaviourCallback(badBehaviourRegistration);
 
         onSuccess();
@@ -30,7 +27,7 @@ define(["knockout", "pomodoro/timer"], function (ko, Timer) {
 
     this.takeABreak = function takeABreak(callback) {
       pomodoroTimer.reset();
-      breakTimer.start(BREAK_DURATION, callback);
+      breakTimer.start(config.breakDuration, callback);
     };
 
     this.isActive = pomodoroTimer.isRunning;
