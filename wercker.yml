@@ -1,9 +1,12 @@
 box: node
 build:
     steps:
+        - npm-install
         - script:
             name: Install bower
             code: npm install -g bower
-        - npm-install
+        - script:
+            name: Install packages from Bower
+            code: bower install
         - grunt:
             tasks: test
