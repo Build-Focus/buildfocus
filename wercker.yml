@@ -1,9 +1,9 @@
-box: wercker/nodejs
+box: nodejs
 build:
     steps:
         - script:
             name: Install bower
-            code: sudo npm install -g bower
+            code: npm install -g bower
         - npm-install
         - grunt:
             tasks: test
