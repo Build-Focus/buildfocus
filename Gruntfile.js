@@ -168,8 +168,8 @@ module.exports = function (grunt) {
       }
     },
 
-    "json-replace": {
-      remove_dev_scripts: {
+    'json-replace': {
+      removeDevScripts: {
         options: {
           "replace": {
             "background": {
