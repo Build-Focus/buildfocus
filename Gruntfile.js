@@ -33,10 +33,11 @@ module.exports = function (grunt) {
         tasks: ['bowerInstall']
       },
       js: {
-        files: ['<%= config.app %>/scripts/{,*/}*.js', 'test/**/*.js'],
+        files: ['<%= config.app %>/scripts/{,*/}*.js', 'test/**/*.js', '**/*.html'],
         tasks: ['run-tests'],
         options: {
-          livereload: '<%= connect.options.livereload %>'
+          livereload: '<%= connect.options.livereload %>',
+          atBegin: true
         }
       },
       gruntfile: {
@@ -195,7 +196,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('debug', function () {
     grunt.task.run([
-      'test',
+      'connect:test',
       'connect:chrome',
       'watch'
     ]);
