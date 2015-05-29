@@ -1,4 +1,4 @@
-box: nodejs
+box: node
 build:
     steps:
         - script:
