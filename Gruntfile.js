@@ -14,6 +14,10 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
+  var bowerDependencies = Object.keys(grunt.file.readJSON('bower.json').dependencies).map(function (dep) {
+    return "bower_components/" + dep + "/**/*.js";
+  });
+
   grunt.initConfig({
 
     // Project settings
@@ -161,9 +165,8 @@ module.exports = function (grunt) {
             'styles/**/*.css',
             'styles/fonts/**/*.*',
             '_locales/**/*.json',
-            'scripts/**/*.js',
-            'bower_components/**/*.js'
-          ]
+            'scripts/**/*.js'
+          ].concat(bowerDependencies)
         }]
       }
     },
