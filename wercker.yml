@@ -5,6 +5,5 @@ build:
             name: Install bower
             code: npm install -g bower
         - npm-install
-        - plasticine/step-bower-install
         - grunt:
             tasks: test
