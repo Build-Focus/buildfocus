@@ -25,6 +25,7 @@
 
     chrome.notifications.clear.reset();
     chrome.notifications.create.reset();
+    chrome.tabs.create.reset();
     chrome.tabs.executeScript.reset();
     activateTab("http://google.com");
     givenBadDomains([]);
@@ -105,6 +106,12 @@
 
       setupStorageStubs();
       resetSpies();
+    });
+
+    it("should open the pomodoro page if the button is clicked", function () {
+      chrome.browserAction.onClicked.trigger();
+
+      expect(chrome.tabs.create.calledOnce).to.equal(true);
     });
 
     it("should give a point for successful pomodoros", function () {
