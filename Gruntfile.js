@@ -31,7 +31,7 @@ module.exports = function (grunt) {
       },
       js: {
         files: ['<%= config.app %>/scripts/{,*/}*.js', 'test/**/*.js', '**/*.html'],
-        tasks: ['run-tests'],
+        tasks: ['run-quick-tests'],
         options: {
           livereload: '<%= connect.options.livereload %>',
           atBegin: true
@@ -114,6 +114,7 @@ module.exports = function (grunt) {
       ]
     },
 
+    // Browser-based tests
     mocha: {
       options: {
         run: true,
@@ -126,11 +127,22 @@ module.exports = function (grunt) {
           urls: ['http://localhost:<%= connect.test.options.port %>/unit-tests.html']
         }
       },
-      system: {
+      acceptance: {
         options: {
           urls: ['http://localhost:<%= connect.test.options.port %>/pomodoro-acceptance.html',
-            'http://localhost:<%= connect.test.options.port %>/failure-page-acceptance.html']
+                 'http://localhost:<%= connect.test.options.port %>/failure-page-acceptance.html']
         }
+      }
+    },
+
+    // Node tests (for Selenium)
+    mochaTest: {
+      system: {
+        options: {
+          reporter: 'spec',
+          timeout: 1000 * 60 * 30
+        },
+        src: 'test/system/system-tests.js'
       }
     },
 
@@ -219,13 +231,18 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', [
     'connect:test',
-    'run-tests'
+    'run-quick-tests',
+    'run-system-tests'
   ]);
 
-  grunt.registerTask('run-tests', [
+  grunt.registerTask('run-quick-tests', [
     'jshint',
     'mocha:unit',
-    'mocha:system'
+    'mocha:acceptance'
+  ]);
+
+  grunt.registerTask('run-system-tests', [,
+    'mochaTest:system'
   ]);
 
   grunt.registerTask('build', [
