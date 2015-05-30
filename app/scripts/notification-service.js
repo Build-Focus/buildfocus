@@ -2,6 +2,7 @@
 
 define(["lodash"], function (_) {
   var notificationId = "rivet-pomodoro-notification";
+  var notificationReissueTimeoutId = null;
 
   function buildNotification(title, message, buttons) {
     return {
@@ -16,11 +17,14 @@ define(["lodash"], function (_) {
   }
 
   function clearNotification() {
+    clearTimeout(notificationReissueTimeoutId);
     chrome.notifications.clear(notificationId, function () { });
   }
 
   return function NotificationService() {
-    this.showSuccessNotification = function () {
+    var self = this;
+
+    self.showSuccessNotification = function () {
       var notification = buildNotification(
         "Success! Go again?",
         "Click to start a new Pomodoro",
@@ -29,9 +33,10 @@ define(["lodash"], function (_) {
 
       clearNotification();
       chrome.notifications.create(notificationId, notification, function () {});
+      notificationReissueTimeoutId = setTimeout(self.showSuccessNotification, 7500);
     };
 
-    this.showBreakNotification = function () {
+    self.showBreakNotification = function () {
       var notification = buildNotification(
         "Break time's over",
         "Click to start a new Pomodoro",
@@ -40,11 +45,12 @@ define(["lodash"], function (_) {
 
       clearNotification();
       chrome.notifications.create(notificationId, notification, function () {});
+      notificationReissueTimeoutId = setTimeout(self.showBreakNotification, 7500);
     };
 
     var onClickCallbacks = [];
 
-    this.onClick = function (callback) {
+    self.onClick = function (callback) {
       onClickCallbacks.push(callback);
     };
 
@@ -57,7 +63,7 @@ define(["lodash"], function (_) {
 
     var onBreakCallbacks = [];
 
-    this.onBreak = function (callback) {
+    self.onBreak = function (callback) {
       onBreakCallbacks.push(callback);
     };
 

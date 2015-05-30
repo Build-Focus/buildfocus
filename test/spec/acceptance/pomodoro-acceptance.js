@@ -21,6 +21,8 @@
   }
 
   function resetSpies() {
+    clockStub.timers = {};
+
     chrome.notifications.clear.reset();
     chrome.notifications.create.reset();
     chrome.tabs.executeScript.reset();

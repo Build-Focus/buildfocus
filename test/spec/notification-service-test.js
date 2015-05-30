@@ -9,6 +9,8 @@
   var onClickCallback;
   var onBreakCallback;
 
+  var clockStub;
+
   function clickNotification(notificationName) {
     chrome.notifications.onClicked.trigger(notificationName || "rivet-pomodoro-notification");
   }
@@ -25,12 +27,20 @@
     before(function (done) {
       require(["notification-service"], function (loadedClass) {
         NotificationService = loadedClass;
+        clockStub = sinon.useFakeTimers();
         done();
       });
     });
 
+    after(function () {
+      clockStub.restore();
+    });
+
     beforeEach(function () {
+      clockStub.timers = {};
+
       chrome.notifications.clear.reset();
+      chrome.notifications.create.reset();
       chrome.notifications.onClicked.removeListeners();
       chrome.notifications.onButtonClicked.removeListeners();
 
@@ -93,6 +103,38 @@
 
         clickNotNow();
         expect(chrome.notifications.clear.calledTwice).to.equal(true);
+      });
+    });
+
+    describe("notification persistence", function () {
+      it("should cancel and reissue success notifications that aren't touched within 10 seconds", function () {
+        notifications.showSuccessNotification();
+
+        clockStub.tick(8000);
+        expect(chrome.notifications.create.callCount).to.equal(2);
+      });
+
+      it("should not reissue success notifications if they're clicked within 10 seconds", function () {
+        notifications.showSuccessNotification();
+
+        clickNotification();
+        clockStub.tick(8000);
+        expect(chrome.notifications.create.callCount).to.equal(1);
+      });
+
+      it("should cancel and reissue break notifications that aren't touched within 10 seconds", function () {
+        notifications.showBreakNotification();
+
+        clockStub.tick(8000);
+        expect(chrome.notifications.create.callCount).to.equal(2);
+      });
+
+      it("should not reissue break notifications if they're clicked within 10 seconds", function () {
+        notifications.showBreakNotification();
+
+        clickNotification();
+        clockStub.tick(8000);
+        expect(chrome.notifications.create.callCount).to.equal(1);
       });
     });
   });
