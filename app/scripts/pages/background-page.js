@@ -8,7 +8,9 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
     var notificationService = new NotificationService();
     var badBehaviourMonitor = new BadBehaviourMonitor(currentUrls, settings);
     var pomodoroService = new PomodoroService(badBehaviourMonitor);
-    var button = new FocusButton(pomodoroService.progress, pomodoroService.isActive);
+
+    var rivetPageUrl = chrome.extension.getURL("rivet.html");
+    new FocusButton(rivetPageUrl, pomodoroService.progress, pomodoroService.isActive);
 
     function onSuccess() {
       score.addSuccess();
@@ -33,7 +35,6 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
       });
     }
 
-    button.onClick(startPomodoro);
     notificationService.onClick(startPomodoro);
     notificationService.onBreak(takeABreak);
     chrome.extension.onMessage.addListener(function (message) {

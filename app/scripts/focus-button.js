@@ -1,18 +1,10 @@
 'use strict';
 
 define(["lodash", "knockout", "observable-image"], function (_, ko, observableImage) {
-  return function FocusButton(progressObservable, pomodoroActiveObservable) {
-    var onClickCallbacks = [];
-
+  return function FocusButton(targetUrl, progressObservable, pomodoroActiveObservable) {
     chrome.browserAction.onClicked.addListener(function () {
-      _.forEach(onClickCallbacks, function (callback) {
-        callback();
-      });
+      chrome.tabs.create({ url: targetUrl });
     });
-
-    this.onClick = function (callback) {
-      onClickCallbacks.push(callback);
-    };
 
     var rivetIcon = observableImage("/images/icon-19.png");
     var pomodoroIcon = observableImage("/images/icon-19-red.png");

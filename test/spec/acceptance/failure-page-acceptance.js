@@ -58,7 +58,7 @@
       var page = openPageWithScript("scripts/failure-content-script.js");
 
       setTimeout(function () {
-        expect(page.location.pathname).to.equal("/pomodoro-failed.html");
+        expect(page.location.pathname).to.equal("/rivet.html");
         done();
       }, 500);
     });

@@ -21,7 +21,7 @@ describe("System tests - ", function () {
   }
 
   function startPomodoro() {
-    return driver.get(extensionPage("pomodoro-failed.html")).then(function () {
+    return driver.get(extensionPage("rivet.html")).then(function () {
       return driver.findElement({css: ".startPomodoro"});
     }).then(function (startButton) {
       return startButton.click();
@@ -42,7 +42,7 @@ describe("System tests - ", function () {
   });
 
   it("Can open failure page", function () {
-    return driver.get(extensionPage("pomodoro-failed.html")).then(function () {
+    return driver.get(extensionPage("rivet.html")).then(function () {
       return driver.findElement({css: ".score"});
     }).then(function (score) {
       return score.getText();
@@ -72,7 +72,7 @@ describe("System tests - ", function () {
     }).then(function () {
       return driver.getCurrentUrl();
     }).then(function (loadedUrl) {
-      expect(loadedUrl).to.equal(extensionPage("pomodoro-failed.html"));
+      expect(loadedUrl).to.equal(extensionPage("rivet.html"));
     });
   });
 
@@ -82,7 +82,7 @@ describe("System tests - ", function () {
     var expectedPoints = null;
 
     return startPomodoro().then(function () {
-      return driver.get(extensionPage("pomodoro-failed.html"));
+      return driver.get(extensionPage("rivet.html"));
     }).then(function () {
       driver.findElement({css: '.score'})
     }).then(function (scoreElement) {

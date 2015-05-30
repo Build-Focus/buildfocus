@@ -30,8 +30,8 @@
     givenBadDomains([]);
   }
 
-  function clickButton() {
-    chrome.browserAction.onClicked.trigger();
+  function startPomodoro() {
+    chrome.extension.onMessage.trigger({"action": "start-pomodoro"});
   }
 
   function getPoints() {
@@ -110,7 +110,7 @@
     it("should give a point for successful pomodoros", function () {
       var initialPoints = getPoints();
 
-      clickButton();
+      startPomodoro();
       clockStub.tick(POMODORO_DURATION);
 
       var resultingPoints = getPoints();
@@ -122,20 +122,20 @@
       givenBadDomain("twitter.com");
       var initialPoints = getPoints();
 
-      clickButton();
+      startPomodoro();
       activateTab("http://twitter.com");
 
       var resultingPoints = getPoints();
       expect(resultingPoints).to.equal(initialPoints - 1);
     });
 
-    it("should do nothing if the pomodoro button is pressed while one's already running", function () {
+    it("should do nothing if a pomodoro's started while one's already running", function () {
       var initialPoints = getPoints();
 
-      clickButton();
-      clickButton();
+      startPomodoro();
+      startPomodoro();
       clockStub.tick(POMODORO_DURATION - 1);
-      clickButton();
+      startPomodoro();
       clockStub.tick(1);
 
       var resultingPoints = getPoints();
@@ -146,14 +146,14 @@
 
     describe("Notifications", function () {
       it("should appear when a pomodoro is completed successfully", function () {
-        clickButton();
+        startPomodoro();
         clockStub.tick(POMODORO_DURATION);
 
         expect(chrome.notifications.create.calledOnce).to.equal(true);
       });
 
       it("should start a new pomodoro when clicked", function () {
-        clickButton();
+        startPomodoro();
         clockStub.tick(POMODORO_DURATION);
 
         chrome.notifications.onClicked.trigger(NOTIFICATION_ID);
@@ -162,7 +162,7 @@
       });
 
       it("should let you take a break after your pomodoro", function () {
-        clickButton();
+        startPomodoro();
         clockStub.tick(POMODORO_DURATION);
 
         chrome.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 0);
@@ -173,7 +173,7 @@
       });
 
       it("should trigger again after your break is up", function () {
-        clickButton();
+        startPomodoro();
         clockStub.tick(POMODORO_DURATION);
 
         chrome.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 0);
@@ -184,18 +184,18 @@
       });
 
       it("should cancel your break if you start a new pomodoro", function () {
-        clickButton();
+        startPomodoro();
         clockStub.tick(POMODORO_DURATION);
 
         chrome.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 0);
-        clickButton();
+        startPomodoro();
         clockStub.tick(BREAK_DURATION);
 
         expect(chrome.notifications.create.callCount).to.equal(1);
       });
 
       it("should let you cancel pomodoro-ing after your pomodoro", function () {
-        clickButton();
+        startPomodoro();
         clockStub.tick(POMODORO_DURATION);
 
         chrome.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 1);
@@ -233,7 +233,7 @@
     it("should show a failure page when a pomodoro is failed", function () {
       givenBadDomain("twitter.com");
 
-      clickButton();
+      startPomodoro();
       activateTab("http://twitter.com");
 
       expect(chrome.tabs.executeScript.calledOnce).to.equal(true);
@@ -249,13 +249,13 @@
           });
 
           it("should be 0% after starting a pomodoro", function () {
-            clickButton();
+            startPomodoro();
 
             expect(getBadgePixel(0, 0)).to.be.transparent();
           });
 
           it("should be 50% half way through a pomodoro", function () {
-            clickButton();
+            startPomodoro();
             clockStub.tick(POMODORO_DURATION / 2);
 
             expect(getBadgePixel(0, 0)).to.be.rgbPixel(POMODORO_COLOUR);
@@ -264,7 +264,7 @@
           });
 
           it("should be 99% when a pomodoro is nearly completed", function () {
-            clickButton();
+            startPomodoro();
             clockStub.tick(POMODORO_DURATION - 1);
 
             expect(getBadgePixel(0, 0)).to.be.rgbPixel(POMODORO_COLOUR);
@@ -274,7 +274,7 @@
           });
 
           it("shouldn't be shown after a pomodoro is completed", function () {
-            clickButton();
+            startPomodoro();
             clockStub.tick(POMODORO_DURATION);
 
             expect(getBadgePixel(0, 0)).to.be.rgbPixel(BADGE_BACKGROUND_COLOUR);
@@ -283,7 +283,7 @@
           it("shouldn't be shown after a pomodoro is failed", function () {
             givenBadDomain("twitter.com");
 
-            clickButton();
+            startPomodoro();
             clockStub.tick(POMODORO_DURATION / 2);
             activateTab("http://twitter.com");
 
