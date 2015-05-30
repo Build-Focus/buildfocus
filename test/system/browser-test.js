@@ -12,4 +12,5 @@ driver.get("http://google.com").then(function () {
   return driver.getTitle();
 }).then(function (title) {
   console.log("Loaded: " + title);
+  driver.close();
 });
