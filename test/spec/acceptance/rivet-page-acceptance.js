@@ -4,7 +4,7 @@
   'use strict';
 
   var clockStub;
-  var FailurePageViewModel;
+  var RivetPageViewModel;
 
   function resetSpies() {
     chrome.storage.sync.get.yields({});
@@ -38,13 +38,13 @@
 
   var setTimeout = window.setTimeout;
 
-  describe('Acceptance: Failure page', function () {
+  describe('Acceptance: Rivet page', function () {
     beforeEach(function (done) {
       resetSpies();
 
-      require(["pages/failed-page"], function (loadedClass) {
+      require(["pages/rivet-page"], function (loadedClass) {
         clockStub = sinon.useFakeTimers();
-        FailurePageViewModel = loadedClass;
+        RivetPageViewModel = loadedClass;
         done();
       });
     });
@@ -66,13 +66,13 @@
     it("should show the user's points", function () {
       chrome.storage.onChanged.trigger({points: {newValue: 10}});
 
-      var viewModel = new FailurePageViewModel();
+      var viewModel = new RivetPageViewModel();
 
       expect(viewModel.points()).to.equal(10);
     });
 
     it("should send a start-pomodoro message when start is clicked", function () {
-      var viewModel = new FailurePageViewModel();
+      var viewModel = new RivetPageViewModel();
 
       viewModel.startPomodoro();
 
@@ -80,7 +80,7 @@
     });
 
     it("should send a start-break message when take a break is clicked", function () {
-      var viewModel = new FailurePageViewModel();
+      var viewModel = new RivetPageViewModel();
 
       viewModel.startBreak();
 
