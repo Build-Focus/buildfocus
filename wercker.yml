@@ -15,4 +15,4 @@ build:
             tasks: test
 
     services:
-        - selenium/standalone-chrome
+        - pimterry/selenium-chrome-ftp
