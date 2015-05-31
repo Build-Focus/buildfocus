@@ -31,5 +31,9 @@ define(["score"], function (score) {
       chrome.extension.sendMessage({"action": "start-break"});
       closeThisTab();
     };
+
+    this.notNow = function () {
+      closeThisTab();
+    }
   };
 });

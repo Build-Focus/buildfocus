@@ -1,29 +1,35 @@
 <html>
 <head>
   <title>RIVET</title>
-  <style>
-    body {
-      text-align: center;
-    }
-
-    .score {
-      font-size: 14em;
-    }
-
-    button {
-      font-size: 4em;
-    }
-  </style>
+  <link rel="stylesheet" href="styles/rivet.css" />
 </head>
 <body style="display: none" data-bind="visible: true">
-  <h2 data-bind="if: failed">FAILED</h2>
+  <main>
+    <h1 class="logo">RIVET</h1>
 
-  <h1 class="score">
-    <span data-bind="text: points"></span> Points
-  </h1>
+    <div class="score-and-buttons">
+      <h2 class="failed-tag" data-bind="if: failed">FAILED</h2>
 
-  <button class="startPomodoro" data-bind="click: startPomodoro">Start Pomodoro</button>&nbsp;
-  <button class="takeABreak" data-bind="click: startBreak">Take a break</button>
+      <h2 class="score">
+        <span data-bind="text: points"></span> Points
+      </h2>
+
+      <button class="startPomodoro pure-button"
+              data-bind="click: startPomodoro">
+        Focus
+      </button>
+
+      <button class="takeABreak pure-button"
+              data-bind="click: startBreak">
+        Take a break
+      </button>
+
+      <button class="notNow pure-button"
+              data-bind="click: notNow">
+        Not now
+      </button>
+    </div>
+  </main>
 
   <script src="bower_components/requirejs/require.js"></script>
   <script src="scripts/require-config.js"></script>

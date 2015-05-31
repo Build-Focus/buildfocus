@@ -1,0 +1,54 @@
+@import 'common.css';
+
+.score-and-buttons {
+  text-align: center;
+}
+
+.score {
+  font-size: 14em;
+}
+
+.failed-tag {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 8%;
+  transform: rotate(-30deg);
+  font-size: 14em;
+  color: rgba(255,0,0,0.5);
+}
+
+.pure-button {
+  font-size: 4em;
+  border-radius: 4px;
+  color: #fff;
+  margin-bottom: 20px;
+  padding: 20px 2px;
+
+  display: block;
+}
+
+.startPomodoro {
+  background-color: #0078e7;
+
+  width: 100%;
+  min-width: 40vw;
+
+  font-size: 9em;
+  line-height: 95%;
+  font-weight: bolder;
+}
+
+.takeABreak, .notNow {
+  float: left;
+  width: 49%;
+}
+
+.takeABreak {
+  background-color: #1cb841;
+  margin-right: 2%;
+}
+
+.notNow {
+  color: #222;
+}

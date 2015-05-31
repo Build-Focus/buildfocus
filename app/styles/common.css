@@ -1,0 +1,60 @@
+@import 'pure-min.css';
+
+@font-face {
+  font-family: 'tertreextra_bold';
+  src: url('/styles/fonts/tertre-xbol-webfont.eot');
+  src: url('/styles/fonts/tertre-xbol-webfont.eot?#iefix') format('embedded-opentype'),
+  url('/styles/fonts/tertre-xbol-webfont.woff2') format('woff2'),
+  url('/styles/fonts/tertre-xbol-webfont.woff') format('woff'),
+  url('/styles/fonts/tertre-xbol-webfont.ttf') format('truetype'),
+  url('/styles/fonts/tertre-xbol-webfont.svg#tertreextra_bold') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  height: inherit;
+  padding: 0;
+  margin: 0;
+
+  text-align: center;
+  background-color: #384145;
+
+  font-family: 'tertreextra_bold';
+}
+
+main {
+  margin: 0;
+  padding: 0 20px;
+  display: inline-block;
+  text-align: left;
+  position: relative;
+
+  background-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  color: #fff;
+
+  min-height: 100%;
+}
+
+.logo {
+  display: inline-block;
+
+  background-color: #FBB840;
+  background-image: linear-gradient(#FBCA5F, #FBB840);
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  color: #35281a;
+
+  margin: 0;
+  padding: 15px;
+  font-family: 'tertreextra_bold';
+  font-weight: normal;
+  font-size: 60pt;
+  line-height: 0.7;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
