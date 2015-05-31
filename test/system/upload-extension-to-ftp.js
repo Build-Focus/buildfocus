@@ -7,7 +7,7 @@ var ftpDeploy = new FtpDeploy();
 var config = {
   username: "anonymous",
   password: "ignored",
-  host: "localhost",
+  host: process.env.SELENIUM_CHROME_FTP_PORT_21_TCP_ADDR,
   port: process.env.SELENIUM_CHROME_FTP_PORT_21_TCP_PORT,
   localRoot: __dirname + "/../../dist",
   remoteRoot: "/uploaded",

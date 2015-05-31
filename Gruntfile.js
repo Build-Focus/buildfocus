@@ -143,7 +143,8 @@ module.exports = function (grunt) {
 
     env: {
       seleniumEnv: {
-        SELENIUM_URL: "http://localhost:<%= process.env.SELENIUM_CHROME_FTP_PORT_4444_TCP_PORT || 4444 %>/wd/hub"
+        SELENIUM_URL: "http://" + (process.env.SELENIUM_CHROME_FTP_PORT_4444_TCP_ADDR || 'localhost') +
+                      ':' + (process.env.SELENIUM_CHROME_FTP_PORT_4444_TCP_PORT || 4444) + '/wd/hub'
       }
     },
 
