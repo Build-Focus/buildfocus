@@ -113,7 +113,7 @@
       var monitor = new BadBehaviourMonitor(currentUrls, matchBadDomain("facebook.com"));
       var callback = monitor.onBadBehaviour(badBehaviourCallback);
 
-      monitor.removeBadBehaviourCallback(callback);
+      monitor.onBadBehaviour.remove(callback);
       currentUrls.push("facebook.com");
 
       expect(badBehaviourCallback.called).to.equal(false);
@@ -124,7 +124,7 @@
       var monitor = new BadBehaviourMonitor(currentUrls, noBadDomains());
 
       expect(function () {
-        monitor.removeBadBehaviourCallback(badBehaviourCallback);
+        monitor.onBadBehaviour.remove(badBehaviourCallback);
       }).to.throw(/wasn't registered/);
     });
   });

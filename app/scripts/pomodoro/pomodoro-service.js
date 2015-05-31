@@ -12,14 +12,14 @@ define(["knockout", "pomodoro/timer", "config"], function (ko, Timer, config) {
 
       breakTimer.reset();
       pomodoroTimer.start(config.pomodoroDuration, function () {
-        badBehaviourMonitor.removeBadBehaviourCallback(badBehaviourRegistration);
+        badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
 
         onSuccess();
       });
 
       var badBehaviourRegistration = badBehaviourMonitor.onBadBehaviour(function () {
         pomodoroTimer.reset();
-        badBehaviourMonitor.removeBadBehaviourCallback(badBehaviourRegistration);
+        badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
 
         onError();
       });

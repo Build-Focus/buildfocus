@@ -17,10 +17,9 @@
 
   describe('Pomodoro monitoring service', function () {
     beforeEach(function (done) {
-      badBehaviourMonitorFake = {
-        onBadBehaviour: sinon.spy(),
-        removeBadBehaviourCallback: sinon.spy()
-      };
+      badBehaviourMonitorFake = {};
+      badBehaviourMonitorFake.onBadBehaviour = sinon.spy();
+      badBehaviourMonitorFake.onBadBehaviour.remove = sinon.spy();
 
       require(["pomodoro/pomodoro-service"], function (PomodoroService) {
         clockStub = sinon.useFakeTimers();

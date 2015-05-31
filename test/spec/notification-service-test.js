@@ -19,7 +19,7 @@
     chrome.notifications.onButtonClicked.trigger(notificationName || "rivet-pomodoro-notification", 0);
   }
 
-  function clickNotNow(notificationName) {
+  function clickMore(notificationName) {
     chrome.notifications.onButtonClicked.trigger(notificationName || "rivet-pomodoro-notification", 1);
   }
 
@@ -101,7 +101,7 @@
       it("should cancel a notification if the not now button is clicked", function () {
         notifications.showSuccessNotification();
 
-        clickNotNow();
+        clickMore();
         expect(chrome.notifications.clear.calledTwice).to.equal(true);
       });
     });

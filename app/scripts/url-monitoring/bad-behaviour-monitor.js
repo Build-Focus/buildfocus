@@ -1,7 +1,9 @@
 'use strict';
 
-define(["knockout", "lodash"], function (ko, _) {
+define(["knockout", "lodash", "subscribable-event"], function (ko, _, SubscribableEvent) {
   return function BadBehaviourMonitor(currentUrls, settings) {
+    var self = this;
+
     var currentlyOnBadDomain = ko.computed(function () {
       return _.any(currentUrls(), function (url) {
         return _.any(settings.badDomains(), function (domain) {
@@ -10,29 +12,11 @@ define(["knockout", "lodash"], function (ko, _) {
       });
     });
 
-    var badBehaviourCallbacks = [];
-
-    this.onBadBehaviour = function(callback) {
-      badBehaviourCallbacks.push(callback);
-      return callback; // for later deregistration
-    };
-
-    this.removeBadBehaviourCallback = function(callback) {
-      var callbackIndex = badBehaviourCallbacks.indexOf(callback);
-      if (callbackIndex > -1) {
-        badBehaviourCallbacks = _.reject(badBehaviourCallbacks, function (value, index) {
-          return index === callbackIndex;
-        });
-      } else {
-        throw new Error("Attempted to remove bad behaviour callback that wasn't registered");
-      }
-    };
+    self.onBadBehaviour = new SubscribableEvent();
 
     currentlyOnBadDomain.subscribe(function () {
       if (currentlyOnBadDomain()) {
-        _.forEach(badBehaviourCallbacks, function (callback) {
-          callback();
-        });
+        self.onBadBehaviour.trigger();
       }
     });
   };

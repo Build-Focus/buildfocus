@@ -1,6 +1,6 @@
 'use strict';
 
-define(["lodash"], function (_) {
+define(["lodash", "subscribable-event"], function (_, SubscribableEvent) {
   var notificationId = "rivet-pomodoro-notification";
   var notificationReissueTimeoutId = null;
 
@@ -16,11 +16,6 @@ define(["lodash"], function (_) {
     };
   }
 
-  function clearNotification() {
-    clearTimeout(notificationReissueTimeoutId);
-    chrome.notifications.clear(notificationId, function () { });
-  }
-
   return function NotificationService() {
     var self = this;
 
@@ -28,10 +23,10 @@ define(["lodash"], function (_) {
       var notification = buildNotification(
         "Success! Go again?",
         "Click to start a new Pomodoro",
-        [{"title": "Take a break"}, {"title": "Not now"}]
+        [{"title": "Take a break"}, {"title": "More..."}]
       );
 
-      clearNotification();
+      self.clearNotifications();
       chrome.notifications.create(notificationId, notification, function () {});
       notificationReissueTimeoutId = setTimeout(self.showSuccessNotification, 7500);
     };
@@ -40,38 +35,38 @@ define(["lodash"], function (_) {
       var notification = buildNotification(
         "Break time's over",
         "Click to start a new Pomodoro",
-        [{"title": "Just one more break"}, {"title": "Not now"}]
+        [{"title": "Just one more break"}, {"title": "More..."}]
       );
 
-      clearNotification();
+      self.clearNotifications();
       chrome.notifications.create(notificationId, notification, function () {});
       notificationReissueTimeoutId = setTimeout(self.showBreakNotification, 7500);
     };
 
-    var onClickCallbacks = [];
-
-    self.onClick = function (callback) {
-      onClickCallbacks.push(callback);
+    self.clearNotifications = function () {
+      clearTimeout(notificationReissueTimeoutId);
+      chrome.notifications.clear(notificationId, function () { });
     };
+
+    self.onClick = new SubscribableEvent();
 
     chrome.notifications.onClicked.addListener(function (clickedNotificationId) {
       if (clickedNotificationId === notificationId) {
-        clearNotification();
-        _.forEach(onClickCallbacks, function (callback) { callback(); });
+        self.clearNotifications();
+        self.onClick.trigger();
       }
     });
 
-    var onBreakCallbacks = [];
-
-    self.onBreak = function (callback) {
-      onBreakCallbacks.push(callback);
-    };
+    self.onBreak = new SubscribableEvent();
+    self.onMore = new SubscribableEvent();
 
     chrome.notifications.onButtonClicked.addListener(function (clickedNotificationId, buttonIndex) {
       if (clickedNotificationId === notificationId) {
-        clearNotification();
-        if (buttonIndex === 0) { // Ignore button 1 ('not now')
-          _.forEach(onBreakCallbacks, function (callback) { callback(); });
+        self.clearNotifications();
+        if (buttonIndex === 0) {
+          self.onBreak.trigger();
+        } else if (buttonIndex === 1) {
+          self.onMore.trigger();
         }
       }
     });
