@@ -9,9 +9,13 @@
   function resetSpies() {
     chrome.storage.sync.get.yields({});
     chrome.storage.local.get.yields({});
+    chrome.tabs.getCurrent.yields({});
+
     chrome.notifications.clear.reset();
     chrome.notifications.create.reset();
     chrome.extension.sendMessage.reset();
+    chrome.tabs.remove.reset();
+    chrome.tabs.query.reset();
   }
 
   function openPageWithScript(scriptUrl) {
@@ -71,20 +75,48 @@
       expect(viewModel.points()).to.equal(10);
     });
 
-    it("should send a start-pomodoro message when start is clicked", function () {
-      var viewModel = new RivetPageViewModel();
+    function shouldCloseTabsIffOtherTabsArePresent(triggerMethodName) {
+      it("should close the tab, if other tabs are present", function () {
+        chrome.tabs.query.yields([{ id: "this-tab" }, { id: "other-tab" }]);
+        var viewModel = new RivetPageViewModel();
 
-      viewModel.startPomodoro();
+        viewModel[triggerMethodName]();
 
-      expect(chrome.extension.sendMessage.calledOnce).to.equal(true);
+        expect(chrome.tabs.remove.called).to.equal(true);
+      });
+
+      it("should not close the tab if it's the only tab", function () {
+        chrome.tabs.query.yields([{ id: "this-tab" }]);
+        var viewModel = new RivetPageViewModel();
+
+        viewModel[triggerMethodName]();
+
+        expect(chrome.tabs.remove.called).to.equal(false);
+      });
+    }
+
+    describe("The start button", function () {
+      it("should send a start-pomodoro message when clicked", function () {
+        var viewModel = new RivetPageViewModel();
+
+        viewModel.startPomodoro();
+
+        expect(chrome.extension.sendMessage.calledOnce).to.equal(true);
+      });
+
+      shouldCloseTabsIffOtherTabsArePresent('startPomodoro');
     });
 
-    it("should send a start-break message when take a break is clicked", function () {
-      var viewModel = new RivetPageViewModel();
+    describe("The break button", function () {
+      it("should send a start-break message when clicked", function () {
+        var viewModel = new RivetPageViewModel();
 
-      viewModel.startBreak();
+        viewModel.startBreak();
 
-      expect(chrome.extension.sendMessage.calledOnce).to.equal(true);
+        expect(chrome.extension.sendMessage.calledOnce).to.equal(true);
+      });
+
+      shouldCloseTabsIffOtherTabsArePresent('startBreak');
     });
   });
 })();

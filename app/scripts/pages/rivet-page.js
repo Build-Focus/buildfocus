@@ -8,7 +8,7 @@ define(["score"], function (score) {
 
   function closeThisTab() {
     chrome.tabs.query({currentWindow: true}, function (tabs) {
-      // Don't close this tab if it's the only tab in the window. // TODO: ADD TESTS FOR THIS
+      // Only close this tab if there are other tabs in the window.
       if (tabs.length > 1) {
         chrome.tabs.getCurrent(function (tab) {
           chrome.tabs.remove(tab.id);
