@@ -135,6 +135,18 @@ module.exports = function (grunt) {
       }
     },
 
+    execute: {
+      uploadToSeleniumFtp: {
+        src: 'test/system/upload-extension-to-ftp.js'
+      }
+    },
+
+    env: {
+      seleniumEnv: {
+        SELENIUM_URL: "http://localhost:<%= process.env.SELENIUM_CHROME_FTP_PORT_4444_TCP_PORT || 4444 %>/wd/hub"
+      }
+    },
+
     // Node tests (for Selenium)
     mochaTest: {
       system: {
@@ -231,8 +243,14 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', [
     'connect:test',
-    'run-quick-tests',
-    // 'run-system-tests' TODO: Renable this once the system tests are workable in CI
+    'run-quick-tests'
+  ]);
+
+  grunt.registerTask('ci-test', [
+    'test',
+    'build',
+    'execute:uploadToSeleniumFtp',
+    'run-system-tests'
   ]);
 
   grunt.registerTask('run-quick-tests', [
@@ -241,7 +259,8 @@ module.exports = function (grunt) {
     'mocha:acceptance'
   ]);
 
-  grunt.registerTask('run-system-tests', [,
+  grunt.registerTask('run-system-tests', [
+    'env:seleniumEnv',
     'mochaTest:system'
   ]);
 

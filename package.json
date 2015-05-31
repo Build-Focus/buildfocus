@@ -21,6 +21,8 @@
     "grunt-contrib-jshint": "~0.9.2",
     "grunt-contrib-uglify": "~0.4.0",
     "grunt-contrib-watch": "~0.6.1",
+    "grunt-env": "^0.4.4",
+    "grunt-execute": "^0.2.2",
     "grunt-json-replace": "^0.1.2",
     "grunt-mocha": "^0.4.12",
     "grunt-mocha-test": "^0.12.7",

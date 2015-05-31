@@ -42,7 +42,7 @@ describe("System tests - ", function () {
 
     driver = new sw.Builder()
       .withCapabilities(capabilities)
-      .usingServer('http://localhost:32806/wd/hub')
+      .usingServer(process.env.SELENIUM_URL)
       .build();
 
     // Need to do an initial load to make the driver live and working in the tests, for some reason (??)

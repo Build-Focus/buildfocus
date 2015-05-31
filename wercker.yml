@@ -12,7 +12,7 @@ build:
             name: Install packages from Bower
             code: bower install --allow-root
         - grunt:
-            tasks: test
+            tasks: ci-test
 
     services:
         - pimterry/selenium-chrome-ftp
