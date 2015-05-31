@@ -5,6 +5,7 @@
   "dependencies": {},
   "devDependencies": {
     "chai": "^2.3.0",
+    "ftp-deploy": "^1.0.0",
     "grunt": "~0.4.1",
     "grunt-bower-install": "~1.0.0",
     "grunt-chrome-manifest": "~0.2.0",

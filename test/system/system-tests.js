@@ -20,28 +20,36 @@ describe("System tests - ", function () {
     });
   }
 
+  function openNewTab() {
+    return driver.findElement({css: "body"}).then(function (element) {
+      return element.sendKeys(sw.Key.CONTROL + "t");
+    });
+  }
+
   function startPomodoro() {
-    return driver.get(extensionPage("rivet.html")).then(function () {
+    return openNewTab().then(function () {
+      return driver.get(extensionPage("rivet.html"))
+    }).then(function () {
       return driver.findElement({css: ".startPomodoro"});
     }).then(function (startButton) {
       return startButton.click();
-    })
+    });
   }
 
   before(function () {
     var capabilities = sw.Capabilities.chrome();
-    capabilities.set('chromeOptions', { 'args': ['--load-extension=/opt/extension'] });
+    capabilities.set('chromeOptions', { 'args': ['--load-extension=/var/ftp/uploaded'] });
 
     driver = new sw.Builder()
       .withCapabilities(capabilities)
-      .usingServer('http://localhost:32776/wd/hub')
+      .usingServer('http://localhost:32806/wd/hub')
       .build();
 
     // Need to do an initial load to make the driver live and working in the tests, for some reason (??)
     return driver.get(extensionPage("options.html"));
   });
 
-  it("Can open failure page", function () {
+  it("Can open Rivet page", function () {
     return driver.get(extensionPage("rivet.html")).then(function () {
       return driver.findElement({css: ".score"});
     }).then(function (score) {
@@ -72,7 +80,7 @@ describe("System tests - ", function () {
     }).then(function () {
       return driver.getCurrentUrl();
     }).then(function (loadedUrl) {
-      expect(loadedUrl).to.equal(extensionPage("rivet.html"));
+      expect(loadedUrl).to.equal(extensionPage("rivet.html?failed=true"));
     });
   });
 
