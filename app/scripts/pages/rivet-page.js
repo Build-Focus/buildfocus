@@ -7,8 +7,13 @@ define(["score"], function (score) {
   }
 
   function closeThisTab() {
-    chrome.tabs.getCurrent(function (tab) {
-      chrome.tabs.remove(tab.id);
+    chrome.tabs.query({currentWindow: true}, function (tabs) {
+      // Don't close this tab if it's the only tab in the window. // TODO: ADD TESTS FOR THIS
+      if (tabs.length > 1) {
+        chrome.tabs.getCurrent(function (tab) {
+          chrome.tabs.remove(tab.id);
+        });
+      }
     });
   }
 
