@@ -34,6 +34,6 @@ define(["score"], function (score) {
 
     this.notNow = function () {
       closeThisTab();
-    }
+    };
   };
 });
