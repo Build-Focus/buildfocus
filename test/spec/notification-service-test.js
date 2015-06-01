@@ -23,6 +23,10 @@
     chrome.notifications.onButtonClicked.trigger(notificationName || "rivet-pomodoro-notification", 1);
   }
 
+  function closeNotification(notificationName) {
+    chrome.notifications.onClosed.trigger(notificationName || "rivet-pomodoro-notification");
+  }
+
   describe('Notification service', function () {
     before(function (done) {
       require(["notification-service"], function (loadedClass) {
@@ -107,34 +111,37 @@
     });
 
     describe("notification persistence", function () {
-      it("should cancel and reissue success notifications that aren't touched within 10 seconds", function () {
+      function shouldReissueNotificationOnlyIfUntouched(name, showNotification) {
+        it("should cancel and reissue " + name + " notifications that aren't touched within 8 seconds", function () {
+          showNotification();
+
+          clockStub.tick(8000);
+          expect(chrome.notifications.create.callCount).to.equal(2);
+        });
+
+        it("should not reissue " + name + " notifications if they're clicked within 8 seconds", function () {
+          showNotification();
+
+          clickNotification();
+          clockStub.tick(8000);
+          expect(chrome.notifications.create.callCount).to.equal(1);
+        });
+
+        it("should not reissue " + name + " notifications if they're closed within 8 seconds", function () {
+          showNotification();
+
+          closeNotification();
+          clockStub.tick(8000);
+          expect(chrome.notifications.create.callCount).to.equal(1);
+        });
+      }
+
+      shouldReissueNotificationOnlyIfUntouched("success", function () {
         notifications.showSuccessNotification();
-
-        clockStub.tick(8000);
-        expect(chrome.notifications.create.callCount).to.equal(2);
       });
 
-      it("should not reissue success notifications if they're clicked within 10 seconds", function () {
-        notifications.showSuccessNotification();
-
-        clickNotification();
-        clockStub.tick(8000);
-        expect(chrome.notifications.create.callCount).to.equal(1);
-      });
-
-      it("should cancel and reissue break notifications that aren't touched within 10 seconds", function () {
+      shouldReissueNotificationOnlyIfUntouched("break", function () {
         notifications.showBreakNotification();
-
-        clockStub.tick(8000);
-        expect(chrome.notifications.create.callCount).to.equal(2);
-      });
-
-      it("should not reissue break notifications if they're clicked within 10 seconds", function () {
-        notifications.showBreakNotification();
-
-        clickNotification();
-        clockStub.tick(8000);
-        expect(chrome.notifications.create.callCount).to.equal(1);
       });
     });
   });

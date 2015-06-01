@@ -70,5 +70,11 @@ define(["lodash", "subscribable-event"], function (_, SubscribableEvent) {
         }
       }
     });
+
+    chrome.notifications.onClosed.addListener(function (closedNotificationid) {
+      if (closedNotificationid === notificationId) {
+        self.clearNotifications();
+      }
+    });
   };
 });
