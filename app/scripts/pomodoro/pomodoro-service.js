@@ -1,45 +1,77 @@
 'use strict';
 
-define(["knockout", "pomodoro/timer", "config"], function (ko, Timer, config) {
-  return function PomodoroService(badBehaviourMonitor) {
-    var pomodoroTimer = new Timer();
-    var breakTimer = new Timer();
+define(["knockout", "synchronized-observable", "subscribable-event", "pomodoro/timer", "config"],
+  function (ko, SynchronizedObservable, SubscribableEvent, Timer, config) {
+    return function PomodoroService(badBehaviourMonitor) {
+      var self = this;
 
-    this.start = function startPomodoro(onSuccess, onError) {
-      if (this.isActive()) {
-        throw new Error("Pomodoro started while one is already active!");
-      }
+      var pomodoroTimer = new Timer();
+      var breakTimer = new Timer();
 
-      breakTimer.reset();
-      pomodoroTimer.start(config.pomodoroDuration, function () {
-        badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
+      self.start = function startPomodoro() {
+        if (self.isActive()) {
+          return;
+        }
 
-        onSuccess();
+        breakTimer.reset();
+        pomodoroTimer.start(config.pomodoroDuration, function () {
+          badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
+
+          self.onPomodoroSuccess.trigger();
+        });
+
+        var badBehaviourRegistration = badBehaviourMonitor.onBadBehaviour(function () {
+          pomodoroTimer.reset();
+          badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
+
+          self.onPomodoroFailure.trigger();
+        });
+
+        self.onPomodoroStart.trigger();
+      };
+
+      self.takeABreak = function takeABreak() {
+        if (self.isActive()) {
+          return;
+        }
+
+        breakTimer.start(config.breakDuration, self.onBreakEnd.trigger);
+        self.onBreakStart.trigger();
+      };
+
+      chrome.extension.onMessage.addListener(function (message) {
+        if (message.action === "start-pomodoro") {
+          self.start();
+        } else if (message.action === "start-break") {
+          self.takeABreak();
+        }
       });
 
-      var badBehaviourRegistration = badBehaviourMonitor.onBadBehaviour(function () {
-        pomodoroTimer.reset();
-        badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
+      self.isActive = new SynchronizedObservable("pomodoro-is-active", pomodoroTimer.isRunning());
+      pomodoroTimer.isRunning.subscribe(self.isActive);
 
-        onError();
+      self.isBreakActive = new SynchronizedObservable("break-is-active", breakTimer.isRunning());
+      breakTimer.isRunning.subscribe(self.isBreakActive);
+
+      var rawProgress = ko.computed(function () {
+        if (pomodoroTimer.isRunning()) {
+          return pomodoroTimer.progress();
+        } else if (breakTimer.isRunning()) {
+          return breakTimer.progress();
+        } else {
+          return null;
+        }
       });
+
+      self.progress = new SynchronizedObservable("pomodoro-service-progress", rawProgress());
+      rawProgress.subscribe(self.progress);
+
+      self.onPomodoroStart = new SubscribableEvent();
+      self.onPomodoroSuccess = new SubscribableEvent();
+      self.onPomodoroFailure = new SubscribableEvent();
+
+      self.onBreakStart = new SubscribableEvent();
+      self.onBreakEnd = new SubscribableEvent();
     };
-
-    this.takeABreak = function takeABreak(callback) {
-      pomodoroTimer.reset();
-      breakTimer.start(config.breakDuration, callback);
-    };
-
-    this.isActive = pomodoroTimer.isRunning;
-
-    this.progress = ko.computed(function () {
-      if (pomodoroTimer.isRunning()) {
-        return pomodoroTimer.progress();
-      } else if (breakTimer.isRunning()) {
-        return breakTimer.progress();
-      } else {
-        return null;
-      }
-    });
-  };
-});
+  }
+);

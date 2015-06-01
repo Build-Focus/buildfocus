@@ -13,16 +13,24 @@ define(["knockout", "lodash"], function (ko, _) {
       });
     });
 
+    var currentlyUpdatingFromSync = false;
+
     observable.subscribe(function (newValue) {
-      var changes = {};
-      changes[valueName] = newValue;
-      chrome.storage[storageArea].set(changes);
+      // We don't want to save things back for chrome if we just got them from chrome, or
+      // we get some painful races and potential ABA cycles
+      if (!currentlyUpdatingFromSync) {
+        var changes = {};
+        changes[valueName] = newValue;
+        chrome.storage[storageArea].set(changes);
+      }
     });
 
     chrome.storage.onChanged.addListener(function (changes) {
       _.forEach(changes, function (change, key) {
         if (key === valueName) {
+          currentlyUpdatingFromSync = true;
           observable(change.newValue);
+          currentlyUpdatingFromSync = false;
         }
       });
     });

@@ -75,6 +75,14 @@
       expect(viewModel.points()).to.equal(10);
     });
 
+    it("should let you start anything initially", function () {
+      var viewModel = new RivetPageViewModel();
+
+      expect(viewModel.canStartPomodoro()).to.equal(true);
+      expect(viewModel.canStartBreak()).to.equal(true);
+      expect(viewModel.canSayNotNow()).to.equal(true);
+    });
+
     function shouldCloseTabsIffOtherTabsArePresent(triggerMethodName) {
       it("should close the tab, if other tabs are present", function () {
         chrome.tabs.query.yields([{ id: "this-tab" }, { id: "other-tab" }]);
@@ -95,28 +103,49 @@
       });
     }
 
-    describe("The start button", function () {
-      it("should send a start-pomodoro message when clicked", function () {
+    function shouldSendMessage(triggerMethodName, messageAction) {
+      it("should send a " + messageAction + " message when clicked", function () {
         var viewModel = new RivetPageViewModel();
 
-        viewModel.startPomodoro();
+        viewModel[triggerMethodName]();
 
         expect(chrome.extension.sendMessage.calledOnce).to.equal(true);
+        expect(chrome.extension.sendMessage.calledWith({action: messageAction})).to.equal(true);
       });
+    }
 
+    describe("When start pomodoro is pressed", function () {
+      shouldSendMessage('startPomodoro', 'start-pomodoro');
       shouldCloseTabsIffOtherTabsArePresent('startPomodoro');
     });
 
-    describe("The break button", function () {
-      it("should send a start-break message when clicked", function () {
+    describe("When take a break is pressed", function () {
+      shouldSendMessage('startBreak', 'start-break');
+      shouldCloseTabsIffOtherTabsArePresent('startBreak');
+    });
+
+    describe("When a pomodoro is active", function () {
+      it("should disable all buttons", function () {
         var viewModel = new RivetPageViewModel();
 
-        viewModel.startBreak();
+        chrome.storage.onChanged.trigger({"pomodoro-is-active": {"newValue": true}});
 
-        expect(chrome.extension.sendMessage.calledOnce).to.equal(true);
+        expect(viewModel.canStartPomodoro()).to.equal(false);
+        expect(viewModel.canStartBreak()).to.equal(false);
+        expect(viewModel.canSayNotNow()).to.equal(false);
       });
+    });
 
-      shouldCloseTabsIffOtherTabsArePresent('startBreak');
+    describe("When a break is active", function () {
+      it("should disable the break and not now buttons", function () {
+        var viewModel = new RivetPageViewModel();
+
+        chrome.storage.onChanged.trigger({"break-is-active": {"newValue": true}});
+
+        expect(viewModel.canStartPomodoro()).to.equal(true);
+        expect(viewModel.canStartBreak()).to.equal(false);
+        expect(viewModel.canSayNotNow()).to.equal(false);
+      });
     });
   });
 })();

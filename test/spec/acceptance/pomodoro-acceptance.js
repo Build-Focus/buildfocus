@@ -136,7 +136,7 @@
       expect(resultingPoints).to.equal(initialPoints - 1);
     });
 
-    it("should do nothing if a pomodoro's started while one's already running", function () {
+    it("should do nothing if a pomodoro is started while one's already running", function () {
       var initialPoints = getPoints();
 
       startPomodoro();

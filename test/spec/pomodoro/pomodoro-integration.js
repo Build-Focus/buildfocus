@@ -58,7 +58,9 @@
       it("should call the success callback if pomodoro is completed ok", function () {
         var successCallback = sinon.stub(), errorCallback = sinon.stub();
 
-        pomodoroService.start(successCallback, errorCallback);
+        pomodoroService.onPomodoroSuccess(successCallback);
+        pomodoroService.onPomodoroFailure(errorCallback);
+        pomodoroService.start();
         clockStub.tick(POMODORO_DURATION);
 
         expect(successCallback.calledOnce).to.equal(true);
@@ -68,7 +70,9 @@
       it("should not call the success callback until the end of the pomodoro", function () {
         var successCallback = sinon.stub(), errorCallback = sinon.stub();
 
-        pomodoroService.start(successCallback, errorCallback);
+        pomodoroService.onPomodoroSuccess(successCallback);
+        pomodoroService.onPomodoroFailure(errorCallback);
+        pomodoroService.start();
         clockStub.tick(POMODORO_DURATION - 1);
 
         expect(successCallback.called).to.equal(false);
@@ -77,7 +81,9 @@
       it("should call the error callback if a bad URL is opened", function () {
         var successCallback = sinon.stub(), errorCallback = sinon.stub();
 
-        pomodoroService.start(successCallback, errorCallback);
+        pomodoroService.onPomodoroSuccess(successCallback);
+        pomodoroService.onPomodoroFailure(errorCallback);
+        pomodoroService.start();
         announceBadBehaviour();
 
         expect(successCallback.called).to.equal(false);
@@ -87,7 +93,9 @@
       it("should never call success after an error occurred, even after full duration", function () {
         var successCallback = sinon.stub(), errorCallback = sinon.stub();
 
-        pomodoroService.start(successCallback, errorCallback);
+        pomodoroService.onPomodoroSuccess(successCallback);
+        pomodoroService.onPomodoroFailure(errorCallback);
+        pomodoroService.start();
         announceBadBehaviour();
         clockStub.tick(POMODORO_DURATION);
 
@@ -95,19 +103,29 @@
         expect(errorCallback.calledOnce).to.equal(true);
       });
 
-      it("should throw an exception if a pomodoro is started while one is in progress", function () {
-        pomodoroService.start(sinon.stub(), sinon.stub());
+      it("should ignore requests to start a pomodoro while one is in progress", function () {
+        var successCallback = sinon.stub();
+        pomodoroService.onPomodoroSuccess(successCallback);
 
-        expect(function () {
-          pomodoroService.start(sinon.stub(), sinon.stub());
-        }).to.throw();
+        pomodoroService.start();
+        clockStub.tick(POMODORO_DURATION - 1);
+        pomodoroService.start();
+
+        clockStub.tick(1);
+        expect(successCallback.calledOnce).to.equal(true);
+
+        clockStub.tick(POMODORO_DURATION);
+        expect(successCallback.calledOnce).to.equal(true);
       });
 
       it("should cancel outstanding breaks if a new pomodoro is started", function () {
         var breakCallback = sinon.stub(), successCallback = sinon.stub();
 
-        pomodoroService.takeABreak(breakCallback);
-        pomodoroService.start(successCallback, sinon.stub());
+        pomodoroService.onBreakEnd(breakCallback);
+        pomodoroService.onPomodoroSuccess(successCallback);
+
+        pomodoroService.takeABreak();
+        pomodoroService.start();
         clockStub.tick(POMODORO_DURATION);
 
         expect(breakCallback.called).to.equal(false);
@@ -119,10 +137,27 @@
       it("should take a break, for 5 minutes", function () {
         var breakCallback = sinon.stub();
 
-        pomodoroService.takeABreak(breakCallback);
+        pomodoroService.onBreakEnd(breakCallback);
+        pomodoroService.takeABreak();
         clockStub.tick(BREAK_DURATION);
 
         expect(breakCallback.calledOnce).to.equal(true);
+      });
+
+      it("should ignore requests to take a break while a pomodoro is in progress", function () {
+        var successCallback = sinon.stub(), breakCallback = sinon.stub();
+        pomodoroService.onPomodoroSuccess(successCallback);
+        pomodoroService.onBreakEnd(breakCallback);
+
+        pomodoroService.start();
+        clockStub.tick(POMODORO_DURATION - 1);
+        pomodoroService.takeABreak();
+
+        clockStub.tick(1);
+        expect(successCallback.calledOnce).to.equal(true);
+
+        clockStub.tick(BREAK_DURATION);
+        expect(breakCallback.called).to.equal(false);
       });
     });
 

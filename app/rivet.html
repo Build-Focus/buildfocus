@@ -22,17 +22,17 @@
       </h2>
 
       <button class="startPomodoro pure-button"
-              data-bind="click: startPomodoro">
+              data-bind="click: startPomodoro, enable: canStartPomodoro">
         Focus
       </button>
 
       <button class="takeABreak pure-button"
-              data-bind="click: startBreak">
+              data-bind="click: startBreak, enable: canStartBreak">
         Take a break
       </button>
 
       <button class="notNow pure-button"
-              data-bind="click: notNow">
+              data-bind="click: notNow, enable: canSayNotNow">
         Not now
       </button>
     </div>
