@@ -1,24 +1,42 @@
 <!doctype html>
 <html>
   <head>
+    <title>RIVET - Settings</title>
     <link href="styles/options.css" rel="stylesheet">
   </head>
   <body>
-    <h1>Rivet Settings Page</h1>
+    <main style="display: none" data-bind="visible: true">
+      <nav>
+        <h2 class="logo">
+          <a href="/rivet.html">RIVET</a>
+        </h2>
+        <h1 class="settings active">
+          <a href="/options.html">Settings</a>
+        </h1>
+      </nav>
 
-    <ul data-bind="foreach: badDomains">
-      <li>
-        <span data-bind="text: $data.toString()"></span>
-        <button data-bind="click: $parent.deleteBadDomain">Delete</button>
-      </li>
-    </ul>
+      <div class="domainPatternSettings">
+        <h3>Distracting domains:</h3>
 
-    Add domain:
-    <form data-bind="submit: saveEnteredBadDomain">
-      <input type="text" data-bind="textInput: enteredBadDomainPattern" />
-      <br/>
-      <button type="submit" data-bind="enable: enteredBadDomain().isValid">Add Domain</button>
-    </form>
+        <ul class="badDomains" data-bind="foreach: badDomains">
+          <li>
+            <span data-bind="text: $data.toString()"></span>
+            <button class="pure-button" data-bind="click: $parent.deleteBadDomain">
+              Delete
+            </button>
+          </li>
+        </ul>
+
+        Add domain:
+        <form data-bind="submit: saveEnteredBadDomain">
+          <input type="text" data-bind="textInput: enteredBadDomainPattern" />
+          <br/>
+          <button type="submit" class="pure-button" data-bind="enable: enteredBadDomain().isValid">
+            Add Domain
+          </button>
+        </form>
+      </div>
+    </main>
 
     <script src="bower_components/requirejs/require.js"></script>
     <script src="scripts/require-config.js"></script>
