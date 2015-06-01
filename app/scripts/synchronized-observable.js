@@ -1,10 +1,11 @@
 'use strict';
 
 define(["knockout", "lodash"], function (ko, _) {
-  return function SynchronizedObservable(valueName) {
-    var observable = ko.observable();
+  return function SynchronizedObservable(valueName, initialValue, storageArea) {
+    storageArea = storageArea || "local";
+    var observable = ko.observable(initialValue);
 
-    chrome.storage.local.get(valueName, function (loadedData) {
+    chrome.storage[storageArea].get(valueName, function (loadedData) {
       _.forEach(loadedData, function (value, key) {
         if (key === valueName) {
           observable(value);
@@ -15,7 +16,7 @@ define(["knockout", "lodash"], function (ko, _) {
     observable.subscribe(function (newValue) {
       var changes = {};
       changes[valueName] = newValue;
-      chrome.storage.local.set(changes);
+      chrome.storage[storageArea].set(changes);
     });
 
     chrome.storage.onChanged.addListener(function (changes) {

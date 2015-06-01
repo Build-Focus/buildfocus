@@ -1,23 +1,9 @@
 'use strict';
 
-define(["lodash", "knockout"], function (_, ko) {
+define(["lodash", "knockout", "synchronized-observable"], function (_, ko, SynchronizedObservable) {
   function Score() {
     var self = this;
-    self.points = ko.observable(0);
-
-    chrome.storage.sync.get("points", function (loadedData) {
-      self.points(loadedData.points || 0);
-    });
-
-    chrome.storage.onChanged.addListener(function (changes) {
-      if (_.has(changes, "points")) {
-        self.points(changes.points.newValue);
-      }
-    });
-
-    self.points.subscribe(function () {
-      chrome.storage.sync.set({points: self.points()});
-    });
+    self.points = new SynchronizedObservable("points", 0, "sync");
 
     this.addSuccess = function addSuccess() {
       self.points(self.points() + 1);
