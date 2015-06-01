@@ -2,7 +2,7 @@ var sw = require('selenium-webdriver');
 var expect = require('chai').expect;
 
 function extensionPage(pagePath) {
-  return "chrome-extension://ednpnngpmfdcjpkjnigpokincopbdgbp/" + pagePath;
+  return "chrome-extension://apckocnmlmkhhigodidbpiakommhmiik/" + pagePath;
 }
 
 describe("System tests - ", function () {
