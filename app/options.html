@@ -15,26 +15,26 @@
         </h1>
       </nav>
 
-      <div class="domainPatternSettings">
-        <h3>Distracting domains:</h3>
+      <div class="domainPatterns">
+        <h3>Distracting sites:</h3>
 
-        <ul class="badDomains" data-bind="foreach: badDomains">
-          <li>
-            <span data-bind="text: $data.toString()"></span>
-            <button class="pure-button" data-bind="click: $parent.deleteBadDomain">
-              Delete
-            </button>
-          </li>
-        </ul>
-
-        Add domain:
         <form data-bind="submit: saveEnteredBadDomain">
-          <input type="text" data-bind="textInput: enteredBadDomainPattern" />
-          <br/>
-          <button type="submit" class="pure-button" data-bind="enable: enteredBadDomain().isValid">
-            Add Domain
+          <input type="text"
+                 data-bind="textInput: enteredBadDomainPattern"
+                 placeholder="Distracting site, e.g. facebook.com"/>
+          <button type="submit" class="pure-button "
+                  data-bind="enable: enteredBadDomain().isValid">
+            Add Site
           </button>
         </form>
+
+        <ul data-bind="foreach: badDomains">
+          <li>
+            <i data-bind="click: $parent.deleteBadDomain"
+               class="deleteButton fa fa-times"></i>
+            <div class="domainName" data-bind="text: $data.toString()"></div>
+          </li>
+        </ul>
       </div>
     </main>
 
