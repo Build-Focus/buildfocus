@@ -3,21 +3,24 @@
 define(["knockout", "lodash"], function (ko, _) {
   return function SynchronizedObservable(valueName, initialValue, storageArea) {
     storageArea = storageArea || "local";
-    var observable = ko.observable(initialValue);
+    var observable = ko.observable(initialValue)
+                       .extend({ notify: 'always' }); // Required to stop some races
+
+    // We don't want to send changes back to Chrome if we just got them from Chrome, or
+    // we get some painful races and potential ABA cycles
+    var currentlyUpdatingFromSync = false;
 
     chrome.storage[storageArea].get(valueName, function (loadedData) {
       _.forEach(loadedData, function (value, key) {
         if (key === valueName) {
+          currentlyUpdatingFromSync = true;
           observable(value);
+          currentlyUpdatingFromSync = false;
         }
       });
     });
 
-    var currentlyUpdatingFromSync = false;
-
     observable.subscribe(function (newValue) {
-      // We don't want to save things back for chrome if we just got them from chrome, or
-      // we get some painful races and potential ABA cycles
       if (!currentlyUpdatingFromSync) {
         var changes = {};
         changes[valueName] = newValue;

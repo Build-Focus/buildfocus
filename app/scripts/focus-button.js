@@ -77,8 +77,7 @@ define(["lodash", "knockout", "subscribable-event", "observable-image"],
         });
       }
 
-      badgeIcon.subscribe(updateBadgeIcon);
-      updateBadgeIcon(badgeIcon());
+      badgeIcon.subscribeAndUpdate(updateBadgeIcon);
     };
   }
 );

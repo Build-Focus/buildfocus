@@ -5,7 +5,8 @@ require.config({
   "paths": {
     "jquery": "../bower_components/jquery/dist/jquery",
     "URI.js": "../bower_components/uri.js/src",
-    "knockout": "../bower_components/knockout/dist/knockout",
+    "raw-knockout": "../bower_components/knockout/dist/knockout",
+    "knockout": "knockout-with-extensions",
     "lodash": "../bower_components/lodash/lodash"
   }
 });

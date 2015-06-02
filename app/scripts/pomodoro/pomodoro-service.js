@@ -48,10 +48,10 @@ define(["knockout", "synchronized-observable", "subscribable-event", "pomodoro/t
       });
 
       self.isActive = new SynchronizedObservable("pomodoro-is-active", pomodoroTimer.isRunning());
-      pomodoroTimer.isRunning.subscribe(self.isActive);
+      pomodoroTimer.isRunning.subscribeAndUpdate(self.isActive);
 
       self.isBreakActive = new SynchronizedObservable("break-is-active", breakTimer.isRunning());
-      breakTimer.isRunning.subscribe(self.isBreakActive);
+      breakTimer.isRunning.subscribeAndUpdate(self.isBreakActive);
 
       var rawProgress = ko.computed(function () {
         if (pomodoroTimer.isRunning()) {
@@ -64,7 +64,7 @@ define(["knockout", "synchronized-observable", "subscribable-event", "pomodoro/t
       });
 
       self.progress = new SynchronizedObservable("pomodoro-service-progress", rawProgress());
-      rawProgress.subscribe(self.progress);
+      rawProgress.subscribeAndUpdate(self.progress);
 
       self.onPomodoroStart = new SubscribableEvent();
       self.onPomodoroSuccess = new SubscribableEvent();
