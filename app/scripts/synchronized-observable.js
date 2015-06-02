@@ -3,8 +3,17 @@
 define(["knockout", "lodash"], function (ko, _) {
   return function SynchronizedObservable(valueName, initialValue, storageArea) {
     storageArea = storageArea || "local";
-    var observable = ko.observable(initialValue)
-                       .extend({ notify: 'always' }); // Required to stop some races
+
+    var observable;
+
+    if (ko.isSubscribable(initialValue)) {
+      observable = ko.observable(initialValue())
+                     .extend({notify: 'always'}); // Required to stop some races
+      initialValue.subscribe(observable);
+    } else {
+      observable = ko.observable(initialValue)
+                     .extend({notify: 'always'}); // Required to stop some races
+    }
 
     // We don't want to send changes back to Chrome if we just got them from Chrome, or
     // we get some painful races and potential ABA cycles

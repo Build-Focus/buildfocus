@@ -3,12 +3,14 @@
 (function () {
   'use strict';
 
+  var ko;
   var SynchronizedObservable;
 
   describe('Synchronized Observable', function () {
     before(function (done) {
-      require(["synchronized-observable"], function (loadedClass) {
-        SynchronizedObservable= loadedClass;
+      require(["knockout", "synchronized-observable"], function (loadedKo, loadedClass) {
+        SynchronizedObservable = loadedClass;
+        ko = loadedKo;
         done();
       });
     });
@@ -35,6 +37,16 @@
       var observable = new SynchronizedObservable("value-name", 0);
 
       expect(observable()).to.equal(1);
+    });
+
+    it("should unwrap subscribe automatically if an observable is provided as an initial value", function () {
+      var realObservable = ko.observable(10);
+
+      var observable = new SynchronizedObservable("value-name", realObservable);
+      expect(observable()).to.equal(10);
+
+      realObservable(5);
+      expect(observable()).to.equal(5);
     });
 
     it('should store values and let you read them back', function () {
