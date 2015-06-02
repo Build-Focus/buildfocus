@@ -224,6 +224,12 @@
         expect(badgeIconColour()).to.be.rgbPixel(POMODORO_COLOUR);
       });
 
+      it("should clear notifications when a start pomodoro message is received", function () {
+        chrome.extension.onMessage.trigger({"action": "start-pomodoro"});
+
+        expect(chrome.notifications.clear.calledOnce).to.equal(true);
+      });
+
       it("should start a break when a break message is received", function () {
         chrome.extension.onMessage.trigger({"action": "start-break"});
 
@@ -234,6 +240,12 @@
 
         expect(chrome.notifications.create.calledOnce).to.equal(true);
         expect(chrome.notifications.create.args[0][1].title).to.equal("Break time's over");
+      });
+
+      it("should clear notifications when a start break message is received", function () {
+        chrome.extension.onMessage.trigger({"action": "start-break"});
+
+        expect(chrome.notifications.clear.calledOnce).to.equal(true);
       });
     });
 

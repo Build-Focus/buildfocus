@@ -25,6 +25,9 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
       notificationService.showBreakNotification();
     });
 
+    pomodoroService.onPomodoroStart(notificationService.clearNotifications);
+    pomodoroService.onBreakStart(notificationService.clearNotifications);
+
     function showRivetPage() {
       chrome.tabs.create({
         url: chrome.extension.getURL("rivet.html")
