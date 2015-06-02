@@ -71,8 +71,8 @@ define(["lodash", "subscribable-event"], function (_, SubscribableEvent) {
       }
     });
 
-    chrome.notifications.onClosed.addListener(function (closedNotificationid) {
-      if (closedNotificationid === notificationId) {
+    chrome.notifications.onClosed.addListener(function (closedNotificationid, byUser) {
+      if (closedNotificationid === notificationId && byUser) {
         self.clearNotifications();
       }
     });

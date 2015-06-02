@@ -11,20 +11,22 @@
 
   var clockStub;
 
+  var RIVET_NOTIFICATION_NAME = "rivet-pomodoro-notification";
+
   function clickNotification(notificationName) {
-    chrome.notifications.onClicked.trigger(notificationName || "rivet-pomodoro-notification");
+    chrome.notifications.onClicked.trigger(notificationName || RIVET_NOTIFICATION_NAME);
   }
 
   function clickTakeABreak(notificationName) {
-    chrome.notifications.onButtonClicked.trigger(notificationName || "rivet-pomodoro-notification", 0);
+    chrome.notifications.onButtonClicked.trigger(notificationName || RIVET_NOTIFICATION_NAME, 0);
   }
 
   function clickMore(notificationName) {
-    chrome.notifications.onButtonClicked.trigger(notificationName || "rivet-pomodoro-notification", 1);
+    chrome.notifications.onButtonClicked.trigger(notificationName || RIVET_NOTIFICATION_NAME, 1);
   }
 
   function closeNotification(notificationName) {
-    chrome.notifications.onClosed.trigger(notificationName || "rivet-pomodoro-notification");
+    chrome.notifications.onClosed.trigger(notificationName || RIVET_NOTIFICATION_NAME, true);
   }
 
   describe('Notification service', function () {
@@ -133,6 +135,15 @@
           closeNotification();
           clockStub.tick(8000);
           expect(chrome.notifications.create.callCount).to.equal(1);
+        });
+
+        it("should reissue " + name + " notifications if they're closed by the reissue itself", function () {
+          showNotification();
+
+          clockStub.tick(8000);
+          chrome.notifications.onClosed.trigger(RIVET_NOTIFICATION_NAME, false);
+
+          expect(chrome.notifications.create.callCount).to.equal(2);
         });
       }
 
