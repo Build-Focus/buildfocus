@@ -9,7 +9,7 @@
     "abcabcbabcabcabcbabcabcabcbabcab": "test"
   };
 
-  var configPrefix = configPrefixes[extensionId] || "prod";
+  var configPrefix = configPrefixes[extensionId];
 
   require.config({
     "baseUrl": "/scripts",

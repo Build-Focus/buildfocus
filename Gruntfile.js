@@ -165,7 +165,7 @@ module.exports = function (grunt) {
       }
     },
 
-    // Copies remaining files to places other tasks can use
+    // Copies built files to dist folder for prod build
     copy: {
       dist: {
         files: [{
@@ -181,7 +181,12 @@ module.exports = function (grunt) {
             'styles/**/*.css',
             'styles/fonts/**/*.*',
             '_locales/**/*.json',
-            'scripts/**/*.js'
+            'scripts/**/*.js',
+
+            // Drop all config except prod config
+            '!scripts/config/**/*.js',
+            'scripts/config/base-config.js',
+            'scripts/config/prod-rivet-config.js',
           ].concat(bowerDependencies)
         }]
       }
