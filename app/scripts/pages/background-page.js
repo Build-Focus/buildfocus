@@ -2,7 +2,7 @@
 
 require(["knockout", "lodash", "repositories/settings-repository", "url-monitoring/current-urls",
          "pomodoro/pomodoro-service", "focus-button", "url-monitoring/bad-behaviour-monitor",
-         "score", "notification-service"],
+         "score", "notification-service", "rollbar"],
   function (ko, _, settings, currentUrls, PomodoroService, FocusButton,
             BadBehaviourMonitor, score, NotificationService) {
     var notificationService = new NotificationService();

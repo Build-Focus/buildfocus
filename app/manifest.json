@@ -12,8 +12,7 @@
     "scripts": [
       "scripts/chromereload.js",
       "bower_components/requirejs/require.js",
-      "scripts/require-config.js",
-      "local-only/local-rivet-config.js",
+      "scripts/config/base-config.js",
       "scripts/pages/background-page.js"
     ]
   },

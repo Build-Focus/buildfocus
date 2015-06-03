@@ -194,8 +194,7 @@ module.exports = function (grunt) {
             "background": {
               "scripts": [
                 "bower_components/requirejs/require.js",
-                "scripts/require-config.js",
-                "scripts/rivet-config.js",
+                "scripts/config/base-config.js",
                 "scripts/pages/background-page.js"
               ]
             },

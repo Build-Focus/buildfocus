@@ -1,6 +1,6 @@
 'use strict';
 
-define(["knockout", "score", "pomodoro/proxy-pomodoro-service"],
+define(["knockout", "score", "pomodoro/proxy-pomodoro-service", "rollbar"],
   function (ko, score, ProxyPomodoroService) {
     function getQueryParameter(name) {
       var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
