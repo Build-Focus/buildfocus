@@ -10,6 +10,9 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
     var pomodoroService = new PomodoroService(badBehaviourMonitor);
     var focusButton = new FocusButton(pomodoroService.progress, pomodoroService.isActive);
 
+    notificationService.onClick(pomodoroService.start);
+    pomodoroService.onPomodoroStart(notificationService.clearNotifications);
+
     pomodoroService.onPomodoroSuccess(function () {
       score.addSuccess();
       notificationService.showSuccessNotification();
@@ -21,23 +24,15 @@ require(["knockout", "lodash", "repositories/settings-repository", "url-monitori
                                        runAt: "document_start"});
     });
 
-    pomodoroService.onBreakEnd(function () {
-      notificationService.showBreakNotification();
-    });
-
-    pomodoroService.onPomodoroStart(notificationService.clearNotifications);
+    notificationService.onBreak(pomodoroService.takeABreak);
     pomodoroService.onBreakStart(notificationService.clearNotifications);
+    pomodoroService.onBreakEnd(notificationService.showBreakNotification);
 
     function showRivetPage() {
-      chrome.tabs.create({
-        url: chrome.extension.getURL("rivet.html")
-      });
+      chrome.tabs.create({ url: chrome.extension.getURL("rivet.html") });
     }
 
-    notificationService.onClick(pomodoroService.start);
-    notificationService.onBreak(pomodoroService.takeABreak);
-    notificationService.onMore(showRivetPage);
-
     focusButton.onClick(showRivetPage);
+    notificationService.onMore(showRivetPage);
   }
 );
