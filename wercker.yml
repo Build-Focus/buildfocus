@@ -20,6 +20,5 @@ build:
 
 deploy:
     steps:
-        - script:
-            name: Push new version to Github
-            code: grunt bump-commit
+        - grunt:
+            tasks: bump-commit
