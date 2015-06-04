@@ -20,5 +20,10 @@ build:
 
 deploy:
     steps:
+        - script:
+            name: Configure git
+            code: |-
+              git config --global user.email "contact@riveted.io"
+              git config --global user.name "wercker-build"
         - grunt:
             tasks: bump-commit
