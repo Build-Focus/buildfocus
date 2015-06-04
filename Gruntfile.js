@@ -234,6 +234,20 @@ module.exports = function (grunt) {
           dest: ''
         }]
       }
+    },
+
+    bump: {
+      options: {
+        files: ['app/manifest.json'],
+        commit: true,
+        commitMessage: 'Release %VERSION%',
+        commitFiles: ['app/manifest.json'],
+        createTag: true,
+        tagName: 'v%VERSION%',
+        tagMessage: 'Version %VERSION%',
+        push: true,
+        pushTo: process.env.GIT_REMOTE || 'origin'
+      }
     }
   });
 
@@ -270,6 +284,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'bump-only',
     'copy',
     'json-replace',
     'compress'
