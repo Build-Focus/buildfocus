@@ -17,3 +17,9 @@ build:
 
     services:
         - pimterry/selenium-chrome-ftp
+
+deploy:
+    steps:
+        - script:
+            name: Push new version to Github
+            code: grunt bump-commit
