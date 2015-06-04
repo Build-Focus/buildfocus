@@ -1,7 +1,7 @@
 'use strict';
 
-define(["knockout", "synchronized-observable", "subscribable-event", "pomodoro/timer", "config"],
-  function (ko, SynchronizedObservable, SubscribableEvent, Timer, config) {
+define(["knockout", "published-observable", "subscribable-event", "pomodoro/timer", "config"],
+  function (ko, PublishedObservable, SubscribableEvent, Timer, config) {
     return function PomodoroService(badBehaviourMonitor) {
       var self = this;
 
@@ -47,8 +47,8 @@ define(["knockout", "synchronized-observable", "subscribable-event", "pomodoro/t
         }
       });
 
-      self.isActive = new SynchronizedObservable("pomodoro-is-active", pomodoroTimer.isRunning);
-      self.isBreakActive = new SynchronizedObservable("break-is-active", breakTimer.isRunning);
+      self.isActive = new PublishedObservable("pomodoro-is-active", pomodoroTimer.isRunning);
+      self.isBreakActive = new PublishedObservable("break-is-active", breakTimer.isRunning);
 
       var rawProgress = ko.computed(function () {
         if (pomodoroTimer.isRunning()) {
@@ -60,7 +60,7 @@ define(["knockout", "synchronized-observable", "subscribable-event", "pomodoro/t
         }
       });
 
-      self.progress = new SynchronizedObservable("pomodoro-service-progress", rawProgress);
+      self.progress = new PublishedObservable("pomodoro-service-progress", rawProgress);
 
       self.onPomodoroStart = new SubscribableEvent();
       self.onPomodoroSuccess = new SubscribableEvent();

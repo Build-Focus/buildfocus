@@ -39,16 +39,6 @@
       expect(observable()).to.equal(1);
     });
 
-    it("should unwrap subscribe automatically if an observable is provided as an initial value", function () {
-      var realObservable = ko.observable(10);
-
-      var observable = new SynchronizedObservable("value-name", realObservable);
-      expect(observable()).to.equal(10);
-
-      realObservable(5);
-      expect(observable()).to.equal(5);
-    });
-
     it('should store values and let you read them back', function () {
       var observable = new SynchronizedObservable("value-name");
 

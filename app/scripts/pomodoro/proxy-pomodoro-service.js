@@ -1,7 +1,7 @@
 'use strict';
 
-define(["knockout", "synchronized-observable", "subscribable-event"],
-  function (ko, SynchronizedObservable, SubscribableEvent) {
+define(["knockout", "subscribed-observable", "subscribable-event"],
+  function (ko, SubscribedObservable, SubscribableEvent) {
     return function ProxyPomodoroService() {
       var self = this;
 
@@ -13,9 +13,9 @@ define(["knockout", "synchronized-observable", "subscribable-event"],
         chrome.extension.sendMessage({"action": "start-break"});
       };
 
-      self.isActive = new SynchronizedObservable("pomodoro-is-active", false);
-      self.isBreakActive = new SynchronizedObservable("break-is-active", false);
-      self.progress = new SynchronizedObservable("pomodoro-service-progress", null);
+      self.isActive = new SubscribedObservable("pomodoro-is-active", false);
+      self.isBreakActive = new SubscribedObservable("break-is-active", false);
+      self.progress = new SubscribedObservable("pomodoro-service-progress", null);
 
       self.onPomodoroStart = new SubscribableEvent();
       self.onPomodoroSuccess = new SubscribableEvent();
