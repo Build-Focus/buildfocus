@@ -121,7 +121,8 @@ module.exports = function (grunt) {
       acceptance: {
         options: {
           urls: ['http://localhost:<%= connect.test.options.port %>/pomodoro-acceptance.html',
-                 'http://localhost:<%= connect.test.options.port %>/rivet-page-acceptance.html']
+                 'http://localhost:<%= connect.test.options.port %>/rivet-page-acceptance.html',
+                 'http://localhost:<%= connect.test.options.port %>/city-acceptance.html']
         }
       }
     },

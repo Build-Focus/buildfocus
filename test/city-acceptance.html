@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mocha Spec Runner</title>
+    <link rel="stylesheet" href="bower_components/mocha/mocha.css">
+</head>
+<body>
+    <div id="mocha"></div>
+    <script src="bower_components/mocha/mocha.js"></script>
+    <script src="bower_components/chai/chai.js"></script>
+    <script src="helpers/colour-matchers.js"></script>
+    <script>
+    mocha.setup('bdd');
+
+    var assert = chai.assert;
+    var expect = chai.expect;
+    var should = chai.should();
+
+    // Stub setLineDash, as it's not defined in phantomjs
+    CanvasRenderingContext2D.prototype.setLineDash = CanvasRenderingContext2D.prototype.setLineDash ||
+                                                     function () { };
+    chai.use(ColourMatchers);
+    </script>
+
+    <script src="bower_components/sinonjs/sinon.js"></script>
+
+    <script src="bower_components/sinon-chrome/src/chrome-alarms.js"></script>
+    <script src="bower_components/sinon-chrome/src/chrome-event.js"></script>
+    <script src="bower_components/sinon-chrome/src/chrome.js"></script>
+
+    <script src="bower_components/lodash/lodash.js"></script>
+
+    <script src="bower_components/requirejs/require.js"></script>
+    <script src="scripts/config/base-config.js"></script>
+
+    <script src="/scripts/pages/background-page.js"></script>
+    <script src="spec/acceptance/city-acceptance.js"></script>
+
+    <script>
+      if (!window.PHANTOMJS) {
+        // PhantomJS Mocha runner does this itself
+        mocha.run();
+      }
+    </script>
+</body>
+</html>
