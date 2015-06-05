@@ -248,6 +248,25 @@ module.exports = function (grunt) {
         push: true,
         pushTo: (process.env.GIT_REMOTE || 'origin') + ' HEAD:master'
       }
+    },
+
+    "webstore_upload": {
+      "accounts": {
+        "default": {
+          "publish": true,
+          "client_id": process.env.WEBSTORE_CLIENT_ID,
+          "client_secret": process.env.WEBSTORE_CLIENT_SECRET,
+          "refresh_token": process.env.WEBSTORE_REFRESH_TOKEN
+        }
+      },
+      "extensions": {
+        "rivet": {
+          "appID": "apckocnmlmkhhigodidbpiakommhmiik",
+          "zip": "package/", // Uploads the most recent zip in this folder
+          "publish": true,
+          "publishTarget": "trustedTesters"
+        }
+      }
     }
   });
 
@@ -288,6 +307,12 @@ module.exports = function (grunt) {
     'copy',
     'json-replace',
     'compress'
+  ]);
+
+  // Assumes you've already done a build, and verified it appropriately.
+  grunt.registerTask('release', [
+    'webstore_upload',
+    'bump-commit'
   ]);
 
   grunt.registerTask('default', [
