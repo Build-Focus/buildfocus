@@ -15,7 +15,7 @@
     badBehaviourCallback();
   }
 
-  describe('Pomodoro monitoring service', function () {
+  describe('Pomodoro Integration - Pomodoro service', function () {
     beforeEach(function (done) {
       badBehaviourMonitorFake = {};
       badBehaviourMonitorFake.onBadBehaviour = sinon.spy();
