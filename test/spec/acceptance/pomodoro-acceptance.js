@@ -32,7 +32,7 @@
   }
 
   function startPomodoro() {
-    chrome.extension.onMessage.trigger({"action": "start-pomodoro"});
+    chrome.runtime.onMessage.trigger({"action": "start-pomodoro"});
   }
 
   function getPoints() {
@@ -219,19 +219,19 @@
 
     describe("OnMessage", function () {
       it("should start a pomodoro when a start message is received", function () {
-        chrome.extension.onMessage.trigger({"action": "start-pomodoro"});
+        chrome.runtime.onMessage.trigger({"action": "start-pomodoro"});
 
         expect(badgeIconColour()).to.be.rgbPixel(POMODORO_COLOUR);
       });
 
       it("should clear notifications when a start pomodoro message is received", function () {
-        chrome.extension.onMessage.trigger({"action": "start-pomodoro"});
+        chrome.runtime.onMessage.trigger({"action": "start-pomodoro"});
 
         expect(chrome.notifications.clear.calledOnce).to.equal(true);
       });
 
       it("should start a break when a break message is received", function () {
-        chrome.extension.onMessage.trigger({"action": "start-break"});
+        chrome.runtime.onMessage.trigger({"action": "start-break"});
 
         expect(badgeIconColour()).to.be.rgbPixel(BREAK_COLOUR);
         expect(chrome.notifications.create.called).to.equal(false);
@@ -243,7 +243,7 @@
       });
 
       it("should clear notifications when a start break message is received", function () {
-        chrome.extension.onMessage.trigger({"action": "start-break"});
+        chrome.runtime.onMessage.trigger({"action": "start-break"});
 
         expect(chrome.notifications.clear.calledOnce).to.equal(true);
       });
@@ -312,12 +312,12 @@
 
         describe("for breaks", function () {
           it("should be 0% after starting a break", function () {
-            chrome.extension.onMessage.trigger({"action": "start-break"});
+            chrome.runtime.onMessage.trigger({"action": "start-break"});
             expect(getBadgePixel(0, 0)).to.be.transparent();
           });
 
           it("should be 50% half way through a break", function () {
-            chrome.extension.onMessage.trigger({"action": "start-break"});
+            chrome.runtime.onMessage.trigger({"action": "start-break"});
             clockStub.tick(BREAK_DURATION / 2);
 
             expect(getBadgePixel(0, 0)).to.be.rgbPixel(BREAK_COLOUR);
@@ -326,7 +326,7 @@
           });
 
           it("should be 99% when a break is nearly completed", function () {
-            chrome.extension.onMessage.trigger({"action": "start-break"});
+            chrome.runtime.onMessage.trigger({"action": "start-break"});
             clockStub.tick(BREAK_DURATION - 1);
 
             expect(getBadgePixel(0, 0)).to.be.rgbPixel(BREAK_COLOUR);
@@ -336,7 +336,7 @@
           });
 
           it("shouldn't be shown after a break is completed", function () {
-            chrome.extension.onMessage.trigger({"action": "start-break"});
+            chrome.runtime.onMessage.trigger({"action": "start-break"});
             clockStub.tick(BREAK_DURATION);
 
             expect(getBadgePixel(0, 0)).to.be.rgbPixel(BADGE_BACKGROUND_COLOUR);

@@ -6,11 +6,11 @@ define(["knockout", "subscribed-observable", "subscribable-event"],
       var self = this;
 
       self.start = function startPomodoro() {
-        chrome.extension.sendMessage({"action": "start-pomodoro"});
+        chrome.runtime.sendMessage({"action": "start-pomodoro"});
       };
 
       self.takeABreak = function takeABreak() {
-        chrome.extension.sendMessage({"action": "start-break"});
+        chrome.runtime.sendMessage({"action": "start-break"});
       };
 
       self.isActive = new SubscribedObservable("pomodoro-is-active", false);

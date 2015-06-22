@@ -39,7 +39,7 @@ define(["knockout", "published-observable", "subscribable-event", "pomodoro/time
         self.onBreakStart.trigger();
       };
 
-      chrome.extension.onMessage.addListener(function (message) {
+      chrome.runtime.onMessage.addListener(function (message) {
         if (message.action === "start-pomodoro") {
           self.start();
         } else if (message.action === "start-break") {

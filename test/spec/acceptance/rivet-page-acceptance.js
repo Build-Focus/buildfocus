@@ -13,7 +13,7 @@
 
     chrome.notifications.clear.reset();
     chrome.notifications.create.reset();
-    chrome.extension.sendMessage.reset();
+    chrome.runtime.sendMessage.reset();
     chrome.tabs.remove.reset();
     chrome.tabs.query.reset();
   }
@@ -109,8 +109,8 @@
 
         viewModel[triggerMethodName]();
 
-        expect(chrome.extension.sendMessage.calledOnce).to.equal(true);
-        expect(chrome.extension.sendMessage.calledWith({action: messageAction})).to.equal(true);
+        expect(chrome.runtime.sendMessage.calledOnce).to.equal(true);
+        expect(chrome.runtime.sendMessage.calledWith({action: messageAction})).to.equal(true);
       });
     }
 

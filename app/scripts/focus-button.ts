@@ -49,7 +49,7 @@ define(["lodash", "knockout", "subscribable-event", "observable-image"],
         var canvas = document.createElement('canvas');
         canvas.setAttribute("style", "width: 19px; height: 19px");
 
-        var context = canvas.getContext('2d');
+        var context = <CanvasRenderingContext2D> canvas.getContext('2d');
 
         if (progressObservable() !== null) {
           var fullDistance = 19*4;

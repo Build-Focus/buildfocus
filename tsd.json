@@ -1,0 +1,24 @@
+{
+  "version": "v4",
+  "repo": "borisyankov/DefinitelyTyped",
+  "ref": "master",
+  "path": "typings",
+  "bundle": "typings/tsd.d.ts",
+  "installed": {
+    "knockout/knockout.d.ts": {
+      "commit": "84dfeeac378552c22297a5d555b1999a396d7e7c"
+    },
+    "requirejs/require.d.ts": {
+      "commit": "84dfeeac378552c22297a5d555b1999a396d7e7c"
+    },
+    "chrome/chrome.d.ts": {
+      "commit": "84dfeeac378552c22297a5d555b1999a396d7e7c"
+    },
+    "webrtc/MediaStream.d.ts": {
+      "commit": "84dfeeac378552c22297a5d555b1999a396d7e7c"
+    },
+    "lodash/lodash.d.ts": {
+      "commit": "84dfeeac378552c22297a5d555b1999a396d7e7c"
+    }
+  }
+}
