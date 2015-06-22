@@ -1,15 +1,15 @@
 'use strict';
 
-define(["knockout"], function (ko) {
-  return function (imageUrl) {
-    var observableImage = ko.observable();
+import ko = require('knockout');
 
-    var rawImage = new Image();
-    rawImage.src = imageUrl;
-    rawImage.onload = function () {
-      observableImage(rawImage);
-    };
+export = function ObservableImage(imageUrl) {
+  var observableImage = ko.observable();
 
-    return observableImage;
+  var rawImage = new Image();
+  rawImage.src = imageUrl;
+  rawImage.onload = function () {
+    observableImage(rawImage);
   };
-});
+
+  return observableImage;
+};
