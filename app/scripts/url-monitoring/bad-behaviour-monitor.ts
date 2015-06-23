@@ -1,9 +1,14 @@
 'use strict';
 
-define(["knockout", "lodash", "subscribable-event"], function (ko, _, SubscribableEvent) {
-  return function BadBehaviourMonitor(currentUrls, settings) {
-    var self = this;
+import ko = require("knockout");
+import _ = require("lodash");
+import SubscribableEvent = require("subscribable-event");
+import SettingsRepository = require('repositories/settings-repository');
 
+class BadBehaviourMonitor {
+  public onBadBehaviour = SubscribableEvent();
+
+  constructor(currentUrls: KnockoutObservableArray<string>, settings: SettingsRepository) {
     var currentlyOnBadDomain = ko.computed(function () {
       return _.any(currentUrls(), function (url) {
         return _.any(settings.badDomains(), function (domain) {
@@ -12,12 +17,12 @@ define(["knockout", "lodash", "subscribable-event"], function (ko, _, Subscribab
       });
     });
 
-    self.onBadBehaviour = new SubscribableEvent();
-
-    currentlyOnBadDomain.subscribe(function () {
+    currentlyOnBadDomain.subscribe(() => {
       if (currentlyOnBadDomain()) {
-        self.onBadBehaviour.trigger();
+        this.onBadBehaviour.trigger();
       }
     });
-  };
-});
+  }
+};
+
+export = BadBehaviourMonitor

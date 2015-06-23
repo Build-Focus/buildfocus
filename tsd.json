@@ -19,6 +19,12 @@
     },
     "lodash/lodash.d.ts": {
       "commit": "84dfeeac378552c22297a5d555b1999a396d7e7c"
+    },
+    "urijs/URIjs.d.ts": {
+      "commit": "7bf24210432d20a4e52ab0975fe3afd2d1edadbe"
+    },
+    "jquery/jquery.d.ts": {
+      "commit": "7bf24210432d20a4e52ab0975fe3afd2d1edadbe"
     }
   }
 }

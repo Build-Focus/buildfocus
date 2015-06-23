@@ -13,10 +13,8 @@ var configPrefix = configPrefixes[extensionId];
 requirejs.config({
   "baseUrl": "/scripts",
   "paths": {
-    "bower": "",
-
     "jquery": "../bower_components/jquery/dist/jquery",
-    "URI.js": "../bower_components/uri.js/src",
+    "URIjs": "../bower_components/uri.js/src",
     "lodash": "../bower_components/lodash/lodash",
 
     "raw-knockout": "../bower_components/knockout/dist/knockout",
