@@ -30,13 +30,9 @@ module.exports = function (grunt) {
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
-      bower: {
-        files: ['bower.json'],
-        tasks: ['bowerInstall']
-      },
       js: {
         files: ['<%= config.app %>/scripts/{,*/}*.ts', 'test/**/*.js', '**/*.html'],
-        tasks: ['build', 'run-quick-tests'],
+        tasks: ['build-fast', 'run-quick-tests'],
         options: {
           livereload: '<%= connect.options.livereload %>',
           atBegin: true
@@ -120,9 +116,18 @@ module.exports = function (grunt) {
         sourceRoot: '/scripts',
         fast: 'never'
       },
+
       app: {
         src: ['app/scripts/**/*.ts', 'typings/**/*.d.ts'],
         outDir: '<%= config.build %>/scripts'
+      },
+
+      fast: {
+        src: ['app/scripts/**/*.ts', 'typings/**/*.d.ts'],
+        outDir: '<%= config.build %>/scripts',
+        options: {
+          fast: 'always'
+        }
       }
     },
 
@@ -314,7 +319,13 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('build', [
-    'ts',
+    'clean',
+    'ts:app',
+    'copy:build'
+  ]);
+
+  grunt.registerTask('build-fast', [
+    'ts:fast',
     'copy:build'
   ]);
 
@@ -347,7 +358,6 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('dist', [
-    'clean',
     'bump-only',
     'build',
     'copy:dist',
