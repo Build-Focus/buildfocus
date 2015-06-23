@@ -1,10 +1,11 @@
 'use strict';
 
 require(["knockout", "lodash", "repositories/settings-repository", "url-monitoring/domain"],
-  function (ko, _, settings, Domain) {
+  function (ko, _, SettingsRepository, Domain) {
     function OptionsViewModel() {
       var self = this;
 
+      var settings = new SettingsRepository();
       self.badDomains = settings.badDomains;
 
       self.enteredBadDomainPattern = ko.observable("");
