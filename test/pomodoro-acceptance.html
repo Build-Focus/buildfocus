@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="bower_components/mocha/mocha.css">
 </head>
 <body>
+    <script src="phantomjs-polyfills.js"></script>
+
     <div id="mocha"></div>
     <script src="bower_components/mocha/mocha.js"></script>
     <script src="bower_components/chai/chai.js"></script>
@@ -17,9 +19,6 @@
     var expect = chai.expect;
     var should = chai.should();
 
-    // Stub setLineDash, as it's not defined in phantomjs
-    CanvasRenderingContext2D.prototype.setLineDash = CanvasRenderingContext2D.prototype.setLineDash ||
-                                                     function () { };
     chai.use(ColourMatchers);
     </script>
 

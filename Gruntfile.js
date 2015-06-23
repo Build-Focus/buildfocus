@@ -126,7 +126,7 @@ module.exports = function (grunt) {
         src: ['app/scripts/**/*.ts', 'typings/**/*.d.ts'],
         outDir: '<%= config.build %>/scripts',
         options: {
-          fast: 'always'
+          fast: 'watch'
         }
       }
     },

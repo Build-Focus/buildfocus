@@ -3,7 +3,7 @@
 import ko = require('knockout');
 
 export = function ObservableImage(imageUrl) {
-  var observableImage = ko.observable();
+  var observableImage: KnockoutObservable<HTMLImageElement> = ko.observable(null);
 
   var rawImage = new Image();
   rawImage.src = imageUrl;
