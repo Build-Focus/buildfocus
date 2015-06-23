@@ -1,6 +1,6 @@
 'use strict';
 
-define({
+const prodConfig: ApplicationConfig = {
   pomodoroDuration: 1000 * 60 * 20,
   breakDuration: 1000 * 60 * 5,
 
@@ -13,4 +13,6 @@ define({
     verbose: true,
     reportLevel: "warning"
   }
-});
+};
+
+export = prodConfig;

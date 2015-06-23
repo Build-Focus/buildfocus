@@ -8,9 +8,9 @@ const NOTIFICATION_ID = "rivet-pomodoro-notification";
 class NotificationService {
   private notificationReissueTimeoutId: number;
 
-  private onClick = SubscribableEvent();
-  private onBreak = SubscribableEvent();
-  private onMore = SubscribableEvent();
+  public onClick = SubscribableEvent();
+  public onBreak = SubscribableEvent();
+  public onMore = SubscribableEvent();
 
   constructor() {
     chrome.notifications.onClicked.addListener((clickedNotificationId) => {

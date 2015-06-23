@@ -1,18 +1,20 @@
 'use strict';
 
-define(["lodash", "knockout", "synchronized-observable"], function (_, ko, SynchronizedObservable) {
-  function Score() {
-    var self = this;
-    self.points = new SynchronizedObservable("points", 0, "sync");
+import ko = require('knockout');
+import _ = require('lodash');
+import synchronizedObservable = require('synchronized-observable');
 
-    this.addSuccess = function addSuccess() {
-      self.points(self.points() + 1);
-    };
+class Score {
+  points = synchronizedObservable("points", 0, "sync");
 
-    this.addFailure = function addFailure() {
-      self.points(self.points() - 1);
-    };
+  addSuccess() {
+    this.points(this.points() + 1);
   }
 
-  return new Score();
-});
+  addFailure() {
+    this.points(this.points() - 1);
+  }
+}
+
+// Singleton
+export = new Score();

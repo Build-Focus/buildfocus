@@ -8,3 +8,7 @@ define(["raw-knockout"], function (ko) {
 
   return ko;
 });
+
+interface KnockoutSubscribable<T> {
+  subscribeAndUpdate(callback: (newValue: T) => void): KnockoutSubscription;
+}

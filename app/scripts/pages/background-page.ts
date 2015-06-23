@@ -1,39 +1,48 @@
 'use strict';
 
-require(["knockout", "lodash", "repositories/settings-repository", "url-monitoring/current-urls",
-         "pomodoro/pomodoro-service", "focus-button", "url-monitoring/bad-behaviour-monitor",
-         "score", "notification-service", "rollbar"],
-  function (ko, _, SettingsRepository, currentUrls, PomodoroService, FocusButton,
-            BadBehaviourMonitor, score, NotificationService) {
-    var settings = new SettingsRepository();
-    var notificationService = new NotificationService();
-    var badBehaviourMonitor = new BadBehaviourMonitor(currentUrls, settings);
-    var pomodoroService = new PomodoroService(badBehaviourMonitor);
-    var focusButton = new FocusButton(pomodoroService.progress, pomodoroService.isActive);
+import rollbar = require("rollbar");
+import ko = require("knockout");
+import _ = require("lodash");
 
-    notificationService.onClick(pomodoroService.start);
-    pomodoroService.onPomodoroStart(notificationService.clearNotifications);
+import score = require("score");
+import SettingsRepository = require("repositories/settings-repository");
+import currentUrls = require("url-monitoring/current-urls");
+import PomodoroService = require("pomodoro/pomodoro-service");
+import FocusButton = require("focus-button");
+import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
+import NotificationService = require("notification-service");
 
-    pomodoroService.onPomodoroSuccess(function () {
-      score.addSuccess();
-      notificationService.showSuccessNotification();
+export = function setupBackgroundPage() {
+  var settings = new SettingsRepository();
+  var notificationService = new NotificationService();
+  var badBehaviourMonitor = new BadBehaviourMonitor(currentUrls, settings);
+  var pomodoroService = new PomodoroService(badBehaviourMonitor);
+  var focusButton = new FocusButton(pomodoroService.progress, pomodoroService.isActive);
+
+  notificationService.onClick(pomodoroService.start);
+  pomodoroService.onPomodoroStart(notificationService.clearNotifications);
+
+  pomodoroService.onPomodoroSuccess(function () {
+    score.addSuccess();
+    notificationService.showSuccessNotification();
+  });
+
+  pomodoroService.onPomodoroFailure(function () {
+    score.addFailure();
+    chrome.tabs.executeScript(null, {
+      file: "scripts/failure-content-script.js",
+      runAt: "document_start"
     });
+  });
 
-    pomodoroService.onPomodoroFailure(function () {
-      score.addFailure();
-      chrome.tabs.executeScript(null, {file: "scripts/failure-content-script.js",
-                                       runAt: "document_start"});
-    });
+  notificationService.onBreak(pomodoroService.takeABreak);
+  pomodoroService.onBreakStart(notificationService.clearNotifications);
+  pomodoroService.onBreakEnd(notificationService.showBreakNotification);
 
-    notificationService.onBreak(pomodoroService.takeABreak);
-    pomodoroService.onBreakStart(notificationService.clearNotifications);
-    pomodoroService.onBreakEnd(notificationService.showBreakNotification);
-
-    function showRivetPage() {
-      chrome.tabs.create({ url: chrome.extension.getURL("rivet.html") });
-    }
-
-    focusButton.onClick(showRivetPage);
-    notificationService.onMore(showRivetPage);
+  function showRivetPage() {
+    chrome.tabs.create({url: chrome.extension.getURL("rivet.html")});
   }
-);
+
+  focusButton.onClick(showRivetPage);
+  notificationService.onMore(showRivetPage);
+}

@@ -1,28 +1,28 @@
 'use strict';
 
-define(["knockout", "subscribed-observable", "subscribable-event"],
-  function (ko, SubscribedObservable, SubscribableEvent) {
-    return function ProxyPomodoroService() {
-      var self = this;
+import ko = require("knockout");
+import subscribedObservable = require("subscribed-observable");
+import subscribableEvent = require("subscribable-event");
 
-      self.start = function startPomodoro() {
-        chrome.runtime.sendMessage({"action": "start-pomodoro"});
-      };
-
-      self.takeABreak = function takeABreak() {
-        chrome.runtime.sendMessage({"action": "start-break"});
-      };
-
-      self.isActive = new SubscribedObservable("pomodoro-is-active", false);
-      self.isBreakActive = new SubscribedObservable("break-is-active", false);
-      self.progress = new SubscribedObservable("pomodoro-service-progress", null);
-
-      self.onPomodoroStart = new SubscribableEvent();
-      self.onPomodoroSuccess = new SubscribableEvent();
-      self.onPomodoroFailure = new SubscribableEvent();
-
-      self.onBreakStart = new SubscribableEvent();
-      self.onBreakEnd = new SubscribableEvent();
-    };
+class ProxyPomodoroService {
+  start() {
+    chrome.runtime.sendMessage({"action": "start-pomodoro"});
   }
-);
+
+  takeABreak() {
+    chrome.runtime.sendMessage({"action": "start-break"});
+  }
+
+  isActive = subscribedObservable("pomodoro-is-active", false);
+  isBreakActive = subscribedObservable("break-is-active", false);
+  progress = subscribedObservable("pomodoro-service-progress", null);
+
+  onPomodoroStart = subscribableEvent();
+  onPomodoroSuccess = subscribableEvent();
+  onPomodoroFailure = subscribableEvent();
+
+  onBreakStart = subscribableEvent();
+  onBreakEnd = subscribableEvent();
+};
+
+export = ProxyPomodoroService;

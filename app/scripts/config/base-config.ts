@@ -26,3 +26,17 @@ requirejs.config({
     "config": "config/" + configPrefix + "-rivet-config"
   }
 });
+
+// Type definition for the app config, to promise to typescript that one of the prod/test/dev configs
+// will solve its problems.
+interface ApplicationConfig {
+  pomodoroDuration: number;
+  breakDuration: number;
+  rollbarConfig: Object;
+}
+
+declare var config: ApplicationConfig;
+
+declare module "config" {
+  export = config;
+}

@@ -243,7 +243,7 @@ module.exports = function (grunt) {
               "scripts": [
                 "bower_components/requirejs/require.js",
                 "scripts/config/base-config.js",
-                "scripts/pages/background-page.js"
+                "scripts/pages/background-page-binding.js"
               ]
             },
             // Prod key

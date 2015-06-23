@@ -13,7 +13,7 @@
       "scripts/chromereload.js",
       "bower_components/requirejs/require.js",
       "scripts/config/base-config.js",
-      "scripts/pages/background-page.js"
+      "scripts/pages/background-page-binding.js"
     ]
   },
   "browser_action": {

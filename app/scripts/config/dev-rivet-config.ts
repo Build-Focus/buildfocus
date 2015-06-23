@@ -1,6 +1,6 @@
 'use strict';
 
-define({
+const devConfig: ApplicationConfig = {
   pomodoroDuration: 1000 * 10,
   breakDuration: 1000 * 3,
 
@@ -13,4 +13,6 @@ define({
     verbose: true,
     enabled: false
   }
-});
+};
+
+export = devConfig;

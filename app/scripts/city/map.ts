@@ -1,36 +1,38 @@
 'use strict';
 
-define(["knockout", "lodash", "city/null-cell"], function (ko, _, NullCell) {
-  return function Map(cells) {
-    var self = this;
+import ko = require('knockout');
+import _ = require('lodash');
+import NullCell = require('city/null-cell');
 
-    var cellLookup = [];
-    _.forEach(cells, function (cell) {
-      if (getCell(cell.x, cell.y) !== undefined) {
-        throw "Duplicate cell coordinates: " + cell.x + "," + cell.y;
-      } else {
-        setCell(cell);
-      }
-    });
+export = function Map(cells: Array<any>) {
+  var self = this;
 
-    function setCell(cell) {
-      if (!cellLookup[cell.x]) {
-        cellLookup[cell.x] = [];
-      }
-      cellLookup[cell.x][cell.y] = cell;
+  var cellLookup = [];
+  _.forEach(cells, function (cell) {
+    if (getCell(cell.x, cell.y) !== undefined) {
+      throw "Duplicate cell coordinates: " + cell.x + "," + cell.y;
+    } else {
+      setCell(cell);
     }
+  });
 
-    function getCell(x, y) {
-      var row = cellLookup[x] || [];
-      return row[y];
+  function setCell(cell) {
+    if (!cellLookup[cell.x]) {
+      cellLookup[cell.x] = [];
     }
+    cellLookup[cell.x][cell.y] = cell;
+  }
 
-    self.cells = function () {
-      return _.flatten(cellLookup);
-    };
+  function getCell(x, y) {
+    var row = cellLookup[x] || [];
+    return row[y];
+  }
 
-    self.getCell = function (x, y) {
-      return getCell(x, y) || new NullCell(x, y);
-    };
+  self.cells = function () {
+    return _.flatten(cellLookup);
   };
-});
+
+  self.getCell = function (x, y) {
+    return getCell(x, y) || new NullCell(x, y);
+  };
+};

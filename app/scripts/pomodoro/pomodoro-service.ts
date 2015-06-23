@@ -1,73 +1,75 @@
 'use strict';
 
-define(["knockout", "published-observable", "subscribable-event", "pomodoro/timer", "config"],
-  function (ko, PublishedObservable, SubscribableEvent, Timer, config) {
-    return function PomodoroService(badBehaviourMonitor) {
-      var self = this;
+import ko = require("knockout");
+import publishedObservable = require("published-observable");
+import subscribableEvent = require("subscribable-event");
+import Timer = require("pomodoro/timer");
+import config = require("config");
 
-      var pomodoroTimer = new Timer();
-      var breakTimer = new Timer();
+export = function PomodoroService(badBehaviourMonitor) {
+  var self = this;
 
-      self.start = function startPomodoro() {
-        if (self.isActive()) {
-          return;
-        }
+  var pomodoroTimer = new Timer();
+  var breakTimer = new Timer();
 
-        breakTimer.reset();
-        pomodoroTimer.start(config.pomodoroDuration, function () {
-          badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
+  self.start = function startPomodoro() {
+    if (self.isActive()) {
+      return;
+    }
 
-          self.onPomodoroSuccess.trigger();
-        });
+    breakTimer.reset();
+    pomodoroTimer.start(config.pomodoroDuration, function () {
+      badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
 
-        var badBehaviourRegistration = badBehaviourMonitor.onBadBehaviour(function () {
-          pomodoroTimer.reset();
-          badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
+      self.onPomodoroSuccess.trigger();
+    });
 
-          self.onPomodoroFailure.trigger();
-        });
+    var badBehaviourRegistration = badBehaviourMonitor.onBadBehaviour(function () {
+      pomodoroTimer.reset();
+      badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
 
-        self.onPomodoroStart.trigger();
-      };
+      self.onPomodoroFailure.trigger();
+    });
 
-      self.takeABreak = function takeABreak() {
-        if (self.isActive()) {
-          return;
-        }
+    self.onPomodoroStart.trigger();
+  };
 
-        breakTimer.start(config.breakDuration, self.onBreakEnd.trigger);
-        self.onBreakStart.trigger();
-      };
+  self.takeABreak = function takeABreak() {
+    if (self.isActive()) {
+      return;
+    }
 
-      chrome.runtime.onMessage.addListener(function (message) {
-        if (message.action === "start-pomodoro") {
-          self.start();
-        } else if (message.action === "start-break") {
-          self.takeABreak();
-        }
-      });
+    breakTimer.start(config.breakDuration, self.onBreakEnd.trigger);
+    self.onBreakStart.trigger();
+  };
 
-      self.isActive = new PublishedObservable("pomodoro-is-active", pomodoroTimer.isRunning);
-      self.isBreakActive = new PublishedObservable("break-is-active", breakTimer.isRunning);
+  chrome.runtime.onMessage.addListener(function (message) {
+    if (message.action === "start-pomodoro") {
+      self.start();
+    } else if (message.action === "start-break") {
+      self.takeABreak();
+    }
+  });
 
-      var rawProgress = ko.computed(function () {
-        if (pomodoroTimer.isRunning()) {
-          return pomodoroTimer.progress();
-        } else if (breakTimer.isRunning()) {
-          return breakTimer.progress();
-        } else {
-          return null;
-        }
-      });
+  self.isActive = publishedObservable("pomodoro-is-active", pomodoroTimer.isRunning);
+  self.isBreakActive = publishedObservable("break-is-active", breakTimer.isRunning);
 
-      self.progress = new PublishedObservable("pomodoro-service-progress", rawProgress);
+  var rawProgress = ko.computed(function () {
+    if (pomodoroTimer.isRunning()) {
+      return pomodoroTimer.progress();
+    } else if (breakTimer.isRunning()) {
+      return breakTimer.progress();
+    } else {
+      return null;
+    }
+  });
 
-      self.onPomodoroStart = new SubscribableEvent();
-      self.onPomodoroSuccess = new SubscribableEvent();
-      self.onPomodoroFailure = new SubscribableEvent();
+  self.progress = publishedObservable("pomodoro-service-progress", rawProgress);
 
-      self.onBreakStart = new SubscribableEvent();
-      self.onBreakEnd = new SubscribableEvent();
-    };
-  }
-);
+  self.onPomodoroStart = subscribableEvent();
+  self.onPomodoroSuccess = subscribableEvent();
+  self.onPomodoroFailure = subscribableEvent();
+
+  self.onBreakStart = subscribableEvent();
+  self.onBreakEnd = subscribableEvent();
+};

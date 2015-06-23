@@ -1,9 +1,13 @@
 'use strict';
 
-define(function () {
-  return function NullCell(x, y) {
-    var self = this;
-    self.x = x;
-    self.y = y;
-  };
-});
+class NullCell {
+  public x: number;
+  public y: number;
+
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+export = NullCell;

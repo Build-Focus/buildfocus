@@ -1,22 +1,21 @@
 'use strict';
 
-define(["knockout", "lodash"], function (ko, _) {
-  function buildCurrentUrlsObservable() {
-    var currentUrls = ko.observableArray();
+import ko = require("knockout");
+import _ = require("lodash");
 
-    function updateCurrentUrls() {
-      chrome.tabs.query({'active': true}, function (activeTabs) {
-        currentUrls(_.map(activeTabs, 'url'));
-      });
-    }
+var currentUrls: KnockoutObservableArray<string> = ko.observableArray([]);
 
-    updateCurrentUrls();
-    chrome.tabs.onActivated.addListener(updateCurrentUrls);
-    chrome.tabs.onUpdated.addListener(updateCurrentUrls);
-    chrome.tabs.onRemoved.addListener(updateCurrentUrls);
+function updateCurrentUrls() {
+  chrome.tabs.query({'active': true}, function (activeTabs: Array<chrome.tabs.Tab>) {
+    var urls = _.map(activeTabs, (tab) => tab.url);
+    currentUrls(urls);
+  });
+}
 
-    return currentUrls;
-  }
+updateCurrentUrls();
 
-  return buildCurrentUrlsObservable();
-});
+chrome.tabs.onActivated.addListener(updateCurrentUrls);
+chrome.tabs.onUpdated.addListener(updateCurrentUrls);
+chrome.tabs.onRemoved.addListener(updateCurrentUrls);
+
+export = currentUrls;
