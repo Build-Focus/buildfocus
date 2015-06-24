@@ -7,7 +7,7 @@ import score = require('score');
 import SettingsRepository = require('repositories/settings-repository');
 import Domain = require("url-monitoring/domain");
 
-export function OptionsPageViewModel() {
+export = function OptionsPageViewModel() {
   var self = this;
 
   var settings = new SettingsRepository();
