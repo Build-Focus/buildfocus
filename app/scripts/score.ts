@@ -17,4 +17,5 @@ class Score {
 }
 
 // Singleton
-export = new Score();
+var score = new Score();
+export = score;

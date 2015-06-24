@@ -23,6 +23,6 @@ class BadBehaviourMonitor {
       }
     });
   }
-};
+}
 
 export = BadBehaviourMonitor
