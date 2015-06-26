@@ -29,6 +29,7 @@
     "grunt-mocha-test": "^0.12.7",
     "grunt-notify": "^0.4.1",
     "grunt-svgmin": "~0.4.0",
+    "grunt-ts": "^4.2.0-beta.1",
     "grunt-usemin": "~2.1.0",
     "grunt-webstore-upload": "^0.8.3",
     "jshint-stylish": "~0.1.5",

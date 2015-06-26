@@ -11,11 +11,16 @@ module.exports = function (grunt) {
   // Configurable paths
   var config = {
     app: 'app',
+    build: 'build',
     dist: 'dist'
   };
 
   var bowerDependencies = Object.keys(grunt.file.readJSON('bower.json').dependencies).map(function (dep) {
     return "bower_components/" + dep + "/**/*.js";
+  });
+
+  var bowerDevDependencies = Object.keys(grunt.file.readJSON('bower.json').devDependencies).map(function (dep) {
+    return "bower_components/" + dep + "/**/*.{js,css}";
   });
 
   grunt.initConfig({
@@ -25,13 +30,9 @@ module.exports = function (grunt) {
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
-      bower: {
-        files: ['bower.json'],
-        tasks: ['bowerInstall']
-      },
       js: {
-        files: ['<%= config.app %>/scripts/{,*/}*.js', 'test/**/*.js', '**/*.html'],
-        tasks: ['run-quick-tests'],
+        files: ['<%= config.app %>/scripts/{,*/}*.ts', 'test/**/*.js', '**/*.html'],
+        tasks: ['build-fast', 'run-quick-tests'],
         options: {
           livereload: '<%= connect.options.livereload %>',
           atBegin: true
@@ -64,7 +65,7 @@ module.exports = function (grunt) {
           port: 9001,
           open: false,
           base: [
-            '<%= config.app %>'
+            '<%= config.build %>'
           ]
         }
       },
@@ -74,7 +75,8 @@ module.exports = function (grunt) {
           open: false,
           base: [
             'test',
-            '<%= config.app %>'
+            '<%= config.app %>',
+            '<%= config.build %>'
           ]
         }
       },
@@ -85,7 +87,8 @@ module.exports = function (grunt) {
           keepalive: true,
           base: [
             'test',
-            '<%= config.app %>'
+            '<%= config.app %>',
+            '<%= config.build %>'
           ]
         }
       }
@@ -103,6 +106,29 @@ module.exports = function (grunt) {
         '!<%= config.app %>/scripts/vendor/*',
         'test/spec/{,*/}*.js'
       ]
+    },
+
+    ts: {
+      options: {
+        module: 'amd',
+        target: 'es5',
+        mapRoot: '/scripts',
+        sourceRoot: '/scripts',
+        fast: 'never'
+      },
+
+      app: {
+        src: ['app/scripts/**/*.ts', 'typings/**/*.d.ts'],
+        outDir: '<%= config.build %>/scripts'
+      },
+
+      fast: {
+        src: ['app/scripts/**/*.ts', 'typings/**/*.d.ts'],
+        outDir: '<%= config.build %>/scripts',
+        options: {
+          fast: 'watch'
+        }
+      }
     },
 
     // Browser-based tests
@@ -153,12 +179,12 @@ module.exports = function (grunt) {
 
     // Empties folders to start fresh
     clean: {
-      chrome: {
-      },
-      dist: {
+      all: {
         files: [{
           dot: true,
           src: [
+            '<%= config.build %>/*',
+            '!<%= config.build %>/.git*',
             '<%= config.dist %>/*',
             '!<%= config.dist %>/.git*'
           ]
@@ -166,14 +192,13 @@ module.exports = function (grunt) {
       }
     },
 
-    // Copies built files to dist folder for prod build
     copy: {
-      dist: {
+      // Copy all non-compiled input files to build output - /build
+      build: {
         files: [{
           expand: true,
-          dot: true,
           cwd: '<%= config.app %>',
-          dest: '<%= config.dist %>',
+          dest: '<%= config.build %>',
           src: [
             'manifest.json',
             '*.{ico,png,txt}',
@@ -182,12 +207,29 @@ module.exports = function (grunt) {
             'styles/**/*.css',
             'styles/fonts/**/*.*',
             '_locales/**/*.json',
-            'scripts/**/*.js',
+
+            // We bring the typescript too, for sourcemapping purposes
+            '**/*.ts'
+          ].concat(bowerDependencies).concat(bowerDevDependencies)
+        }]
+      },
+      // Copy all prod-relevant build output to dist - /dist
+      dist: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= config.build %>',
+          dest: '<%= config.dist %>',
+          src: [
+            '**/*',
 
             // Drop all config except prod config
             '!scripts/config/**/*.js',
             'scripts/config/base-config.js',
             'scripts/config/prod-rivet-config.js',
+
+            // Don't copy all bower components, only bowerDependencies (no dev deps)
+            '!bower_components/**/*'
           ].concat(bowerDependencies)
         }]
       }
@@ -201,7 +243,7 @@ module.exports = function (grunt) {
               "scripts": [
                 "bower_components/requirejs/require.js",
                 "scripts/config/base-config.js",
-                "scripts/pages/background-page.js"
+                "scripts/pages/background-page-binding.js"
               ]
             },
             // Prod key
@@ -279,15 +321,26 @@ module.exports = function (grunt) {
     ]);
   });
 
+  grunt.registerTask('build', [
+    'clean',
+    'ts:app',
+    'copy:build'
+  ]);
+
+  grunt.registerTask('build-fast', [
+    'ts:fast',
+    'copy:build'
+  ]);
+
   grunt.registerTask('test', [
+    'build',
     'connect:test',
     'run-quick-tests'
   ]);
 
   grunt.registerTask('ci-test', [
     'test',
-    'build',
-    'execute:uploadToSeleniumFtp',
+    'prepare-system-tests',
     'run-system-tests'
   ]);
 
@@ -297,15 +350,20 @@ module.exports = function (grunt) {
     'mocha:acceptance'
   ]);
 
+  grunt.registerTask('prepare-system-tests', [
+    'dist',
+    'execute:uploadToSeleniumFtp'
+  ]);
+
   grunt.registerTask('run-system-tests', [
     'env:seleniumEnv',
     'mochaTest:system'
   ]);
 
-  grunt.registerTask('build', [
-    'clean:dist',
+  grunt.registerTask('dist', [
     'bump-only',
-    'copy',
+    'build',
+    'copy:dist',
     'json-replace',
     'compress'
   ]);
@@ -318,6 +376,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'test',
-    'build'
+    'dist'
   ]);
 };
