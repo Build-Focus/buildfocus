@@ -42,6 +42,11 @@
     <script src="spec/city/city-test.js"></script>
     <script src="spec/city/city-integration-test.js"></script>
 
+    <script src="spec/ko-bindings/render-binding-test.js"></script>
+
+    <!-- For tests that need to touch the DOM: -->
+    <div id="test-element"></div>
+
     <script>
       if (!window.PHANTOMJS) {
         // PhantomJS Mocha runner does this itself
