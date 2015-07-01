@@ -25,6 +25,15 @@
     },
     "jquery/jquery.d.ts": {
       "commit": "7bf24210432d20a4e52ab0975fe3afd2d1edadbe"
+    },
+    "easeljs/easeljs.d.ts": {
+      "commit": "c7b1128cc9a8f5797bade826e7632b36b06a856c"
+    },
+    "createjs-lib/createjs-lib.d.ts": {
+      "commit": "c7b1128cc9a8f5797bade826e7632b36b06a856c"
+    },
+    "tweenjs/tweenjs.d.ts": {
+      "commit": "c7b1128cc9a8f5797bade826e7632b36b06a856c"
     }
   }
 }

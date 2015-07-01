@@ -16,6 +16,7 @@ requirejs.config({
     "jquery": "../bower_components/jquery/dist/jquery",
     "URIjs": "../bower_components/uri.js/src",
     "lodash": "../bower_components/lodash/lodash",
+    "createjs": "../bower_components/easeljs/lib/easeljs-0.8.1.combined",
 
     "raw-knockout": "../bower_components/knockout/dist/knockout",
     "knockout": "lib-wrappers/knockout",
@@ -24,6 +25,10 @@ requirejs.config({
     "rollbar": "lib-wrappers/rollbar",
 
     "config": "config/" + configPrefix + "-rivet-config"
+  },
+  shim: {
+    createjs: { exports: 'createjs' },
+    tween: { deps: ['createjs'], exports: 'Tween' }
   }
 });
 

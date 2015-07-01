@@ -5,3 +5,6 @@
 /// <reference path="lodash/lodash.d.ts" />
 /// <reference path="jquery/jquery.d.ts" />
 /// <reference path="urijs/URIjs.d.ts" />
+/// <reference path="createjs-lib/createjs-lib.d.ts" />
+/// <reference path="easeljs/easeljs.d.ts" />
+/// <reference path="tweenjs/tweenjs.d.ts" />

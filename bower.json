@@ -7,7 +7,8 @@
     "lodash": "~3.6.0",
     "uri.js": "~1.15.0",
     "requirejs": "~2.1.17",
-    "rollbar": "~1.2.2"
+    "rollbar": "~1.2.2",
+    "easeljs": "~0.8.1"
   },
   "devDependencies": {
     "chai": "~1.8.0",
