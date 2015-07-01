@@ -3,7 +3,7 @@
 import ko = require("knockout");
 import _ = require("lodash");
 import subscribableEvent = require("subscribable-event");
-import observableImage = require('observable-image');
+import observableImage = require('observables/observable-image');
 
 export = function FocusButton(progressObservable, pomodoroActiveObservable) {
   this.onClick = subscribableEvent();

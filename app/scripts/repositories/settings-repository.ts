@@ -2,7 +2,7 @@
 
 import ko = require('knockout');
 import _ = require('lodash');
-import SynchronizedObservable = require('synchronized-observable');
+import SynchronizedObservable = require('observables/synchronized-observable');
 import Domain = require('url-monitoring/domain');
 
 class SettingsRepository {

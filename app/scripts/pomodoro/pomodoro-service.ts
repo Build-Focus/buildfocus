@@ -1,7 +1,7 @@
 'use strict';
 
 import ko = require("knockout");
-import publishedObservable = require("published-observable");
+import publishedObservable = require("observables/published-observable");
 import subscribableEvent = require("subscribable-event");
 import Timer = require("pomodoro/timer");
 import config = require("config");

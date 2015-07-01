@@ -2,7 +2,7 @@
 
 import ko = require('knockout');
 import _ = require('lodash');
-import synchronizedObservable = require('synchronized-observable');
+import synchronizedObservable = require('observables/synchronized-observable');
 
 class Score {
   points = synchronizedObservable("points", 0, "sync");
