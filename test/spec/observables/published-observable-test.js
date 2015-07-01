@@ -8,7 +8,7 @@
 
   describe('Published Observable', function () {
     before(function (done) {
-      require(["knockout", "published-observable"], function (loadedKo, loadedClass) {
+      require(["knockout", "observables/published-observable"], function (loadedKo, loadedClass) {
         PublishedObservable = loadedClass;
         ko = loadedKo;
         done();

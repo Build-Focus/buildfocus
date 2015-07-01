@@ -8,7 +8,7 @@
 
   describe('Subscribed Observable', function () {
     before(function (done) {
-      require(["knockout", "subscribed-observable"], function (loadedKo, loadedClass) {
+      require(["knockout", "observables/subscribed-observable"], function (loadedKo, loadedClass) {
         SubscribedObservable = loadedClass;
         ko = loadedKo;
         done();

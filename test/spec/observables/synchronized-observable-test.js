@@ -8,7 +8,7 @@
 
   describe('Synchronized Observable', function () {
     before(function (done) {
-      require(["knockout", "synchronized-observable"], function (loadedKo, loadedClass) {
+      require(["knockout", "observables/synchronized-observable"], function (loadedKo, loadedClass) {
         SynchronizedObservable = loadedClass;
         ko = loadedKo;
         done();

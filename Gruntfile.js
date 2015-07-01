@@ -32,7 +32,7 @@ module.exports = function (grunt) {
     watch: {
       js: {
         files: ['<%= config.app %>/scripts/{,*/}*.ts', 'test/**/*.js', '**/*.html'],
-        tasks: ['build-fast', 'run-quick-tests'],
+        tasks: ['build', 'run-quick-tests'],
         options: {
           livereload: '<%= connect.options.livereload %>',
           atBegin: true
@@ -324,11 +324,6 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean',
     'ts:app',
-    'copy:build'
-  ]);
-
-  grunt.registerTask('build-fast', [
-    'ts:fast',
     'copy:build'
   ]);
 
