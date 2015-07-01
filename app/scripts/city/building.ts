@@ -1,5 +1,13 @@
 'use strict';
 
-define(function () {
-  return null;
-});
+enum BuildingType {
+  BasicHouse
+}
+
+class Building {
+  private type: BuildingType;
+
+  public constructor(type: BuildingType) {
+    this.type = type;
+  }
+}
