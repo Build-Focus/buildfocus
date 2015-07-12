@@ -1,13 +1,17 @@
 'use strict';
 
-enum BuildingType {
-  BasicHouse
-}
+import Cell = require('city/cell');
+import BuildingType = require('city/building-type');
 
 class Building {
-  private type: BuildingType;
+  // TODO: Store coords, not cells
+  public cells: Cell[];
+  public buildingType: BuildingType;
 
-  public constructor(type: BuildingType) {
-    this.type = type;
+  constructor(cells: Cell[], buildingType: BuildingType) {
+    this.cells = cells;
+    this.buildingType = buildingType;
   }
 }
+
+export = Building;

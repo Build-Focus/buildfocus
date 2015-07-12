@@ -1,25 +1,18 @@
 'use strict';
 
-export enum CellSurface {
-  Null,
-  Grass
-}
+import CellType = require('city/cell-type');
 
-export class Cell {
+class Cell {
   public x: number;
   public y: number;
 
-  private surface: CellSurface;
+  private type: CellType;
 
-  constructor(x: number, y: number, surface: CellSurface) {
+  constructor(x: number, y: number, type: CellType) {
     this.x = x;
     this.y = y;
-    this.surface = surface;
+    this.type = type;
   }
 }
 
-export class NullCell extends Cell {
-  constructor(x: number, y: number) {
-    super(x, y, CellSurface.Null);
-  }
-}
+export = Cell;

@@ -2,17 +2,18 @@
 
 import ko = require('knockout');
 import _ = require('lodash');
-import cell = require('city/cell');
-import Construction = require('city/construction');
+import Cell = require('city/cell');
+import NullCell = require('city/null-cell');
+import Building = require('city/building');
 
 class Map {
-  private cellLookup: { [x: number]: { [y:number]: cell.Cell } };
-  private constructions: Construction[];
-  private cellFactory: (x: number, y: number) => cell.Cell;
+  private cellLookup: { [x: number]: { [y:number]: Cell } };
+  private buildings: Building[];
+  private cellFactory: (x: number, y: number) => Cell;
 
-  constructor(cells: cell.Cell[], cellFactory: (x: number, y: number) => cell.Cell) {
+  constructor(cells: Cell[], cellFactory: (x: number, y: number) => Cell) {
     this.cellFactory = cellFactory;
-    this.constructions = [];
+    this.buildings = [];
     this.cellLookup = {};
 
     _.forEach(cells, (cell) => {
@@ -31,7 +32,7 @@ class Map {
     this.cellLookup[cell.x][cell.y] = cell;
   };
 
-  private getCellOrUndefined(x, y): cell.Cell {
+  private getCellOrUndefined(x, y): Cell {
     var row = this.cellLookup[x] || [];
     return row[y];
   }
@@ -40,31 +41,31 @@ class Map {
     return !!this.getCellOrUndefined(x, y);
   }
 
-  public getCells(): cell.Cell[] {
+  public getCells(): Cell[] {
     var rows = _.values(this.cellLookup);
     return _.flatten(_.map(rows, _.values));
   }
 
-  public getCell(x, y): cell.Cell {
-    return this.getCellOrUndefined(x, y) || new cell.NullCell(x, y);
+  public getCell(x, y): Cell {
+    return this.getCellOrUndefined(x, y) || new NullCell(x, y);
   }
 
-  public construct(construction: Construction) {
-    if (_.any(construction.cells, (coord) => !this.isCellPresent(coord.x, coord.y))) {
-      throw new Error("Can't build construction for cells that don't exist");
+  public construct(building: Building) {
+    if (_.any(building.cells, (coord) => !this.isCellPresent(coord.x, coord.y))) {
+      throw new Error("Can't build building for cells that don't exist");
     }
-    this.constructions.push(construction);
-    this.expandCellsAroundConstruction(construction);
+    this.buildings.push(building);
+    this.expandCellsAroundBuilding(building);
   }
 
-  private expandCellsAroundConstruction(construction: Construction) {
+  private expandCellsAroundBuilding(building: Building) {
     // TODO: Refactor out a coord type, move methods to use it, move some of below to coord.getNeighbours
-    var allCoordsToExpand = _.reduce(construction.cells, (coordsSoFar, constructionCell) => {
+    var allCoordsToExpand = _.reduce(building.cells, (coordsSoFar, buildingCell) => {
       var offsets = [[0,-1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]];
 
       var coordsToExpandForCell = offsets.map((offset) => {
-        var x = constructionCell.x + offset[0];
-        var y = constructionCell.y + offset[1];
+        var x = buildingCell.x + offset[0];
+        var y = buildingCell.y + offset[1];
         return [x, y];
       }).filter((coord) => {
         var x = coord[0];
@@ -85,8 +86,8 @@ class Map {
     newCells.forEach(this.setCell)
   }
 
-  public getConstructions(): Construction[] {
-    return _.clone(this.constructions);
+  public getBuildings(): Building[] {
+    return _.clone(this.buildings);
   }
 }
 

@@ -16,11 +16,12 @@
 
   describe('Map', function () {
     before(function (done) {
-      require(["knockout", "lodash", "city/map", "city/cell"],
-        function (loadedKo, loadedLodash, loadedMapClass, loadedCellClass) {
+      require(["knockout", "lodash", "city/map", "city/cell", "city/null-cell"],
+        function (loadedKo, loadedLodash, loadedMapClass,
+                  loadedCellClass, loadedNullCellClass) {
           Map = loadedMapClass;
-          Cell = loadedCellClass.Cell;
-          NullCell = loadedCellClass.NullCell;
+          Cell = loadedCellClass;
+          NullCell = loadedNullCellClass;
 
           _ = loadedLodash;
           ko = loadedKo;
@@ -73,12 +74,12 @@
 
     it("should allow you to add a building", function () {
       var centralCell = buildCell(0, 0);
-      var construction = { building: {}, cells: [centralCell] };
+      var building = { buildingType: null, cells: [centralCell] };
       var map = new Map([centralCell], buildCell);
 
-      map.construct(construction);
+      map.construct(building);
 
-      expect(map.getConstructions()).to.deep.equal([construction]);
+      expect(map.getBuildings()).to.deep.equal([building]);
     });
 
     function asCoords(cells) {
@@ -98,7 +99,7 @@
       var map = new Map([centralCell], buildCell);
 
       expect(function () {
-        map.construct({building: {}, cells: [buildCell(1, 0)]});
+        map.construct({buildingType: null, cells: [buildCell(1, 0)]});
       }).to.throw();
     });
 
@@ -106,7 +107,7 @@
       var centralCell = buildCell(0, 0);
       var map = new Map([centralCell], buildCell);
 
-      map.construct({ building: {}, cells: [centralCell] });
+      map.construct({ buildingType: null, cells: [centralCell] });
 
       expect(asCoords(map.getCells()).sort()).to.deep.equal([
         [-1, -1], [0, -1], [1, -1],
@@ -119,7 +120,7 @@
       var initialCoords = [[0,0], [1,0], [2,0], [1, 1]];
       var map = new Map(toCells(initialCoords), buildCell);
 
-      map.construct({ building: {}, cells: [buildCell(1, 1)] });
+      map.construct({ buildingType: null, cells: [buildCell(1, 1)] });
 
       var coords = _.map(map.getCells(), function (cell) { return [cell.x, cell.y]; }).sort();
       expect(coords).to.deep.equal(initialCoords.concat([
@@ -127,9 +128,5 @@
         [0, 2], [1, 2], [2, 2]
       ]).sort());
     });
-
-    it("should have a width matching the longest row of the cells given");
-
-    it("should have a height matching the longest column of the cells given");
   });
 })();
