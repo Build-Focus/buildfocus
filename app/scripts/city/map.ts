@@ -2,6 +2,8 @@
 
 import ko = require('knockout');
 import _ = require('lodash');
+
+import Coord = require('city/coord');
 import Cell = require('city/cell');
 import NullCell = require('city/null-cell');
 import Building = require('city/building');
@@ -9,16 +11,16 @@ import Building = require('city/building');
 class Map {
   private cellLookup: { [x: number]: { [y:number]: Cell } };
   private buildings: Building[];
-  private cellFactory: (x: number, y: number) => Cell;
+  private cellFactory: (coord: Coord) => Cell;
 
-  constructor(cells: Cell[], cellFactory: (x: number, y: number) => Cell) {
+  constructor(cells: Cell[], cellFactory: (coord: Coord) => Cell) {
     this.cellFactory = cellFactory;
     this.buildings = [];
     this.cellLookup = {};
 
     _.forEach(cells, (cell) => {
-      if (this.getCellOrUndefined(cell.x, cell.y) !== undefined) {
-        throw "Duplicate cell coordinates: " + cell.x + "," + cell.y;
+      if (this.getCellOrUndefined(cell.coord) !== undefined) {
+        throw "Duplicate cell coordinates: " + cell.coord;
       } else {
         this.setCell(cell);
       }
@@ -26,19 +28,19 @@ class Map {
   }
 
   private setCell = (cell) => {
-    if (!this.cellLookup[cell.x]) {
-      this.cellLookup[cell.x] = [];
+    if (!this.cellLookup[cell.coord.x]) {
+      this.cellLookup[cell.coord.x] = [];
     }
-    this.cellLookup[cell.x][cell.y] = cell;
+    this.cellLookup[cell.coord.x][cell.coord.y] = cell;
   };
 
-  private getCellOrUndefined(x, y): Cell {
-    var row = this.cellLookup[x] || [];
-    return row[y];
+  private getCellOrUndefined(coord: Coord): Cell {
+    var row = this.cellLookup[coord.x] || [];
+    return row[coord.y];
   }
 
-  private isCellPresent(x, y): boolean {
-    return !!this.getCellOrUndefined(x, y);
+  private isCellPresent(coord: Coord): boolean {
+    return !!this.getCellOrUndefined(coord);
   }
 
   public getCells(): Cell[] {
@@ -46,12 +48,20 @@ class Map {
     return _.flatten(_.map(rows, _.values));
   }
 
-  public getCell(x, y): Cell {
-    return this.getCellOrUndefined(x, y) || new NullCell(x, y);
+  public getCell(x: number, y: number): Cell;
+  public getCell(coord: Coord): Cell;
+  public getCell(coordOrX: Coord|number, y?: number): Cell {
+    if (coordOrX instanceof Coord) {
+      var coord: Coord = coordOrX;
+      return this.getCellOrUndefined(coord) || new NullCell(coord);
+    } else {
+      var x = <number> coordOrX;
+      return this.getCell(new Coord(x, y));
+    }
   }
 
   public construct(building: Building) {
-    if (_.any(building.cells, (coord) => !this.isCellPresent(coord.x, coord.y))) {
+    if (_.any(building.cells, (cell) => !this.isCellPresent(cell.coord))) {
       throw new Error("Can't build building for cells that don't exist");
     }
     this.buildings.push(building);
@@ -59,30 +69,21 @@ class Map {
   }
 
   private expandCellsAroundBuilding(building: Building) {
-    // TODO: Refactor out a coord type, move methods to use it, move some of below to coord.getNeighbours
     var allCoordsToExpand = _.reduce(building.cells, (coordsSoFar, buildingCell) => {
-      var offsets = [[0,-1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]];
+      var neighbouringCoords = buildingCell.coord.getNeighbours();
+      var coordsToExpandForCell = neighbouringCoords.filter((coord) => {
+        var alreadyPresent = this.getCellOrUndefined(coord) !== undefined;
+        var alreadyExpanding = !!_.find(coordsSoFar, (previousCoord) => {
+          return previousCoord.x === coord.x && previousCoord.y === coord.y;
+        });
 
-      var coordsToExpandForCell = offsets.map((offset) => {
-        var x = buildingCell.x + offset[0];
-        var y = buildingCell.y + offset[1];
-        return [x, y];
-      }).filter((coord) => {
-        var x = coord[0];
-        var y = coord[1];
-
-        var alreadyPresent = this.getCellOrUndefined(x, y) !== undefined;
-        var alreadyExpanding = !!_.find(coordsSoFar, (cell) => cell.x === x && cell.y === y);
-
-        return  !alreadyPresent && !alreadyExpanding;
+        return !alreadyPresent && !alreadyExpanding;
       });
 
       return coordsSoFar.concat(coordsToExpandForCell);
     }, []);
 
-    var newCells = allCoordsToExpand.map((coord) => {
-      return this.cellFactory(coord[0], coord[1]);
-    });
+    var newCells = allCoordsToExpand.map(this.cellFactory);
     newCells.forEach(this.setCell)
   }
 

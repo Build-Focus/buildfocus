@@ -47,9 +47,9 @@
     });
 
     function asCoords(cells) {
-      return _.map(cells, function (cell) {
-        return [cell.x, cell.y];
-      });
+      return _(cells).pluck('coord').map(function (coord) {
+        return [coord.x, coord.y];
+      }).value();
     }
 
     it('should add new surrounding cells after the first building is added', function () {

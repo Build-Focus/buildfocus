@@ -9,19 +9,46 @@
   var Map;
   var Cell;
   var NullCell;
+  var Coord;
 
   function buildCell(x, y) {
-    return new NullCell(x, y);
+    return new NullCell(new Coord(x, y));
+  }
+
+  function cellFactory(coord) {
+    return buildCell(coord.x, coord.y);
+  }
+
+  function lexicographicSort(coordA, coordB) {
+    if (coordA.x !== coordB.x) {
+      return coordA.x > coordB.x ? 1 : -1;
+    } else if (coordA.y !== coordB.y) {
+      return coordA.y > coordB.y ? 1 : -1;
+    } else {
+      return 0;
+    }
+  }
+
+  function c(x, y) {
+    return new Coord(x, y);
+  }
+
+  function toCells(coordArraysArray) {
+    return coordArraysArray.map(function (coord) {
+      return new NullCell(coord);
+    });
   }
 
   describe('Map', function () {
     before(function (done) {
-      require(["knockout", "lodash", "city/map", "city/cell", "city/null-cell"],
+      require(["knockout", "lodash", "city/map", "city/cell",
+               "city/null-cell", "city/coord"],
         function (loadedKo, loadedLodash, loadedMapClass,
-                  loadedCellClass, loadedNullCellClass) {
+                  loadedCellClass, loadedNullCellClass, loadedCoordClass) {
           Map = loadedMapClass;
           Cell = loadedCellClass;
           NullCell = loadedNullCellClass;
+          Coord = loadedCoordClass;
 
           _ = loadedLodash;
           ko = loadedKo;
@@ -59,7 +86,7 @@
       var cell = buildCell(0, 0);
       var map = new Map([cell]);
 
-      var unspecifiedCell = map.getCell(10, 10);
+      var unspecifiedCell = map.getCell(new Coord(10, 10));
       expect(unspecifiedCell).to.be.instanceOf(NullCell);
     });
 
@@ -75,28 +102,16 @@
     it("should allow you to add a building", function () {
       var centralCell = buildCell(0, 0);
       var building = { buildingType: null, cells: [centralCell] };
-      var map = new Map([centralCell], buildCell);
+      var map = new Map([centralCell], cellFactory);
 
       map.construct(building);
 
       expect(map.getBuildings()).to.deep.equal([building]);
     });
 
-    function asCoords(cells) {
-      return _.map(cells, function (cell) {
-        return [cell.x, cell.y];
-      });
-    }
-
-    function toCells(coords) {
-      return _.map(coords, function (coord) {
-        return buildCell(coord[0], coord[1]);
-      });
-    }
-
     it("should reject constructions on cells that don't exist", function () {
       var centralCell = buildCell(0, 0);
-      var map = new Map([centralCell], buildCell);
+      var map = new Map([centralCell], cellFactory);
 
       expect(function () {
         map.construct({buildingType: null, cells: [buildCell(1, 0)]});
@@ -105,28 +120,29 @@
 
     it("should add new cells from the cell factory when a building as added surrounded by space", function () {
       var centralCell = buildCell(0, 0);
-      var map = new Map([centralCell], buildCell);
+      var map = new Map([centralCell], cellFactory);
 
       map.construct({ buildingType: null, cells: [centralCell] });
 
-      expect(asCoords(map.getCells()).sort()).to.deep.equal([
-        [-1, -1], [0, -1], [1, -1],
-        [-1, 0],  [0, 0],  [1, 0],
-        [-1, 1],  [0, 1],  [1, 1]
-      ].sort());
+      var coords = _.pluck(map.getCells(), 'coord');
+      expect(coords.sort(lexicographicSort)).to.deep.equal([
+        c(-1, -1), c(0, -1), c(1, -1),
+        c(-1, 0),  c(0, 0),  c(1, 0),
+        c(-1, 1),  c(0, 1),  c(1, 1)
+      ].sort(lexicographicSort));
     });
 
     it("should add new cells from the cell factory when a building as added at the edge", function () {
-      var initialCoords = [[0,0], [1,0], [2,0], [1, 1]];
-      var map = new Map(toCells(initialCoords), buildCell);
+      var initialCoords = [c(0, 0), c(1, 0), c(2, 0), c(1, 1)];
+      var map = new Map(toCells(initialCoords), cellFactory);
 
       map.construct({ buildingType: null, cells: [buildCell(1, 1)] });
 
-      var coords = _.map(map.getCells(), function (cell) { return [cell.x, cell.y]; }).sort();
-      expect(coords).to.deep.equal(initialCoords.concat([
-        [0, 1],         [2, 1],
-        [0, 2], [1, 2], [2, 2]
-      ]).sort());
+      var coords = _.pluck(map.getCells(), 'coord');
+      expect(coords.sort(lexicographicSort)).to.deep.equal(initialCoords.concat([
+        c(0, 1),          c(2, 1),
+        c(0, 2), c(1, 2), c(2, 2)
+      ]).sort(lexicographicSort));
     });
   });
 })();

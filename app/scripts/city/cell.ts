@@ -1,17 +1,19 @@
 'use strict';
 
 import CellType = require('city/cell-type');
+import Coord = require('city/coord');
 
 class Cell {
-  public x: number;
-  public y: number;
-
+  public coord: Coord;
   private type: CellType;
 
-  constructor(x: number, y: number, type: CellType) {
-    this.x = x;
-    this.y = y;
+  constructor(coord: Coord, type: CellType) {
+    this.coord = coord;
     this.type = type;
+  }
+
+  toString() {
+    return "[Cell: " + this.coord.toString() + " - " + this.type + "]";
   }
 }
 
