@@ -83,26 +83,21 @@
     });
 
     it("should return NullCells for all empty cells", function () {
-      var cell = buildCell(0, 0);
-      var map = new Map([cell]);
+      var map = new Map([buildCell(0, 0)]);
 
       var unspecifiedCell = map.getCell(new Coord(10, 10));
       expect(unspecifiedCell).to.be.instanceOf(NullCell);
     });
 
     it("should throw if the cells provided have duplicates", function () {
-      var centralCell1 = buildCell(0, 0);
-      var centralCell2 = buildCell(0, 0);
-
       expect(function () {
-        new Map([centralCell1, centralCell2]);
+        new Map([buildCell(0, 0), buildCell(0, 0)]);
       }).to.throw();
     });
 
     it("should allow you to add a building", function () {
-      var centralCell = buildCell(0, 0);
-      var building = { buildingType: null, cells: [centralCell] };
-      var map = new Map([centralCell], cellFactory);
+      var building = { buildingType: null, coords: [c(0, 0)] };
+      var map = new Map([buildCell(0, 0)], cellFactory);
 
       map.construct(building);
 
@@ -110,19 +105,17 @@
     });
 
     it("should reject constructions on cells that don't exist", function () {
-      var centralCell = buildCell(0, 0);
-      var map = new Map([centralCell], cellFactory);
+      var map = new Map([buildCell(0, 0)], cellFactory);
 
       expect(function () {
-        map.construct({buildingType: null, cells: [buildCell(1, 0)]});
+        map.construct({buildingType: null, coords: [c(1, 0)]});
       }).to.throw();
     });
 
     it("should add new cells from the cell factory when a building as added surrounded by space", function () {
-      var centralCell = buildCell(0, 0);
-      var map = new Map([centralCell], cellFactory);
+      var map = new Map([buildCell(0, 0)], cellFactory);
 
-      map.construct({ buildingType: null, cells: [centralCell] });
+      map.construct({ buildingType: null, coords: [c(0, 0)] });
 
       var coords = _.pluck(map.getCells(), 'coord');
       expect(coords.sort(lexicographicSort)).to.deep.equal([
@@ -136,7 +129,7 @@
       var initialCoords = [c(0, 0), c(1, 0), c(2, 0), c(1, 1)];
       var map = new Map(toCells(initialCoords), cellFactory);
 
-      map.construct({ buildingType: null, cells: [buildCell(1, 1)] });
+      map.construct({ buildingType: null, coords: [c(1, 1)] });
 
       var coords = _.pluck(map.getCells(), 'coord');
       expect(coords.sort(lexicographicSort)).to.deep.equal(initialCoords.concat([

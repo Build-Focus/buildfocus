@@ -61,17 +61,17 @@ class Map {
   }
 
   public construct(building: Building) {
-    if (_.any(building.cells, (cell) => !this.isCellPresent(cell.coord))) {
-      throw new Error("Can't build building for cells that don't exist");
+    if (_.any(building.coords, (coord) => !this.isCellPresent(coord))) {
+      throw new Error("Can't build building on cells that don't exist yet");
     }
     this.buildings.push(building);
     this.expandCellsAroundBuilding(building);
   }
 
   private expandCellsAroundBuilding(building: Building) {
-    var allCoordsToExpand = _.reduce(building.cells, (coordsSoFar, buildingCell) => {
-      var neighbouringCoords = buildingCell.coord.getNeighbours();
-      var coordsToExpandForCell = neighbouringCoords.filter((coord) => {
+    var allCoordsToExpand = _.reduce(building.coords, (coordsSoFar, buildingCoord) => {
+      var neighbouringCoords = buildingCoord.getNeighbours();
+      var nextCoordsToExpand = neighbouringCoords.filter((coord) => {
         var alreadyPresent = this.getCellOrUndefined(coord) !== undefined;
         var alreadyExpanding = !!_.find(coordsSoFar, (previousCoord) => {
           return previousCoord.x === coord.x && previousCoord.y === coord.y;
@@ -80,7 +80,7 @@ class Map {
         return !alreadyPresent && !alreadyExpanding;
       });
 
-      return coordsSoFar.concat(coordsToExpandForCell);
+      return coordsSoFar.concat(nextCoordsToExpand);
     }, []);
 
     var newCells = allCoordsToExpand.map(this.cellFactory);

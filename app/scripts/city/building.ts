@@ -1,15 +1,14 @@
 'use strict';
 
-import Cell = require('city/cell');
+import Coord = require('city/coord');
 import BuildingType = require('city/building-type');
 
 class Building {
-  // TODO: Store coords, not cells
-  public cells: Cell[];
+  public coords: Coord[];
   public buildingType: BuildingType;
 
-  constructor(cells: Cell[], buildingType: BuildingType) {
-    this.cells = cells;
+  constructor(coords: Coord[], buildingType: BuildingType) {
+    this.coords = coords;
     this.buildingType = buildingType;
   }
 }

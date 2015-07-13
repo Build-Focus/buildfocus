@@ -38,9 +38,9 @@
 
     it('should construct provided buildings', function () {
       var city = new City();
-      var onlyCell = city.getCells()[0];
+      var onlyCoord = city.getCells()[0].coord;
 
-      var building = new Building([onlyCell], BuildingType.BasicHouse);
+      var building = new Building([onlyCoord], BuildingType.BasicHouse);
       city.construct(building);
 
       expect(city.getBuildings()).to.deep.equal([building]);
@@ -54,9 +54,9 @@
 
     it('should add new surrounding cells after the first building is added', function () {
       var city = new City();
-      var onlyCell = city.getCells()[0];
+      var onlyCoord = city.getCells()[0].coord;
 
-      city.construct(new Building([onlyCell], BuildingType.BasicHouse));
+      city.construct(new Building([onlyCoord], BuildingType.BasicHouse));
 
       expect(asCoords(city.getCells()).sort()).to.deep.equal([
         [-1, -1], [0, -1], [1, -1],
