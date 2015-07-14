@@ -32,8 +32,10 @@ module.exports = function (grunt) {
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       js: {
-        files: ['<%= config.app %>/scripts/{,*/}*.{ts,html}',
-                '<%= config.test %>/**/*.{js,html}'],
+        files: ['<%= config.app %>/scripts/**/*.ts',
+                '<%= config.app %>/**/*.html',
+                '<%= config.test %>/**/*.js',
+                '<%= config.test %>/**/*.html',],
         tasks: ['build', 'run-quick-tests'],
         options: {
           livereload: '<%= connect.options.livereload %>',
