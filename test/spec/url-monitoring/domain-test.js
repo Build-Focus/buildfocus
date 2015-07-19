@@ -1,18 +1,10 @@
 /* global describe, it */
 
-(function () {
+
+define(["url-monitoring/domain"], function (Domain) {
   'use strict';
 
-  var Domain;
-
   describe('Domain model', function () {
-    before(function (done) {
-      require(["url-monitoring/domain"], function (loadedDomainClass) {
-        Domain = loadedDomainClass;
-        done();
-      });
-    });
-
     describe('validity check', function () {
       it('should allow simple domains', function () {
         var domain = new Domain("google.com");
@@ -146,4 +138,4 @@
       });
     });
   });
-})();
+});

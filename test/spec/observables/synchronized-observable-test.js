@@ -1,23 +1,13 @@
 /* global describe, it */
 
-(function () {
+define(["knockout", "observables/synchronized-observable"], function (ko, SynchronizedObservable) {
   'use strict';
 
-  var ko;
-  var SynchronizedObservable;
-
   describe('Synchronized Observable', function () {
-    before(function (done) {
-      require(["knockout", "observables/synchronized-observable"], function (loadedKo, loadedClass) {
-        SynchronizedObservable = loadedClass;
-        ko = loadedKo;
-        done();
-      });
-    });
-
     beforeEach(function () {
       chrome.storage.local.set.reset();
       chrome.storage.local.get.yields({});
+      chrome.storage.sync.set.reset();
     });
 
     it('should be undefined if no stored values are available', function () {
@@ -74,4 +64,4 @@
       expect(chrome.storage.sync.set.args[0][0]["sync-value-name"]).to.equal("new-value");
     });
   });
-})();
+});

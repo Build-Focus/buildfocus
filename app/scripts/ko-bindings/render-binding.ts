@@ -1,5 +1,5 @@
 import $ = require('jquery');
-import ko = require('knockout');
+import ko = require('raw-knockout');
 import easeljs = require('createjs');
 
 ko.bindingHandlers['render'] = {

@@ -35,8 +35,8 @@ module.exports = function (grunt) {
         files: ['<%= config.app %>/scripts/**/*.ts',
                 '<%= config.app %>/**/*.html',
                 '<%= config.test %>/**/*.js',
-                '<%= config.test %>/**/*.html',],
-        tasks: ['build', 'run-quick-tests'],
+                '<%= config.test %>/**/*.html'],
+        tasks: ['build', 'jshint', 'karma:continually:run'],
         options: {
           livereload: '<%= connect.options.livereload %>',
           atBegin: true
@@ -116,6 +116,7 @@ module.exports = function (grunt) {
       options: {
         module: 'amd',
         target: 'es5',
+        sourceMap: true,
         mapRoot: '/scripts',
         sourceRoot: '/scripts',
         fast: 'never'
@@ -135,25 +136,54 @@ module.exports = function (grunt) {
       }
     },
 
-    // Browser-based tests
-    mocha: {
+    karma: {
       options: {
-        run: true,
-        log: true,
-        logErrors: true,
-        growlOnSuccess: false
+        frameworks: ["mocha"],
+        reporters: ['mocha'],
+        browsers: ['Chrome'],
+        proxies: {
+          "/images/": "/base/build/images/",
+          "/scripts/": "/base/build/scripts/"
+        },
+        files: [
+          'build/bower_components/chai/chai.js',
+          'test/helpers/colour-matchers.js',
+          'test/helpers/mocha-setup.js',
+
+          'build/bower_components/sinonjs/sinon.js',
+
+          'build/bower_components/sinon-chrome/src/chrome-alarms.js',
+          'build/bower_components/sinon-chrome/src/chrome-event.js',
+          'build/bower_components/sinon-chrome/src/chrome.js',
+
+          // TODO: Move usages of this to require
+          'build/bower_components/lodash/lodash.js',
+
+          'build/bower_components/requirejs/require.js',
+          'node_modules/karma-requirejs/lib/adapter.js',
+
+          'build/scripts/config/base-config.js',
+          'test/test-main.js',
+
+          { pattern: "build/images/**/*", included: false, served: true },
+
+          'build/scripts/pages/background-page-binding.js',
+          { pattern: "test/spec/**/*.js", included: false },
+
+          { pattern: "build/scripts/**/*.js", included: false },
+          { pattern: "build/scripts/**/*.js.map", included: false },
+          { pattern: "build/scripts/**/*.ts", included: false },
+
+          { pattern: "build/bower_components/**/*.js", included: false }
+        ],
+        autoWatch: false
       },
-      unit: {
-        options: {
-          urls: ['http://localhost:<%= connect.test.options.port %>/unit-tests.html']
-        }
+      once: {
+        singleRun: true,
       },
-      acceptance: {
-        options: {
-          urls: ['http://localhost:<%= connect.test.options.port %>/pomodoro-acceptance.html',
-                 'http://localhost:<%= connect.test.options.port %>/rivet-page-acceptance.html',
-                 'http://localhost:<%= connect.test.options.port %>/city-acceptance.html']
-        }
+      continually: {
+        background: true,
+        singleRun: false
       }
     },
 
@@ -319,8 +349,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('debug', function () {
     grunt.task.run([
-      'connect:test',
       'connect:chrome',
+      'karma:continually:start',
       'watch'
     ]);
   });
@@ -333,7 +363,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', [
     'build',
-    'connect:test',
     'run-quick-tests'
   ]);
 
@@ -345,8 +374,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('run-quick-tests', [
     'jshint',
-    'mocha:unit',
-    'mocha:acceptance'
+    'karma:once'
   ]);
 
   grunt.registerTask('prepare-system-tests', [
