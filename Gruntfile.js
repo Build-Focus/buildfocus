@@ -140,7 +140,13 @@ module.exports = function (grunt) {
       options: {
         frameworks: ["mocha"],
         reporters: ['mocha'],
-        browsers: ['Chrome'],
+        browsers: ['Chrome_NoSandbox'],
+        customLaunchers: {
+          "Chrome_NoSandbox": {
+            base: 'Chrome',
+            flags: ['--no-sandbox'] // with sandbox it fails under Docker
+          }
+        },
         proxies: {
           "/images/": "/base/build/images/",
           "/scripts/": "/base/build/scripts/"
