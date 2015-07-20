@@ -2,9 +2,8 @@ box: emmenko/nodejs-karma
 build:
     steps:
         - script:
-            name: Print env (for debugging)
-            code: env
-        - npm-install
+            name: Install NPM modules
+            code: npm install
         - script:
             name: Install bower
             code: npm install -g bower
