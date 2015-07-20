@@ -11,9 +11,6 @@ build:
         - script:
             name: Install packages from Bower
             code: bower install --allow-root
-        - script:
-            name: Start XVFB
-            code: /etc/init.d/xvfb start
         - grunt:
             tasks: ci-test
             fail-on-warnings: true
