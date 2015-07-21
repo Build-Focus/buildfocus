@@ -194,9 +194,14 @@ module.exports = function (grunt) {
     },
 
     env: {
-      seleniumEnv: {
+      dockerSeleniumEnv: {
         SELENIUM_URL: "http://" + (process.env.SELENIUM_CHROME_FTP_PORT_4444_TCP_ADDR || 'localhost') +
-                      ':' + (process.env.SELENIUM_CHROME_FTP_PORT_4444_TCP_PORT || 4444) + '/wd/hub'
+                      ':' + (process.env.SELENIUM_CHROME_FTP_PORT_4444_TCP_PORT || 4444) + '/wd/hub',
+        EXTENSION_PATH: "/var/ftp/uploaded"
+      },
+      localSeleniumEnv: {
+        SELENIUM_URL: "http://localhost:4444/wd/hub",
+        EXTENSION_PATH: __dirname + "/dist"
       }
     },
 
@@ -383,7 +388,12 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('run-system-tests', [
-    'env:seleniumEnv',
+    'env:dockerSeleniumEnv',
+    'mochaTest:system'
+  ]);
+
+  grunt.registerTask('run-local-system-tests', [
+    'env:localSeleniumEnv',
     'mochaTest:system'
   ]);
 

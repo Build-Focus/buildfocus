@@ -38,7 +38,7 @@ describe("System tests - ", function () {
 
   before(function () {
     var capabilities = sw.Capabilities.chrome();
-    capabilities.set('chromeOptions', { 'args': ['--load-extension=/var/ftp/uploaded'] });
+    capabilities.set('chromeOptions', { 'args': ['--load-extension=' + process.env.EXTENSION_PATH] });
 
     driver = new sw.Builder()
       .withCapabilities(capabilities)
@@ -53,7 +53,9 @@ describe("System tests - ", function () {
     return driver.get(extensionPage("rivet.html")).then(function () {
       return driver.findElement({css: ".score"});
     }).then(function (score) {
-      return score.getText();
+      return driver.wait(function () {
+        return score.getText();
+      }, 1000);
     }).then(function (scoreText) {
       // This is dependent on test order - could probably be avoided, but not worth worrying about for now methinks.
       expect(scoreText).to.equal("0 Points");
@@ -64,11 +66,15 @@ describe("System tests - ", function () {
     return driver.get(extensionPage("options.html")).then(function () {
       return driver.findElement({css: "button[type=submit]"});
     }).then(function (submitButton) {
-      return submitButton.isEnabled();
-    }).then(function (isSubmitEnabled) {
+      return driver.wait(function () {
+        // Wait until the button is *not* enabled
+        return submitButton.isEnabled().then(function (enabled) { return !enabled; });
+      }, 1000);
+    }).then(function (isSubmitDisabled) {
       // The submit button is disabled initially by JS, this is a smoke test
       // to check the core JS ran and probably set up the page successfully
-      expect(isSubmitEnabled).to.equal(false, "Submit button should be disabled initially (i.e. options JS should load)");
+      expect(isSubmitDisabled).to.equal(true,
+        "Submit button should be disabled initially (i.e. options JS should load)");
     });
   });
 
