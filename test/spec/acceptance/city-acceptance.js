@@ -12,7 +12,7 @@ define(["jquery", "createjs", "knockout", "city/city", "city/rendering/city-rend
       return $(element).find("canvas")[0];
     }
 
-    describe.only('Acceptance: City', function () {
+    describe('Acceptance: City', function () {
       it("should render a building", function () {
         var city = new City();
 
