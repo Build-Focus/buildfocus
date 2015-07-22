@@ -157,7 +157,6 @@ module.exports = function (grunt) {
           "/expected-images/": "/base/test/expected-images/",
           "/scripts/": "/base/build/scripts/"
         },
-        // TODO: Wrap this in something that adds nocache automatically
         files: withNoCache([
           'build/bower_components/chai/chai.js',
           'build/bower_components/resemblejs/resemble.js',
