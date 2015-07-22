@@ -66,8 +66,9 @@ var ImageMatchers = function imageMatchers(chai) {
 
       resemble(actualImageData).compareTo(expectedImageData).onComplete(function (result) {
         try {
-          assertion.assert(result.misMatchPercentage < 0.05,
-            "Expected canvas to match " + imagePath,
+          assertion.assert(result.misMatchPercentage < 1,
+            "Expected canvas to match " + imagePath +
+              " but was " + result.misMatchPercentage + "% different",
             "Expected canvas not to match " + imagePath);
         } catch (e) {
           appendDebugInfo(imagePath, images[0], images[1], result);
