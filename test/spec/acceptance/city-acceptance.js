@@ -13,7 +13,7 @@ define(["jquery", "createjs", "knockout", "pages/rivet-page"],
     }
 
     describe('Acceptance: City', function () {
-      it.only("should render a building", function () {
+      it("should render a building", function () {
         var viewModel = new RivetPageViewModel();
         var canvas = render(viewModel);
 
