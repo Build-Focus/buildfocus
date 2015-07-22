@@ -5,71 +5,74 @@ import publishedObservable = require("observables/published-observable");
 import subscribableEvent = require("subscribable-event");
 import Timer = require("pomodoro/timer");
 import config = require("config");
+import BadBehaviourMonitor = require('url-monitoring/bad-behaviour-monitor');
 
-export = function PomodoroService(badBehaviourMonitor) {
-  var self = this;
+class PomodoroService {
+  private badBehaviourMonitor: BadBehaviourMonitor;
+  private pomodoroTimer = new Timer();
+  private breakTimer = new Timer();
 
-  var pomodoroTimer = new Timer();
-  var breakTimer = new Timer();
+  onPomodoroStart = subscribableEvent();
+  onPomodoroSuccess = subscribableEvent();
+  onPomodoroFailure = subscribableEvent();
 
-  self.start = function startPomodoro() {
-    if (self.isActive()) {
-      return;
-    }
+  onBreakStart = subscribableEvent();
+  onBreakEnd = subscribableEvent();
 
-    breakTimer.reset();
-    pomodoroTimer.start(config.pomodoroDuration, function () {
-      badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
-
-      self.onPomodoroSuccess.trigger();
-    });
-
-    var badBehaviourRegistration = badBehaviourMonitor.onBadBehaviour(function () {
-      pomodoroTimer.reset();
-      badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
-
-      self.onPomodoroFailure.trigger();
-    });
-
-    self.onPomodoroStart.trigger();
-  };
-
-  self.takeABreak = function takeABreak() {
-    if (self.isActive()) {
-      return;
-    }
-
-    breakTimer.start(config.breakDuration, self.onBreakEnd.trigger);
-    self.onBreakStart.trigger();
-  };
-
-  chrome.runtime.onMessage.addListener(function (message) {
-    if (message.action === "start-pomodoro") {
-      self.start();
-    } else if (message.action === "start-break") {
-      self.takeABreak();
-    }
-  });
-
-  self.isActive = publishedObservable("pomodoro-is-active", pomodoroTimer.isRunning);
-  self.isBreakActive = publishedObservable("break-is-active", breakTimer.isRunning);
-
-  var rawProgress = ko.computed(function () {
-    if (pomodoroTimer.isRunning()) {
-      return pomodoroTimer.progress();
-    } else if (breakTimer.isRunning()) {
-      return breakTimer.progress();
+  isActive = publishedObservable("pomodoro-is-active", this.pomodoroTimer.isRunning);
+  isBreakActive = publishedObservable("break-is-active", this.breakTimer.isRunning);
+  progress = publishedObservable("pomodoro-service-progress", ko.computed(() => {
+    if (this.pomodoroTimer.isRunning()) {
+      return this.pomodoroTimer.progress();
+    } else if (this.breakTimer.isRunning()) {
+      return this.breakTimer.progress();
     } else {
       return null;
     }
-  });
+  }));
 
-  self.progress = publishedObservable("pomodoro-service-progress", rawProgress);
+  constructor(badBehaviourMonitor: BadBehaviourMonitor) {
+    this.badBehaviourMonitor = badBehaviourMonitor;
 
-  self.onPomodoroStart = subscribableEvent();
-  self.onPomodoroSuccess = subscribableEvent();
-  self.onPomodoroFailure = subscribableEvent();
+    chrome.runtime.onMessage.addListener((message) => {
+      if (message.action === "start-pomodoro") {
+        this.start();
+      } else if (message.action === "start-break") {
+        this.takeABreak();
+      }
+    });
+  }
 
-  self.onBreakStart = subscribableEvent();
-  self.onBreakEnd = subscribableEvent();
-};
+  start = () => {
+    if (this.isActive()) {
+      return;
+    }
+
+    this.breakTimer.reset();
+    this.pomodoroTimer.start(config.pomodoroDuration, () => {
+      this.badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
+
+      this.onPomodoroSuccess.trigger();
+    });
+
+    var badBehaviourRegistration = this.badBehaviourMonitor.onBadBehaviour(() => {
+      this.pomodoroTimer.reset();
+      this.badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
+
+      this.onPomodoroFailure.trigger();
+    });
+
+    this.onPomodoroStart.trigger();
+  };
+
+  takeABreak = () => {
+    if (this.isActive()) {
+      return;
+    }
+
+    this.breakTimer.start(config.breakDuration, this.onBreakEnd.trigger);
+    this.onBreakStart.trigger();
+  }
+}
+
+export = PomodoroService;

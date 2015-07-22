@@ -31,23 +31,13 @@ class RivetPageViewModel {
   points = score.points;
   failed = (getQueryParameter("failed") === "true");
 
-  canStartPomodoro: KnockoutComputed<boolean>;
-  canStartBreak: KnockoutComputed<boolean>;
-  canSayNotNow: KnockoutComputed<boolean>;
+  canStartPomodoro = ko.computed(() => !this.pomodoroService.isActive());
 
-  constructor() {
-    this.canStartPomodoro = ko.computed(() => {
-      return !this.pomodoroService.isActive();
-    });
+  canStartBreak = ko.computed(() => !this.pomodoroService.isActive() &&
+                                    !this.pomodoroService.isBreakActive());
 
-    this.canStartBreak = ko.computed(() => {
-      return !this.pomodoroService.isActive() && !this.pomodoroService.isBreakActive();
-    });
-
-    this.canSayNotNow = ko.computed(() => {
-      return !this.pomodoroService.isActive() && !this.pomodoroService.isBreakActive();
-    });
-  }
+  canSayNotNow = ko.computed(() => !this.pomodoroService.isActive() &&
+                                   !this.pomodoroService.isBreakActive());
 
   startPomodoro() {
     this.pomodoroService.start();

@@ -6,27 +6,23 @@ import SynchronizedObservable = require('observables/synchronized-observable');
 import Domain = require('url-monitoring/domain');
 
 class SettingsRepository {
-  public badDomains: KnockoutComputed<Array<Domain>>;
+  private syncedValues = {
+    "badDomainPatterns": SynchronizedObservable("badDomainPatterns", [], "sync")
+  };
 
-  constructor() {
-    var syncedValues = {
-      "badDomainPatterns": SynchronizedObservable("badDomainPatterns", [], "sync")
-    };
-
-    this.badDomains = ko.computed({
-      read: function () {
-        return _(syncedValues.badDomainPatterns()).map(function (pattern) {
-          return new Domain(pattern);
-        }).sortBy(function (domain) {
-          return domain.toString();
-        }).valueOf();
-      },
-      write: function (newDomains) {
-        var patterns = _.map(newDomains, 'pattern');
-        syncedValues.badDomainPatterns(patterns);
-      }
-    });
-  }
+  public badDomains = ko.pureComputed({
+    read: () => {
+      return _(this.syncedValues.badDomainPatterns()).map(function (pattern) {
+        return new Domain(pattern);
+      }).sortBy(function (domain) {
+        return domain.toString();
+      }).valueOf();
+    },
+    write: (newDomains) => {
+      var patterns = _.map(newDomains, 'pattern');
+      this.syncedValues.badDomainPatterns(patterns);
+    }
+  });
 }
 
 export = SettingsRepository;

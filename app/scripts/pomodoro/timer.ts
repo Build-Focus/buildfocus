@@ -6,45 +6,45 @@ function now() {
   return new Date().valueOf();
 }
 
-export = function Timer () {
-  var self = this;
+class Timer {
+  private runningTimerId: KnockoutObservable<number> = ko.observable(null);
 
-  var runningTimerId = ko.observable(null);
+  progress: KnockoutObservable<number> = ko.observable(0);
+  isRunning: KnockoutComputed<boolean> = ko.computed(() => {
+    return this.runningTimerId() !== null;
+  });
 
-  self.start = function (duration, callback) {
-    self.reset();
+  start(duration: number, callback: () => void) {
+    this.reset();
 
     var timerStartTime = now();
     var timerEndTime = timerStartTime + duration;
 
-    runningTimerId(window.setInterval(function () {
+    this.runningTimerId(window.setInterval(() => {
       var rawProgress = (now() - timerStartTime) / duration;
-      self.progress(Math.floor(rawProgress * 100));
+      this.progress(Math.floor(rawProgress * 100));
 
       if (now() >= timerEndTime) {
-        stopTimer();
+        this.stopTimer();
         if (callback) {
           callback();
         }
       }
     }, 100));
-  };
+  }
 
-  function stopTimer() {
-    if (runningTimerId()) {
-      window.clearInterval(runningTimerId());
-      runningTimerId(null);
+  private stopTimer() {
+    if (this.runningTimerId()) {
+      window.clearInterval(this.runningTimerId());
+      this.runningTimerId(null);
     }
   }
 
-  self.reset = function () {
-    stopTimer();
-    self.progress(0);
-  };
+  reset() {
+    this.stopTimer();
+    this.progress(0);
+  }
+}
 
-  self.isRunning = ko.computed(function () {
-    return runningTimerId() !== null;
-  });
 
-  self.progress = ko.observable(0);
-};
+export = Timer;
