@@ -167,9 +167,6 @@ module.exports = function (grunt) {
           'build/bower_components/sinon-chrome/src/chrome-event.js',
           'build/bower_components/sinon-chrome/src/chrome.js',
 
-          // TODO: Move usages of this to require
-          'build/bower_components/lodash/lodash.js',
-
           'build/bower_components/requirejs/require.js',
 
           'build/scripts/config/base-config.js',

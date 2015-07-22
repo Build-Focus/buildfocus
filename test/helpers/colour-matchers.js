@@ -1,4 +1,4 @@
-define(function () {
+define(["lodash"], function (_) {
   return function colourMatchers(chai) {
     chai.Assertion.addMethod('rgbPixel', function (colour) {
       var r = colour[0],
