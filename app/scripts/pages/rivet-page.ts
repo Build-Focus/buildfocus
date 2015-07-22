@@ -24,37 +24,46 @@ function closeThisTab() {
   });
 }
 
-export = function RivetPageViewModel() {
-  var pomodoroService = new ProxyPomodoroService();
+class RivetPageViewModel {
+  private pomodoroService = new ProxyPomodoroService();
+  private cityRenderer = new CityRenderer(score.city);
 
-  this.points = score.points;
+  public points = score.points;
+  public failed = (getQueryParameter("failed") === "true");
 
-  this.failed = (getQueryParameter("failed") === "true");
+  public canStartPomodoro: KnockoutComputed<boolean>;
+  public canStartBreak: KnockoutComputed<boolean>;
+  public canSayNotNow: KnockoutComputed<boolean>;
 
-  this.startPomodoro = function () {
-    pomodoroService.start();
+  constructor() {
+    this.canStartPomodoro = ko.computed(() => {
+      return !this.pomodoroService.isActive();
+    });
+
+    this.canStartBreak = ko.computed(() => {
+      return !this.pomodoroService.isActive() && !this.pomodoroService.isBreakActive();
+    });
+
+    this.canSayNotNow = ko.computed(() => {
+      return !this.pomodoroService.isActive() && !this.pomodoroService.isBreakActive();
+    });
+  }
+
+  public startPomodoro() {
+    this.pomodoroService.start();
     closeThisTab();
-  };
+  }
 
-  this.startBreak = function () {
-    pomodoroService.takeABreak();
+  public startBreak() {
+    this.pomodoroService.takeABreak();
     closeThisTab();
-  };
+  }
 
-  this.notNow = function () {
+  public notNow() {
     closeThisTab();
-  };
+  }
 
-  this.canStartPomodoro = ko.computed(function () {
-    return !pomodoroService.isActive();
-  });
-  this.canStartBreak = ko.computed(function () {
-    return !pomodoroService.isActive() && !pomodoroService.isBreakActive();
-  });
-  this.canSayNotNow = ko.computed(function () {
-    return !pomodoroService.isActive() && !pomodoroService.isBreakActive();
-  });
-
-  var cityRenderer = new CityRenderer(score.city);
-  this.renderScore = cityRenderer.render.bind(cityRenderer);
+  public renderScore = (stage) => this.cityRenderer.render(stage);
 }
+
+export = RivetPageViewModel;
