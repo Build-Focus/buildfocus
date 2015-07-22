@@ -29,7 +29,7 @@ module.exports = function (grunt) {
       if (typeof pattern === "string") {
         return { pattern: pattern, nocache: true };
       } else {
-        pattern.noCache = true;
+        pattern.nocache = true;
         return pattern;
       }
     });
