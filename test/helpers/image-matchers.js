@@ -1,7 +1,5 @@
 /* global resemble */
 
-// TODO: This needs lots of refactoring and cleanup to work out what's actually necessary
-
 var ImageMatchers = function imageMatchers(chai) {
   function loadImage(src) {
     return new Promise(function (resolve, reject) {
@@ -14,20 +12,20 @@ var ImageMatchers = function imageMatchers(chai) {
     });
   }
 
-  function renderImageToCanvas(image, width, height) {
+  function renderImageToCanvas(image) {
     var canvas = $("<canvas>")[0];
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = image.width;
+    canvas.height = image.height;
 
     var context = canvas.getContext("2d");
-    context.drawImage(image, 0, 0, width, height);
+    context.drawImage(image, 0, 0);
 
     return canvas;
   }
 
-  function getImageData(image, width, height) {
-    var canvas = renderImageToCanvas(image, width, height);
-    return canvas.getContext("2d").getImageData(0, 0, width, height);
+  function getImageData(image) {
+    var canvas = renderImageToCanvas(image, image.width, image.height);
+    return canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
   }
 
   function appendDebugInfo(imagePath, actualImage, expectedImage, diffData) {
@@ -51,27 +49,21 @@ var ImageMatchers = function imageMatchers(chai) {
   }
 
   // Asserts on a canvas and takes an image path, ensures they contain the exact same data
-  chai.Assertion.addMethod('image', function (imagePath) {
+  chai.Assertion.addMethod('image', function (expectedImagePath) {
     var assertion = this;
-
     var actualCanvas = assertion._obj;
-    var width = actualCanvas.width;
-    var height = actualCanvas.height;
 
-    // We can't just pull the image data from the canvas, we need to copy it to a new canvas first, because
-    // PNG encoding issues (?) mean we get ever so slightly different results for identical images otherwise.
-    var assertionPromise = Promise.all([loadImage(actualCanvas.toDataURL()), loadImage(imagePath)]).then(function (images) {
-      var actualImageData = getImageData(images[0], width, height);
-      var expectedImageData = getImageData(images[1], width, height);
+    var assertionPromise = loadImage(expectedImagePath).then(function (expectedImage) {
+      var expectedImageData = getImageData(expectedImage);
 
-      resemble(actualImageData).compareTo(expectedImageData).onComplete(function (result) {
+      resemble(actualCanvas.toDataURL()).compareTo(expectedImageData).onComplete(function (result) {
         try {
-          assertion.assert(result.misMatchPercentage < 1,
-            "Expected canvas to match " + imagePath +
-              " but was " + result.misMatchPercentage + "% different",
-            "Expected canvas not to match " + imagePath);
+          var difference = result.misMatchPercentage;
+          assertion.assert(difference < 1,
+            "Expected canvas to match " + expectedImagePath + " but was " + difference + "% different",
+            "Expected canvas not to match " + expectedImagePath + " but was only " + difference + "% different");
         } catch (e) {
-          appendDebugInfo(imagePath, images[0], images[1], result);
+          appendDebugInfo(expectedImagePath, actualCanvas, renderImageToCanvas(expectedImage), result);
           throw e;
         }
       });
