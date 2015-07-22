@@ -1,6 +1,6 @@
 /* global resemble */
 
-var ImageMatchers = function imageMatchers(chai) {
+define(function () {
   function loadImage(src) {
     return new Promise(function (resolve, reject) {
       var image = new Image();
@@ -48,29 +48,31 @@ var ImageMatchers = function imageMatchers(chai) {
     document.body.appendChild(debugOutput);
   }
 
-  // Asserts on a canvas and takes an image path, ensures they contain the exact same data
-  chai.Assertion.addMethod('image', function (expectedImagePath) {
-    var assertion = this;
-    var actualCanvas = assertion._obj;
+  return function imageMatchers(chai) {
+    // Asserts on a canvas and takes an image path, ensures they contain the exact same data
+    chai.Assertion.addMethod('image', function (expectedImagePath) {
+      var assertion = this;
+      var actualCanvas = assertion._obj;
 
-    var assertionPromise = loadImage(expectedImagePath).then(function (expectedImage) {
-      var expectedImageData = getImageData(expectedImage);
+      var assertionPromise = loadImage(expectedImagePath).then(function (expectedImage) {
+        var expectedImageData = getImageData(expectedImage);
 
-      resemble(actualCanvas.toDataURL()).compareTo(expectedImageData).onComplete(function (result) {
-        try {
-          var difference = result.misMatchPercentage;
-          assertion.assert(difference < 1,
-            "Expected canvas to match " + expectedImagePath + " but was " + difference + "% different",
-            "Expected canvas not to match " + expectedImagePath + " but was only " + difference + "% different");
-        } catch (e) {
-          appendDebugInfo(expectedImagePath, actualCanvas, renderImageToCanvas(expectedImage), result);
-          throw e;
-        }
+        resemble(actualCanvas.toDataURL()).compareTo(expectedImageData).onComplete(function (result) {
+          try {
+            var difference = result.misMatchPercentage;
+            assertion.assert(difference < 1,
+              "Expected canvas to match " + expectedImagePath + " but was " + difference + "% different",
+              "Expected canvas not to match " + expectedImagePath + " but was only " + difference + "% different");
+          } catch (e) {
+            appendDebugInfo(expectedImagePath, actualCanvas, renderImageToCanvas(expectedImage), result);
+            throw e;
+          }
+        });
       });
-    });
 
-    // Turn the assertion itself into a promise, so Mocha can wait for it.
-    assertion.then = assertionPromise.then.bind(assertionPromise);
-    assertion.catch = assertionPromise.catch.bind(assertionPromise);
-  });
-};
+      // Turn the assertion itself into a promise, so Mocha can wait for it.
+      assertion.then = assertionPromise.then.bind(assertionPromise);
+      assertion.catch = assertionPromise.catch.bind(assertionPromise);
+    });
+  };
+});

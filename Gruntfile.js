@@ -161,9 +161,6 @@ module.exports = function (grunt) {
           'build/bower_components/chai/chai.js',
           'build/bower_components/resemblejs/resemble.js',
 
-          { pattern: 'test/helpers/*-matchers.js' },
-          { pattern: 'test/helpers/mocha-setup.js' },
-
           'build/bower_components/sinonjs/sinon.js',
 
           'build/bower_components/sinon-chrome/src/chrome-alarms.js',
@@ -180,6 +177,7 @@ module.exports = function (grunt) {
 
           'build/scripts/pages/background-page-binding.js',
           { pattern: "test/spec/**/*.js", included: false },
+          { pattern: 'test/helpers/**/*.js', included: false },
 
           { pattern: "build/scripts/**/*.js", included: false },
           { pattern: "build/scripts/**/*.js.map", included: false },

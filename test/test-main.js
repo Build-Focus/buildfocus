@@ -13,7 +13,7 @@ requirejs.config({
     "test": "/base/test"
   },
 
-  deps: tests,
+  deps: tests.concat(["test/helpers/mocha-setup"]),
   callback: window.__karma__.start
 });
 
