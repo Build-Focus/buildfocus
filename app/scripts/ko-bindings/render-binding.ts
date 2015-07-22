@@ -16,8 +16,10 @@ ko.bindingHandlers['render'] = {
     easeljs.Ticker.addEventListener("tick", (event) => {
       var bounds = stage.getBounds();
       if (bounds && !bounds.isEmpty()) {
-        stage.scaleX = canvas.width / bounds.width;
-        stage.scaleY = canvas.height / bounds.height;
+        var scaleFactor = Math.min(canvas.width / bounds.width,
+                                   canvas.height / bounds.height);
+        stage.scaleX = scaleFactor;
+        stage.scaleY = scaleFactor;
       }
       stage.update();
     });
