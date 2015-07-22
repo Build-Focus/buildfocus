@@ -28,12 +28,12 @@ class RivetPageViewModel {
   private pomodoroService = new ProxyPomodoroService();
   private cityRenderer = new CityRenderer(score.city);
 
-  public points = score.points;
-  public failed = (getQueryParameter("failed") === "true");
+  points = score.points;
+  failed = (getQueryParameter("failed") === "true");
 
-  public canStartPomodoro: KnockoutComputed<boolean>;
-  public canStartBreak: KnockoutComputed<boolean>;
-  public canSayNotNow: KnockoutComputed<boolean>;
+  canStartPomodoro: KnockoutComputed<boolean>;
+  canStartBreak: KnockoutComputed<boolean>;
+  canSayNotNow: KnockoutComputed<boolean>;
 
   constructor() {
     this.canStartPomodoro = ko.computed(() => {
@@ -49,21 +49,21 @@ class RivetPageViewModel {
     });
   }
 
-  public startPomodoro() {
+  startPomodoro() {
     this.pomodoroService.start();
     closeThisTab();
   }
 
-  public startBreak() {
+  startBreak() {
     this.pomodoroService.takeABreak();
     closeThisTab();
   }
 
-  public notNow() {
+  notNow() {
     closeThisTab();
   }
 
-  public renderScore = (stage) => this.cityRenderer.render(stage);
+  renderScore = (stage) => this.cityRenderer.render(stage);
 }
 
 export = RivetPageViewModel;
