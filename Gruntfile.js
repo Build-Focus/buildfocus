@@ -24,6 +24,17 @@ module.exports = function (grunt) {
     return "bower_components/" + dep + "/**/*.{js,css}";
   });
 
+  function withNoCache(patterns) {
+    return patterns.map(function (pattern) {
+      if (typeof pattern === "string") {
+        return { pattern: pattern, nocache: true };
+      } else {
+        pattern.noCache = true;
+        return pattern;
+      }
+    });
+  }
+
   grunt.initConfig({
 
     // Project settings
@@ -147,12 +158,12 @@ module.exports = function (grunt) {
           "/scripts/": "/base/build/scripts/"
         },
         // TODO: Wrap this in something that adds nocache automatically
-        files: [
+        files: withNoCache([
           'build/bower_components/chai/chai.js',
           'build/bower_components/resemblejs/resemble.js',
 
-          { pattern: 'test/helpers/*-matchers.js', nocache: true },
-          { pattern: 'test/helpers/mocha-setup.js', nocache: true },
+          { pattern: 'test/helpers/*-matchers.js' },
+          { pattern: 'test/helpers/mocha-setup.js' },
 
           'build/bower_components/sinonjs/sinon.js',
 
@@ -169,17 +180,17 @@ module.exports = function (grunt) {
           'test/test-main.js',
 
           'build/scripts/pages/background-page-binding.js',
-          { pattern: "test/spec/**/*.js", included: false, nocache: true },
+          { pattern: "test/spec/**/*.js", included: false },
 
-          { pattern: "build/scripts/**/*.js", included: false, nocache: true },
-          { pattern: "build/scripts/**/*.js.map", included: false, nocache: true },
-          { pattern: "build/scripts/**/*.ts", included: false, nocache: true },
+          { pattern: "build/scripts/**/*.js", included: false },
+          { pattern: "build/scripts/**/*.js.map", included: false },
+          { pattern: "build/scripts/**/*.ts", included: false },
 
           { pattern: "build/bower_components/**/*.js", included: false },
 
           { pattern: "build/images/**/*", included: false, served: true },
           { pattern: "test/expected-images/**/*", included: false, served: true }
-        ],
+        ]),
         autoWatch: false
       },
       once: {
