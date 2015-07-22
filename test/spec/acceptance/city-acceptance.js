@@ -1,21 +1,23 @@
 /* global describe, it, xit */
 
-define(["jquery", "createjs", "knockout", "pages/rivet-page"],
-  function ($, easeljs, ko, RivetPageViewModel) {
+define(["jquery", "createjs", "knockout", "city/city", "city/rendering/city-renderer"],
+  function ($, easeljs, ko, City, CityRenderer) {
     'use strict';
 
-    function render(viewModel) {
-      var element = $("<div data-bind='render: renderScore'></div>")[0];
+    function render(city) {
+      var element = $("<div data-bind='render: render'></div>")[0];
 
-      ko.applyBindings(viewModel, element);
+      ko.applyBindings(new CityRenderer(city), element);
 
       return $(element).find("canvas")[0];
     }
 
-    describe('Acceptance: City', function () {
+    describe.only('Acceptance: City', function () {
       it("should render a building", function () {
-        var viewModel = new RivetPageViewModel();
-        var canvas = render(viewModel);
+        var city = new City();
+
+        city.construct(city.getPossibleUpgrades()[0]);
+        var canvas = render(city);
 
         return expect(canvas).to.soon.be.image("expected-images/single-building.png");
       });

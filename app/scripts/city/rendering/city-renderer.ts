@@ -9,7 +9,7 @@ class CityRenderer {
     this.city = city;
   }
 
-  render(container: easeljs.Container) {
+  render = (container: easeljs.Container) => {
     var building = new easeljs.Bitmap("/images/city/basic-house/sw.png");
     container.addChild(building);
   }
