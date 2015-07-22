@@ -8,3 +8,4 @@
 /// <reference path="createjs-lib/createjs-lib.d.ts" />
 /// <reference path="easeljs/easeljs.d.ts" />
 /// <reference path="tweenjs/tweenjs.d.ts" />
+/// <reference path="bluebird/bluebird.d.ts" />

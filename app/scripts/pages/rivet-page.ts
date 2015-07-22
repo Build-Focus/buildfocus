@@ -3,7 +3,10 @@
 import rollbar = require('rollbar');
 import ko = require('knockout');
 import score = require('score');
+import easeljs = require('createjs');
+
 import ProxyPomodoroService = require('pomodoro/proxy-pomodoro-service');
+import CityRenderer = require('city/rendering/city-renderer');
 
 function getQueryParameter(name) {
   var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
@@ -51,4 +54,7 @@ export = function RivetPageViewModel() {
   this.canSayNotNow = ko.computed(function () {
     return !pomodoroService.isActive() && !pomodoroService.isBreakActive();
   });
-};
+
+  var cityRenderer = new CityRenderer(score.city);
+  this.renderScore = cityRenderer.render.bind(cityRenderer);
+}

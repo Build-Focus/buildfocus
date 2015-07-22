@@ -138,17 +138,21 @@ module.exports = function (grunt) {
 
     karma: {
       options: {
-        frameworks: ["mocha"],
+        frameworks: ['mocha'],
         reporters: ['mocha'],
         browsers: ['Chrome'],
         proxies: {
           "/images/": "/base/build/images/",
+          "/expected-images/": "/base/test/expected-images/",
           "/scripts/": "/base/build/scripts/"
         },
+        // TODO: Wrap this in something that adds nocache automatically
         files: [
           'build/bower_components/chai/chai.js',
-          'test/helpers/colour-matchers.js',
-          'test/helpers/mocha-setup.js',
+          'build/bower_components/resemblejs/resemble.js',
+
+          { pattern: 'test/helpers/*-matchers.js', nocache: true },
+          { pattern: 'test/helpers/mocha-setup.js', nocache: true },
 
           'build/bower_components/sinonjs/sinon.js',
 
@@ -160,26 +164,26 @@ module.exports = function (grunt) {
           'build/bower_components/lodash/lodash.js',
 
           'build/bower_components/requirejs/require.js',
-          'node_modules/karma-requirejs/lib/adapter.js',
 
           'build/scripts/config/base-config.js',
           'test/test-main.js',
 
-          { pattern: "build/images/**/*", included: false, served: true },
-
           'build/scripts/pages/background-page-binding.js',
-          { pattern: "test/spec/**/*.js", included: false },
+          { pattern: "test/spec/**/*.js", included: false, nocache: true },
 
-          { pattern: "build/scripts/**/*.js", included: false },
-          { pattern: "build/scripts/**/*.js.map", included: false },
-          { pattern: "build/scripts/**/*.ts", included: false },
+          { pattern: "build/scripts/**/*.js", included: false, nocache: true },
+          { pattern: "build/scripts/**/*.js.map", included: false, nocache: true },
+          { pattern: "build/scripts/**/*.ts", included: false, nocache: true },
 
-          { pattern: "build/bower_components/**/*.js", included: false }
+          { pattern: "build/bower_components/**/*.js", included: false },
+
+          { pattern: "build/images/**/*", included: false, served: true },
+          { pattern: "test/expected-images/**/*", included: false, served: true }
         ],
         autoWatch: false
       },
       once: {
-        singleRun: true,
+        singleRun: true
       },
       continually: {
         background: true,
@@ -241,7 +245,7 @@ module.exports = function (grunt) {
           src: [
             'manifest.json',
             '*.{ico,png,txt}',
-            'images/**/*.{webp,gif,png}',
+            'images/**/*.{webp,gif,png,svg}',
             '*.html',
             'styles/**/*.css',
             'styles/fonts/**/*.*',

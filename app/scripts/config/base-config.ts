@@ -17,6 +17,7 @@ requirejs.config({
     "URIjs": "../bower_components/uri.js/src",
     "lodash": "../bower_components/lodash/lodash",
     "createjs": "../bower_components/easeljs/lib/easeljs-0.8.1.combined",
+    "bluebird": "../bower_components/bluebird/js/browser/bluebird",
 
     "raw-knockout": "../bower_components/knockout/dist/knockout",
     "knockout": "lib-wrappers/knockout",

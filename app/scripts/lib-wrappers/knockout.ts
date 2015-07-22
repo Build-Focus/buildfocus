@@ -1,8 +1,8 @@
 'use strict';
 
 declare module "raw-knockout" {
-  import ko = require('knockout');
-  export = ko;
+  import knockout = require("knockout");
+  export = knockout
 }
 
 define(["raw-knockout", "ko-bindings/render-binding"], function (ko) {

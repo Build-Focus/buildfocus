@@ -39,26 +39,27 @@ define(["jquery", "knockout", "createjs"],
       });
 
       it('should call render', function () {
-        var element = elementWithBinding("render: $data");
+        var element = elementWithBinding("render: renderMethod");
 
-        var viewModel = { render: sinon.stub() };
+        var viewModel = { renderMethod: sinon.stub() };
         ko.applyBindings(viewModel, element);
 
-        expect(viewModel.render.callCount).to.equal(1);
+        expect(viewModel.renderMethod.callCount).to.equal(1);
       });
 
       it('should provide a working easeljs stage to render()', function () {
         var renderFunction = function (stage) {
           var shape = new easeljs.Shape();
-          shape.graphics.beginFill('#101010');
+          shape.graphics.beginFill('#090909');
           shape.graphics.drawRect(9, 9, 3, 3);
           stage.addChild(shape);
         };
 
-        ko.applyBindings({render: renderFunction}, elementWithBinding("render: $data"));
+        ko.applyBindings({renderMethod: renderFunction},
+          elementWithBinding("render: renderMethod"));
 
         var middlePixel = getPixelAt(10, 10);
-        expect(middlePixel).to.deep.equal([16, 16, 16, 255]);
+        expect(middlePixel).to.deep.equal([9, 9, 9, 255]);
       });
     });
   }

@@ -21,6 +21,8 @@
         <span data-bind="text: points"></span> Points
       </h2>
 
+      <div data-bind="render: renderScore"></div>
+
       <button class="startPomodoro pure-button"
               data-bind="click: startPomodoro, enable: canStartPomodoro">
         Focus

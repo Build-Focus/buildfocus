@@ -16,3 +16,6 @@ requirejs.config({
   deps: tests,
   callback: window.__karma__.start
 });
+
+// Make Karma async (for RequireJS: stolen from karma-requirejs/adapter.wrapper
+window.__karma__.loaded = function () { };
