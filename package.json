@@ -4,8 +4,11 @@
   "version": "0.0.0",
   "dependencies": {},
   "devDependencies": {
+    "async": "^1.4.0",
     "chai": "^2.3.0",
+    "chalk": "^1.1.0",
     "ftp-deploy": "^1.0.0",
+    "glob": "^5.0.14",
     "grunt": "~0.4.1",
     "grunt-bower-install": "~1.0.0",
     "grunt-bump": "^0.3.1",
