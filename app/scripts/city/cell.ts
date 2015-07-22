@@ -5,15 +5,15 @@ import Coord = require('city/coord');
 
 class Cell {
   public coord: Coord;
-  private type: CellType;
+  public cellType: CellType;
 
   constructor(coord: Coord, type: CellType) {
     this.coord = coord;
-    this.type = type;
+    this.cellType = type;
   }
 
   toString() {
-    return "[Cell: " + this.coord.toString() + " - " + this.type + "]";
+    return "[Cell: " + this.coord.toString() + " - " + this.cellType + "]";
   }
 }
 

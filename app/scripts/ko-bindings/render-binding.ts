@@ -3,9 +3,13 @@ import ko = require('raw-knockout');
 import easeljs = require('createjs');
 
 ko.bindingHandlers['render'] = {
-  init: function (element, valueAccessor) {
+  init: function (element: HTMLElement, valueAccessor) {
     var render = valueAccessor();
-    var canvas = <HTMLCanvasElement> $("<canvas width='100' height='100'>")[0];
+    var width = element.clientWidth;
+
+    var canvas = <HTMLCanvasElement> document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = width * 0.8;
     $(element).append(canvas);
 
     var stage = new easeljs.Stage(canvas);
@@ -20,6 +24,9 @@ ko.bindingHandlers['render'] = {
                                    canvas.height / bounds.height);
         stage.scaleX = scaleFactor;
         stage.scaleY = scaleFactor;
+
+        stage.x = -bounds.x * scaleFactor;
+        stage.y = -bounds.y * scaleFactor;
       }
       stage.update();
     });

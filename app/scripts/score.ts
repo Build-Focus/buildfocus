@@ -10,6 +10,10 @@ class Score {
   points = synchronizedObservable("points", 0, "sync");
   city = new City();
 
+  constructor() {
+    this.city.construct(this.city.getPossibleUpgrades()[0]);
+  }
+
   addSuccess() {
     this.points(this.points() + 1);
   }
