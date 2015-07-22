@@ -45,7 +45,7 @@ class Map {
 
   public getCells(): Cell[] {
     var rows = _.values(this.cellLookup);
-    return _.flatten(_.map(rows, _.values));
+    return _.flatten(_.map(rows, (row) => _.values<Cell>(row)));
   }
 
   public getCell(x: number, y: number): Cell;

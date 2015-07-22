@@ -1,5 +1,7 @@
 'use strict';
 
+import _ = require("lodash");
+
 import Map = require('city/map');
 import Coord = require('city/coord');
 import Cell = require('city/cell');
@@ -23,6 +25,15 @@ class City {
 
   getBuildings() {
     return this.map.getBuildings();
+  }
+
+  getPossibleUpgrades(): Building[] {
+    var buildingCoords = _(this.getBuildings()).pluck('coords').flatten();
+    var buildableCells = _.reject(this.getCells(), (cell) => _(buildingCoords).contains(cell.coord));
+
+    return buildableCells.map(function (cell) {
+      return new Building([cell.coord], BuildingType.BasicHouse);
+    });
   }
 
   construct(building: Building) {
