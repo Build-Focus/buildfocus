@@ -1,4 +1,5 @@
 import easeljs = require('createjs');
+import ko = require('knockout');
 
 import City = require('city/city');
 
@@ -38,15 +39,17 @@ class CityRenderer {
     this.city = city;
   }
 
-  render = (container: easeljs.Container) => {
+  render = (): KnockoutObservableArray<easeljs.DisplayObject> => {
+    var results = ko.observableArray([]);
     for (var cell of this.city.getCells().sort(byCoordsDiagonally)) {
-      container.addChild(this.renderCell(cell));
+      results.push(this.renderCell(cell));
     }
 
     // TODO: Sort buildings correctly
     for (var building of this.city.getBuildings()) {
-      container.addChild(this.renderBuilding(building));
+      results.push(this.renderBuilding(building));
     }
+    return results;
   };
 
   private renderBuilding(building: Building): easeljs.DisplayObject {

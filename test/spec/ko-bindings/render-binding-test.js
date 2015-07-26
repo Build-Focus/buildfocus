@@ -1,7 +1,7 @@
 /* global describe, it */
 
-define(["jquery", "knockout", "createjs"],
-  function ($, ko, easeljs) {
+define(["jquery", "knockout", "lodash", "createjs"],
+  function ($, ko, _, easeljs) {
     'use strict';
 
     function elementWithBinding(binding) {
@@ -17,16 +17,18 @@ define(["jquery", "knockout", "createjs"],
       return context.getImageData(0, 0, width, height).data;
     }
 
-    function getPixelAt(x, y) {
-      var imageData = getImageData(x+1, y+1);
+    function getPixels(width, height) {
+      var data = getImageData(width, height);
+      return _(data).groupBy(function (byte, index) {
+        return Math.floor(index / 4);
+      }).map().value();
+    }
 
-      var pixelIndex = ((x+1) * y) + x;
-      var byteIndex = pixelIndex * 4;
-
-      return [imageData[byteIndex],
-              imageData[byteIndex+1],
-              imageData[byteIndex+2],
-              imageData[byteIndex+3]];
+    function blackDot(x, y) {
+      var dot = new easeljs.Shape();
+      dot.graphics.beginFill("#000000");
+      dot.graphics.drawRect(x, y, 1, 1);
+      return dot;
     }
 
     describe('Render binding', function () {
@@ -36,30 +38,78 @@ define(["jquery", "knockout", "createjs"],
 
       afterEach(function () {
         $("#test-element").remove();
+
+        // Clear ticker listeners, so that the stage stops getting updated
+        easeljs.Ticker.removeAllEventListeners();
       });
 
-      it('should call render', function () {
-        var element = elementWithBinding("render: renderMethod");
+      it('should render nothing if the observable is empty', function () {
+        var element = elementWithBinding("render: renderables");
 
-        var viewModel = { renderMethod: sinon.stub() };
+        var viewModel = { renderables: ko.observableArray( [] ) };
         ko.applyBindings(viewModel, element);
 
-        expect(viewModel.renderMethod.callCount).to.equal(1);
+        getPixels(100, 100).forEach(function (pixel, index) {
+          var coord = Math.floor(index / 100) + ", " + (index % 100);
+          expect(pixel, coord).to.deep.equal([0, 0, 0, 0]);
+        });
       });
 
-      it('should provide a working easeljs stage to render()', function () {
-        var renderFunction = function (stage) {
-          var shape = new easeljs.Shape();
-          shape.graphics.beginFill('#090909');
-          shape.graphics.drawRect(9, 9, 3, 3);
-          stage.addChild(shape);
+      it('should render everything from the given observable to the stage', function () {
+        var element = elementWithBinding("render: renderables");
+
+        var viewModel = {
+          renderables: ko.observableArray([
+            blackDot(10, 10), blackDot(20, 20), blackDot(30, 30)
+          ])
         };
+        ko.applyBindings(viewModel, element);
 
-        ko.applyBindings({renderMethod: renderFunction},
-          elementWithBinding("render: renderMethod"));
+        getPixels(100, 100).forEach(function (pixel, index) {
+          var x = Math.floor(index / 100);
+          var y = index % 100;
 
-        var middlePixel = getPixelAt(10, 10);
-        expect(middlePixel).to.deep.equal([9, 9, 9, 255]);
+          if (_.isEqual([x, y], [10, 10]) || _.isEqual([x, y], [20, 20]) || _.isEqual([x, y], [30, 30])) {
+            expect(pixel, x + ", " + y).to.deep.equal([0, 0, 0, 255]);
+          } else {
+            expect(pixel, x + ", " + y).to.deep.equal([0, 0, 0, 0]);
+          }
+        });
+      });
+
+      it('should update the canvas if renderables are added later', function () {
+        var element = elementWithBinding("render: renderables");
+
+        var viewModel = { renderables: ko.observableArray( [] ) };
+        ko.applyBindings(viewModel, element);
+
+        viewModel.renderables.push(blackDot(5, 5));
+
+        getPixels(100, 100).forEach(function (pixel, index) {
+          var x = Math.floor(index / 100);
+          var y = index % 100;
+
+          if (_.isEqual([x, y], [5, 5])) {
+            expect(pixel, x + ", " + y).to.deep.equal([0, 0, 0, 255]);
+          } else {
+            expect(pixel, x + ", " + y).to.deep.equal([0, 0, 0, 0]);
+          }
+        });
+      });
+
+      it('should update the canvas if renderables are removed later', function () {
+        var element = elementWithBinding("render: renderables");
+
+        var viewModel = {renderables: ko.observableArray([blackDot(8, 8)])};
+        ko.applyBindings(viewModel, element);
+
+        viewModel.renderables([]);
+
+        getPixels(100, 100).forEach(function (pixel, index) {
+          var x = Math.floor(index / 100);
+          var y = index % 100;
+          expect(pixel, x + ", " + y).to.deep.equal([0, 0, 0, 0]);
+        });
       });
     });
   }

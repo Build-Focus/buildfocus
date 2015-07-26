@@ -53,7 +53,7 @@ class RivetPageViewModel {
     closeThisTab();
   }
 
-  renderScore = (stage) => this.cityRenderer.render(stage);
+  renderScore = () => this.cityRenderer.render();
 }
 
 export = RivetPageViewModel;

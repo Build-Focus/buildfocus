@@ -2,9 +2,14 @@ import $ = require('jquery');
 import ko = require('raw-knockout');
 import easeljs = require('createjs');
 
+const STAGE_DATA_KEY = "easeljs-stage";
+
+interface Renderable {
+  (): easeljs.DisplayObject[] | KnockoutObservableArray<easeljs.DisplayObject>
+}
+
 ko.bindingHandlers['render'] = {
-  init: function (element: HTMLElement, valueAccessor) {
-    var render = valueAccessor();
+  init: function (element: HTMLElement, valueAccessor: () => Renderable) {
     var width = element.clientWidth;
 
     var canvas = <HTMLCanvasElement> document.createElement("canvas");
@@ -13,8 +18,7 @@ ko.bindingHandlers['render'] = {
     $(element).append(canvas);
 
     var stage = new easeljs.Stage(canvas);
-    render(stage);
-    stage.update();
+    ko.utils.domData.set(element, STAGE_DATA_KEY, stage);
 
     easeljs.Ticker.framerate = 24;
     easeljs.Ticker.addEventListener("tick", (event) => {
@@ -30,5 +34,17 @@ ko.bindingHandlers['render'] = {
       }
       stage.update();
     });
+  },
+  update: function (element: HTMLElement, valueAccessor: () => Renderable) {
+    var getRenderables = valueAccessor();
+    var stage = ko.utils.domData.get(element, STAGE_DATA_KEY);
+
+    // One day we might want this to be more nuanced, but for now wipe and redraw is fine.
+    stage.removeAllChildren();
+    ko.unwrap(getRenderables()).forEach(function (renderable) {
+      stage.addChild(renderable);
+    });
+
+    stage.update();
   }
 };
