@@ -2,12 +2,12 @@
 
 import ko = require('knockout');
 import _ = require('lodash');
-import SynchronizedObservable = require('observables/synchronized-observable');
+import synchronizedObservable = require('observables/synchronized-observable');
 import Domain = require('url-monitoring/domain');
 
 class SettingsRepository {
   private syncedValues = {
-    "badDomainPatterns": SynchronizedObservable("badDomainPatterns", [], "sync")
+    "badDomainPatterns": synchronizedObservable("badDomainPatterns", [], "sync")
   };
 
   public badDomains = ko.pureComputed({

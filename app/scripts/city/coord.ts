@@ -1,7 +1,8 @@
+import serialize = require('city/city-serialization');
+
 const NEIGHBOUR_OFFSETS = [
   [0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]
 ];
-
 
 class Coord {
   public x: number;
@@ -22,6 +23,17 @@ class Coord {
 
   toString() {
     return "(" + this.x + ", " + this.y + ")";
+  }
+
+  serialize(): serialize.CoordData {
+    return {
+      x: this.x,
+      y: this.y
+    };
+  }
+
+  static deserialize(data: serialize.CoordData): Coord {
+    return new Coord(data.x, data.y);
   }
 }
 

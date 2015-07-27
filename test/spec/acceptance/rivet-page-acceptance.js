@@ -1,10 +1,7 @@
 /* global describe, it, xit */
 
-(function () {
+define(["pages/rivet-page", "city/city"], function (RivetPageViewModel, City) {
   'use strict';
-
-  var clockStub;
-  var RivetPageViewModel;
 
   function resetSpies() {
     chrome.storage.sync.get.yields({});
@@ -40,20 +37,19 @@
     return iframe.contentWindow;
   }
 
+  var clockStub;
   var setTimeout = window.setTimeout;
 
   describe('Acceptance: Rivet page', function () {
-    beforeEach(function (done) {
-      resetSpies();
-
-      require(["pages/rivet-page"], function (loadedClass) {
-        clockStub = sinon.useFakeTimers();
-        RivetPageViewModel = loadedClass;
-        done();
-      });
+    before(function () {
+      clockStub = sinon.useFakeTimers();
     });
 
-    afterEach(function () {
+    beforeEach(function () {
+      resetSpies();
+    });
+
+    after(function () {
       clockStub.restore();
     });
 
@@ -68,11 +64,47 @@
     });
 
     it("should show the user's points", function () {
-      chrome.storage.onChanged.trigger({points: {newValue: 10}});
-
       var viewModel = new RivetPageViewModel();
+      chrome.storage.sync.get.yield({ points: 10 });
 
       expect(viewModel.points()).to.equal(10);
+    });
+
+    describe("city", function () {
+      it("should be empty initially", function () {
+        var viewModel = new RivetPageViewModel();
+
+        var renderedOutput = viewModel.renderScore();
+
+        // Just one empty cell
+        expect(renderedOutput().length).to.equal(1);
+      });
+
+      it("should load from persisted data", function () {
+        var city = new City();
+        city.construct(city.getPossibleUpgrades()[0]);
+
+        var viewModel = new RivetPageViewModel();
+        chrome.storage.sync.get.yield({ "city-data": city.toJSON() });
+        var renderedOutput = viewModel.renderScore();
+
+        // Nine cells + one building
+        expect(renderedOutput().length).to.equal(10);
+      });
+
+      it("should update the city when it's updated remotely", function () {
+        var cityWithNewBuilding = new City();
+        cityWithNewBuilding.construct(cityWithNewBuilding.getPossibleUpgrades()[0]);
+
+        var viewModel = new RivetPageViewModel();
+        chrome.storage.onChanged.trigger(
+          { "city-data": { "newValue": cityWithNewBuilding.toJSON() } }
+        );
+        var renderedOutput = viewModel.renderScore();
+
+        // Nine cells + one building
+        expect(renderedOutput().length).to.equal(10);
+      });
     });
 
     it("should let you start anything initially", function () {
@@ -148,4 +180,4 @@
       });
     });
   });
-})();
+});

@@ -8,10 +8,13 @@ import City = require('city/city');
 
 class Score {
   points = synchronizedObservable("points", 0, "sync");
+
   city = new City();
+  private cityData = synchronizedObservable("city-data", this.city.toJSON(), "sync");
 
   constructor() {
-    this.city.construct(this.city.getPossibleUpgrades()[0]);
+    this.cityData.subscribe((newCityData) => this.city.updateFromJSON(newCityData));
+    this.city.onChanged(() => this.cityData(this.city.toJSON()));
   }
 
   addSuccess() {
@@ -23,6 +26,4 @@ class Score {
   }
 }
 
-// Singleton
-var score = new Score();
-export = score;
+export = Score;

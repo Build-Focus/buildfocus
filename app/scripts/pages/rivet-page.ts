@@ -2,7 +2,7 @@
 
 import rollbar = require('rollbar');
 import ko = require('knockout');
-import score = require('score');
+import Score = require('score');
 import easeljs = require('createjs');
 
 import ProxyPomodoroService = require('pomodoro/proxy-pomodoro-service');
@@ -26,9 +26,10 @@ function closeThisTab() {
 
 class RivetPageViewModel {
   private pomodoroService = new ProxyPomodoroService();
-  private cityRenderer = new CityRenderer(score.city);
+  private score = new Score();
+  private cityRenderer = new CityRenderer(this.score.city);
 
-  points = score.points;
+  points = this.score.points;
   failed = (getQueryParameter("failed") === "true");
 
   canStartPomodoro = ko.computed(() => !this.pomodoroService.isActive());

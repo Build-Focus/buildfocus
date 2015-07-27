@@ -26,6 +26,18 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
         expect(city.getBuildings()).to.deep.equal([building]);
       });
 
+      it('should fire a changed event when constructing buildings', function () {
+        var city = new City();
+        var onlyCoord = city.getCells()[0].coord;
+        var building = new Building([onlyCoord], BuildingType.BasicHouse);
+        var listener = sinon.stub();
+
+        city.onChanged(listener);
+        city.construct(building);
+
+        expect(listener.calledOnce).to.equal(true);
+      });
+
       function asCoords(cells) {
         return _(cells).pluck('coord').map(function (coord) {
           return [coord.x, coord.y];

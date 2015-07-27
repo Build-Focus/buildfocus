@@ -4,7 +4,7 @@ import rollbar = require("rollbar");
 import ko = require("knockout");
 import _ = require("lodash");
 
-import score = require("score");
+import Score = require("score");
 import SettingsRepository = require("repositories/settings-repository");
 import currentUrls = require("url-monitoring/current-urls");
 import PomodoroService = require("pomodoro/pomodoro-service");
@@ -13,6 +13,7 @@ import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
 import NotificationService = require("notification-service");
 
 export = function setupBackgroundPage() {
+  var score = new Score();
   var settings = new SettingsRepository();
   var notificationService = new NotificationService();
   var badBehaviourMonitor = new BadBehaviourMonitor(currentUrls, settings);

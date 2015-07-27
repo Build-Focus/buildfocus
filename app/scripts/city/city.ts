@@ -2,6 +2,7 @@
 
 import _ = require("lodash");
 
+import subscribableEvent = require('subscribable-event');
 import Map = require('city/map');
 import Coord = require('city/coord');
 import Cell = require('city/cell');
@@ -11,19 +12,19 @@ import BuildingType = require('city/building-type');
 
 // Handles setup and defines the external API of the city model
 class City {
+  private cellFactory: (Coord) => Cell;
   private map: Map;
 
   constructor() {
-    var initialCell = new Cell(new Coord(0, 0), CellType.Grass);
-    var cellFactory = (coord: Coord) => new Cell(coord, CellType.Grass);
-    this.map = new Map([initialCell], cellFactory);
+    this.cellFactory = (coord: Coord) => new Cell(coord, CellType.Grass);
+    this.map = new Map(this.cellFactory);
   }
 
-  getCells() {
+  getCells(): Cell[] {
     return this.map.getCells();
   }
 
-  getBuildings() {
+  getBuildings(): Building[] {
     return this.map.getBuildings();
   }
 
@@ -36,8 +37,22 @@ class City {
     });
   }
 
-  construct(building: Building) {
+  construct(building: Building): void {
     this.map.construct(building);
+    this.onChanged.trigger();
+  }
+
+  onChanged = subscribableEvent();
+
+  updateFromJSON(json: string): void {
+    var data = JSON.parse(json);
+    this.map = Map.deserialize(data.map, this.cellFactory);
+  }
+
+  toJSON(): string {
+    return JSON.stringify({
+      map: this.map.serialize()
+    });
   }
 }
 

@@ -34,4 +34,4 @@ export = function SubscribableEventConstructor() {
   };
 
   return <SubscribableEvent> eventSubscribeFunction;
-};
+}

@@ -40,4 +40,4 @@ export = function synchronizedObservable<T>(valueName: string, initialValue: T, 
   });
 
   return observable;
-};
+}
