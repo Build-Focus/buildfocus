@@ -20,12 +20,18 @@ requirejs.config({
     "bluebird": "../bower_components/bluebird/js/browser/bluebird",
 
     "raw-knockout": "../bower_components/knockout/dist/knockout",
+    "knockout-es5": "../bower_components/knockout-es5/dist/knockout-es5",
     "knockout": "lib-wrappers/knockout",
 
     "raw-rollbar": "../bower_components/rollbar/dist/rollbar.amd",
     "rollbar": "lib-wrappers/rollbar",
 
     "config": "config/" + configPrefix + "-rivet-config"
+  },
+  map: {
+    'knockout-es5': {
+      'knockout': 'raw-knockout'
+    },
   },
   shim: {
     createjs: { exports: 'createjs' },

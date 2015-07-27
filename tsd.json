@@ -37,6 +37,9 @@
     },
     "bluebird/bluebird.d.ts": {
       "commit": "8f51d25ad3523cd01f2d92e343247852f6b70dff"
+    },
+    "knockout.es5/knockout.es5.d.ts": {
+      "commit": "db3a54c801e29e73bdaae327a64ed7991778c958"
     }
   }
 }

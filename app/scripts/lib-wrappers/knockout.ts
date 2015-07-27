@@ -5,7 +5,7 @@ declare module "raw-knockout" {
   export = knockout
 }
 
-define(["raw-knockout", "ko-bindings/render-binding"], function (ko) {
+define(["raw-knockout", "knockout-es5", "ko-bindings/render-binding"], function (ko) {
   ko.subscribable.fn.subscribeAndUpdate = function (target) {
     target(this());
     return this.subscribe(target);

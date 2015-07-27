@@ -16,11 +16,14 @@ interface CellFactory {
 }
 
 class Map {
-  private cellLookup: { [x: number]: { [y:number]: Cell } };
+  // TODO: String format for lookups is a bit hacky; make this a proper map
+  private cellLookup: { [coord: string]: Cell };
   private buildings: Building[];
 
   constructor(private cellFactory: (Coord) => Cell) {
     this.loadData([cellFactory(new Coord(0, 0))], []);
+
+    ko.track(this);
   }
 
   private loadData(cells: Cell[], buildings: Building[]) {
@@ -39,15 +42,12 @@ class Map {
   }
 
   private setCell = (cell) => {
-    if (!this.cellLookup[cell.coord.x]) {
-      this.cellLookup[cell.coord.x] = [];
-    }
-    this.cellLookup[cell.coord.x][cell.coord.y] = cell;
+    this.cellLookup[cell.coord.toString()] = cell;
+    ko.valueHasMutated(this, 'cellLookup');
   };
 
   private getCell(coord: Coord): Cell {
-    var row = this.cellLookup[coord.x] || [];
-    return row[coord.y];
+    return this.cellLookup[coord.toString()];
   }
 
   private isCellPresent(coord: Coord): boolean {
@@ -55,8 +55,7 @@ class Map {
   }
 
   getCells(): Cell[] {
-    var rows = _.values(this.cellLookup);
-    return _.flatten(_.map(rows, (row) => _.values<Cell>(row)));
+    return _.values<Cell>(this.cellLookup);
   }
 
   construct(building: Building) {

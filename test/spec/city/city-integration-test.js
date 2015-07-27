@@ -59,8 +59,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
 
       it('should offer new basic houses on all empty cells', function () {
         var city = new City();
-        var onlyCoord = city.getCells()[0].coord;
-        city.construct(new Building([onlyCoord], BuildingType.BasicHouse));
+        city.construct(new Building([c(0, 0)], BuildingType.BasicHouse));
 
         var potentialBuildings = city.getPossibleUpgrades();
 

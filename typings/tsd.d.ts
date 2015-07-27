@@ -9,3 +9,4 @@
 /// <reference path="easeljs/easeljs.d.ts" />
 /// <reference path="tweenjs/tweenjs.d.ts" />
 /// <reference path="bluebird/bluebird.d.ts" />
+/// <reference path="knockout.es5/knockout.es5.d.ts" />

@@ -19,6 +19,7 @@ class Score {
 
   addSuccess() {
     this.points(this.points() + 1);
+    this.city.construct(this.city.getPossibleUpgrades()[0]);
   }
 
   addFailure() {

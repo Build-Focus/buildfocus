@@ -58,6 +58,15 @@ define(["jquery", "createjs", "knockout", "city/city", "city/rendering/city-rend
 
         return expect(canvas).to.soon.be.image("expected-images/10x-0th-upgrade-city.png");
       });
+
+      it("should update as new buildings are added", function () {
+        var city = new City();
+        var canvas = render(city);
+
+        city.construct(city.getPossibleUpgrades()[0]);
+
+        return expect(canvas).to.soon.be.image("expected-images/single-building.png");
+      });
     });
   }
 );

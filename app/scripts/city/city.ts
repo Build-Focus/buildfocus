@@ -1,6 +1,7 @@
 'use strict';
 
 import _ = require("lodash");
+import ko = require("knockout");
 
 import subscribableEvent = require('subscribable-event');
 import Map = require('city/map');
@@ -18,6 +19,7 @@ class City {
   constructor() {
     this.cellFactory = (coord: Coord) => new Cell(coord, CellType.Grass);
     this.map = new Map(this.cellFactory);
+    ko.track(this);
   }
 
   getCells(): Cell[] {
@@ -29,12 +31,9 @@ class City {
   }
 
   getPossibleUpgrades(): Building[] {
-    var buildingCoords = _(this.getBuildings()).pluck('coords').flatten();
-    var buildableCells = _.reject(this.getCells(), (cell) => _(buildingCoords).contains(cell.coord));
-
-    return buildableCells.map(function (cell) {
-      return new Building([cell.coord], BuildingType.BasicHouse);
-    });
+    var buildingCoords = _(this.getBuildings()).pluck('coords').flatten().value();
+    var buildableCells = _.reject(this.getCells(), (cell) => !!_.findWhere(buildingCoords, cell.coord));
+    return buildableCells.map((cell) => new Building([cell.coord], BuildingType.BasicHouse));
   }
 
   construct(building: Building): void {
