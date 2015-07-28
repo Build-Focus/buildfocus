@@ -14,14 +14,10 @@
       </h2>
     </nav>
 
-    <div class="score-and-buttons">
+    <div class="city-and-buttons">
       <h2 class="failed-tag" data-bind="if: failed">FAILED</h2>
 
-      <h2 class="score">
-        <span data-bind="text: points"></span> Points
-      </h2>
-
-      <div data-bind="render: renderScore"></div>
+      <div class="city" data-bind="render: renderCity"></div>
 
       <button class="startPomodoro pure-button"
               data-bind="click: startPomodoro, enable: canStartPomodoro">

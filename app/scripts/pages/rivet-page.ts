@@ -29,7 +29,6 @@ class RivetPageViewModel {
   private score = new Score();
   private cityRenderer = new CityRenderer(this.score.city);
 
-  points = this.score.points;
   failed = (getQueryParameter("failed") === "true");
 
   canStartPomodoro = ko.computed(() => !this.pomodoroService.isActive());
@@ -54,7 +53,7 @@ class RivetPageViewModel {
     closeThisTab();
   }
 
-  renderScore = () => this.cityRenderer.render();
+  renderCity = () => this.cityRenderer.render();
 }
 
 export = RivetPageViewModel;

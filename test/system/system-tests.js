@@ -36,6 +36,19 @@ describe("System tests - ", function () {
     });
   }
 
+  function canvasContainsDrawnPixels(canvas) {
+    return driver.executeScript(function (canvas) {
+      var canvasContext = canvas.getContext("2d");
+      var canvasMiddleBytes = canvasContext.getImageData(canvas.width/2 - 10, canvas.height/2 - 10, 20, 20).data;
+      var canvasMiddleBytesArray = [].slice.call(canvasMiddleBytes);
+      var nonZeroBytes = canvasMiddleBytesArray.filter(function (byte) {
+        return byte !== 0;
+      }).length;
+
+      return nonZeroBytes > 0;
+    }, canvas);
+  }
+
   before(function () {
     var capabilities = sw.Capabilities.chrome();
     capabilities.set('chromeOptions', { 'args': ['--load-extension=' + process.env.EXTENSION_PATH] });
@@ -51,14 +64,12 @@ describe("System tests - ", function () {
 
   it("Can open Rivet page", function () {
     return driver.get(extensionPage("rivet.html")).then(function () {
-      return driver.findElement({css: ".score"});
-    }).then(function (score) {
-      return driver.wait(function () {
-        return score.getText();
-      }, 1000);
-    }).then(function (scoreText) {
-      // This is dependent on test order - could probably be avoided, but not worth worrying about for now methinks.
-      expect(scoreText).to.equal("0 Points");
+      return driver.wait(sw.until.elementLocated({css: ".city > canvas"}), 1000);
+    }).then(function (cityCanvas) {
+      return canvasContainsDrawnPixels(cityCanvas);
+    }).then(function (canvasContainsDrawnPixels) {
+      expect(canvasContainsDrawnPixels).to.equal(true,
+        "City canvas should have an image drawn on it");
     });
   });
 

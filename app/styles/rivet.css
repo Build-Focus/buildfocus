@@ -1,11 +1,7 @@
 @import 'common.css';
 
-.score-and-buttons {
+.city-and-buttons {
   text-align: center;
-}
-
-.score {
-  font-size: 14em;
 }
 
 .failed-tag {

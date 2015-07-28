@@ -63,18 +63,11 @@ define(["pages/rivet-page", "city/city"], function (RivetPageViewModel, City) {
       }, 500);
     });
 
-    it("should show the user's points", function () {
-      var viewModel = new RivetPageViewModel();
-      chrome.storage.sync.get.yield({ points: 10 });
-
-      expect(viewModel.points()).to.equal(10);
-    });
-
     describe("city", function () {
       it("should be empty initially", function () {
         var viewModel = new RivetPageViewModel();
 
-        var renderedOutput = viewModel.renderScore();
+        var renderedOutput = viewModel.renderCity();
 
         // Just one empty cell
         expect(renderedOutput().length).to.equal(1);
@@ -86,7 +79,7 @@ define(["pages/rivet-page", "city/city"], function (RivetPageViewModel, City) {
 
         var viewModel = new RivetPageViewModel();
         chrome.storage.sync.get.yield({ "city-data": city.toJSON() });
-        var renderedOutput = viewModel.renderScore();
+        var renderedOutput = viewModel.renderCity();
 
         // Nine cells + one building
         expect(renderedOutput().length).to.equal(10);
@@ -100,7 +93,7 @@ define(["pages/rivet-page", "city/city"], function (RivetPageViewModel, City) {
         chrome.storage.onChanged.trigger(
           { "city-data": { "newValue": cityWithNewBuilding.toJSON() } }
         );
-        var renderedOutput = viewModel.renderScore();
+        var renderedOutput = viewModel.renderCity();
 
         // Nine cells + one building
         expect(renderedOutput().length).to.equal(10);

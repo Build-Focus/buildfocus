@@ -29,8 +29,13 @@ ko.bindingHandlers['render'] = {
         stage.scaleX = scaleFactor;
         stage.scaleY = scaleFactor;
 
+        // Position the stage with the bounds at the top-left
         stage.x = -bounds.x * scaleFactor;
         stage.y = -bounds.y * scaleFactor;
+
+        // Offset position to center the rendering
+        stage.x += (canvas.width - (bounds.width * scaleFactor)) / 2;
+        stage.y += (canvas.height - (bounds.height * scaleFactor)) / 2;
       }
       stage.update();
     });
