@@ -1,4 +1,4 @@
-/* global describe, it, _, xit */
+/* global describe, it, _ */
 
 (function () {
   'use strict';
@@ -123,8 +123,10 @@
       expect(resultingCitySize).to.equal(initialCitySize + 1);
     });
 
-    xit("should remove a building for failed pomodoros", function () {
+    it("should remove a building for failed pomodoros", function () {
       givenBadDomain("twitter.com");
+      startPomodoro();
+      clockStub.tick(POMODORO_DURATION);
       var initialCitySize = getCitySize();
 
       startPomodoro();

@@ -20,6 +20,10 @@ class Score {
   }
 
   addFailure() {
+    var buildingToRemove = this.city.getBuildings()[0];
+    if (buildingToRemove) {
+      this.city.remove(buildingToRemove);
+    }
   }
 }
 
