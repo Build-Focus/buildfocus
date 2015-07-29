@@ -7,8 +7,6 @@ import synchronizedObservable = require('observables/synchronized-observable');
 import City = require('city/city');
 
 class Score {
-  points = synchronizedObservable("points", 0, "sync");
-
   city = new City();
   private cityData = synchronizedObservable("city-data", this.city.toJSON(), "sync");
 
@@ -18,12 +16,10 @@ class Score {
   }
 
   addSuccess() {
-    this.points(this.points() + 1);
     this.city.construct(this.city.getPossibleUpgrades()[0]);
   }
 
   addFailure() {
-    this.points(this.points() - 1);
   }
 }
 

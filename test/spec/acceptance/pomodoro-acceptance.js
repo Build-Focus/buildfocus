@@ -1,4 +1,4 @@
-/* global describe, it, _ */
+/* global describe, it, _, xit */
 
 (function () {
   'use strict';
@@ -29,12 +29,16 @@
     chrome.runtime.onMessage.trigger({"action": "start-pomodoro"});
   }
 
-  function getPoints() {
-    var lastStoredPoints = _(chrome.storage.sync.set.args).map(function (args) {
-      return args[0].points;
+  function getCitySize() {
+    var lastStoredCityData = _(chrome.storage.sync.set.args).map(function (args) {
+      return args[0]["city-data"];
     }).reject(_.isUndefined).last();
 
-    return lastStoredPoints || 0;
+    if (lastStoredCityData) {
+      return JSON.parse(lastStoredCityData).map.buildings.length;
+    } else {
+      return 0;
+    }
   }
 
   function getBadgeImageData() {
@@ -108,30 +112,30 @@
       expect(chrome.tabs.create.calledOnce).to.equal(true);
     });
 
-    it("should give a point for successful pomodoros", function () {
-      var initialPoints = getPoints();
+    it("should add a building for a successful pomodoros", function () {
+      var initialCitySize = getCitySize();
 
       startPomodoro();
       clockStub.tick(POMODORO_DURATION);
 
-      var resultingPoints = getPoints();
+      var resultingCitySize = getCitySize();
 
-      expect(resultingPoints).to.equal(initialPoints + 1);
+      expect(resultingCitySize).to.equal(initialCitySize + 1);
     });
 
-    it("should subtract a point for failed pomodoros", function () {
+    xit("should remove a building for failed pomodoros", function () {
       givenBadDomain("twitter.com");
-      var initialPoints = getPoints();
+      var initialCitySize = getCitySize();
 
       startPomodoro();
       activateTab("http://twitter.com");
 
-      var resultingPoints = getPoints();
-      expect(resultingPoints).to.equal(initialPoints - 1);
+      var resultingCitySize = getCitySize();
+      expect(resultingCitySize).to.equal(initialCitySize - 1);
     });
 
     it("should do nothing if a pomodoro is started while one's already running", function () {
-      var initialPoints = getPoints();
+      var initialCitySize = getCitySize();
 
       startPomodoro();
       startPomodoro();
@@ -139,10 +143,10 @@
       startPomodoro();
       clockStub.tick(1);
 
-      var resultingPoints = getPoints();
-      expect(resultingPoints).to.equal(initialPoints + 1);
+      var resultingCitySize = getCitySize();
+      expect(resultingCitySize).to.equal(initialCitySize + 1);
       clockStub.tick(POMODORO_DURATION);
-      expect(resultingPoints).to.equal(initialPoints + 1);
+      expect(resultingCitySize).to.equal(initialCitySize + 1);
     });
 
     describe("Notifications", function () {
