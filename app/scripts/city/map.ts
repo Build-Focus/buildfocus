@@ -66,6 +66,17 @@ class Map {
     this.expandCellsAroundBuilding(building);
   }
 
+  remove(buildingToDelete: Building) {
+    var savedBuilding = _(this.getBuildings()).find(function (building) {
+      return _.isEqual(building, buildingToDelete);
+    });
+
+    if (!savedBuilding) throw new Error("Attempted to delete building that is not present: " +
+                                        JSON.stringify(buildingToDelete));
+
+    this.buildings.remove(savedBuilding);
+  }
+
   private expandCellsAroundBuilding(building: Building) {
     var allCoordsToExpand = _.reduce(building.coords, (coordsSoFar, buildingCoord) => {
       var neighbouringCoords = buildingCoord.getNeighbours();

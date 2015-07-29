@@ -38,6 +38,28 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
         expect(listener.calledOnce).to.equal(true);
       });
 
+      it('should let you delete its buildings', function () {
+        var city = new City();
+        var building = new Building([city.getCells()[0].coord], BuildingType.BasicHouse);
+        city.construct(building);
+
+        city.remove(city.getBuildings()[0]);
+
+        expect(city.getBuildings()).to.deep.equal([]);
+      });
+
+      it('should fire a changed event when removing buildings', function () {
+        var city = new City();
+        var building = new Building([city.getCells()[0].coord], BuildingType.BasicHouse);
+        city.construct(building);
+
+        var listener = sinon.stub();
+        city.onChanged(listener);
+        city.remove(city.getBuildings()[0]);
+
+        expect(listener.calledOnce).to.equal(true);
+      });
+
       function asCoords(cells) {
         return _(cells).pluck('coord').map(function (coord) {
           return [coord.x, coord.y];

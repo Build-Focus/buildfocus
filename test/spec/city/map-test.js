@@ -57,11 +57,52 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
         expect(map.getBuildings()).to.deep.equal([building]);
       });
 
+      it("should let you remove a building", function () {
+        var building = new Building([c(0, 0)], 0);
+        var map = new Map(cellFactory);
+
+        map.construct(building);
+        map.remove(building);
+
+        expect(map.getBuildings()).to.deep.equal([]);
+      });
+
       it("should reject constructions on cells that don't exist", function () {
         var map = new Map(cellFactory);
 
         expect(function () {
           map.construct({buildingType: null, coords: [c(1, 0)]});
+        }).to.throw();
+      });
+
+      it("should reject removing buildings that don't exist", function () {
+        var building = new Building([c(0, 0)], 0);
+        var map = new Map(cellFactory);
+
+        map.construct(building);
+        map.remove(building);
+
+        expect(function () {
+          map.remove(building);
+        }).to.throw();
+      });
+
+      it("should allow building remove on equality, not identity", function () {
+        var map = new Map(cellFactory);
+
+        map.construct(new Building([c(0, 0)], 0));
+        map.remove(new Building([c(0, 0)], 0));
+
+        expect(map.getBuildings()).to.deep.equal([]);
+      });
+
+      it("should reject removing buildings that don't quite match", function () {
+        var map = new Map(cellFactory);
+
+        map.construct(new Building([c(0, 0)], 0));
+
+        expect(function () {
+          map.remove(new Building([c(0, 0)], 1));
         }).to.throw();
       });
 

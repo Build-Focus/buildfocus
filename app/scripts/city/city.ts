@@ -41,6 +41,11 @@ class City {
     this.onChanged.trigger();
   }
 
+  remove(building: Building): void {
+    this.map.remove(building);
+    this.onChanged.trigger();
+  }
+
   onChanged = subscribableEvent();
 
   updateFromJSON(json: string): void {
