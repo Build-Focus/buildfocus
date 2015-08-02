@@ -1,16 +1,24 @@
-var TEST_REGEXP = /\/test\/spec\/.*\.js/;
+var TEST_REGEXP = /\/test\/spec\/.*\.js$/;
+
+interface Window {
+  __karma__: {
+    files: string[];
+    start(): void;
+    loaded(): void;
+  }
+}
 
 var tests = Object.keys(window.__karma__.files).filter(function (filename) {
   return TEST_REGEXP.test(filename);
 }).map(function (filename) {
-  return filename.replace(/^\/base\/|\.js$/g, '');
+  return filename.replace(/^\/base\/build\/|\.js$/g, '');
 });
 
 requirejs.config({
-  baseUrl: "/base/build/scripts",
+  baseUrl: "/base/build/app/scripts",
 
   paths: {
-    "test": "/base/test"
+    "test": "/base/build/test"
   },
 
   deps: tests.concat(["test/helpers/mocha-setup"]),

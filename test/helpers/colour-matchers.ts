@@ -1,3 +1,10 @@
+declare module Chai {
+  interface Assertion {
+    rgbPixel(rgb: number[]): void;
+    transparent(): void;
+  }
+}
+
 define(["lodash"], function (_) {
   return function colourMatchers(chai) {
     chai.Assertion.addMethod('rgbPixel', function (colour) {

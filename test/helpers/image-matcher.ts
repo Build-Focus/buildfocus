@@ -1,8 +1,12 @@
-/* global resemble */
+declare module Chai {
+  interface Assertion {
+    image(expectedImagePath: string): Promise<void>;
+  }
+}
 
 define(function () {
   function loadImage(src) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve: (HTMLImageElement) => void, reject) {
       var image = new Image();
       image.onload = function () {
         resolve(image);
@@ -13,7 +17,7 @@ define(function () {
   }
 
   function renderImageToCanvas(image) {
-    var canvas = $("<canvas>")[0];
+    var canvas = <HTMLCanvasElement> $("<canvas>")[0];
     canvas.width = image.width;
     canvas.height = image.height;
 
@@ -24,7 +28,7 @@ define(function () {
   }
 
   function getImageData(image) {
-    var canvas = renderImageToCanvas(image, image.width, image.height);
+    var canvas = renderImageToCanvas(image);
     return canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
   }
 

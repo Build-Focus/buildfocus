@@ -43,14 +43,14 @@ module.exports = function (grunt) {
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       js: {
-        files: ['<%= config.app %>/scripts/**/*.ts',
-                '<%= config.app %>/**/*.html',
-                '<%= config.test %>/**/*.js',
-                '<%= config.test %>/**/*.html'],
-        tasks: ['build', 'jshint', 'karma:continually:run'],
+        files: ['app/scripts/**/*.ts',
+                'app/**/*.html',
+                'test/**/*.ts'],
+        tasks: ['build', 'karma:continually:run'],
         options: {
           livereload: '<%= connect.options.livereload %>',
-          atBegin: true
+          atBegin: true,
+          livereloadOnError: false
         }
       },
       gruntfile: {
@@ -62,8 +62,8 @@ module.exports = function (grunt) {
           livereload: '<%= connect.options.livereload %>'
         },
         files: [
-          '<%= config.app %>/manifest.json',
-          '<%= config.app %>/_locales/{,*/}*.json'
+          'app/manifest.json',
+          'app/_locales/{,*/}*.json'
         ]
       }
     },
@@ -80,7 +80,7 @@ module.exports = function (grunt) {
           port: 9001,
           open: false,
           base: [
-            '<%= config.build %>'
+            'build'
           ]
         }
       },
@@ -90,8 +90,8 @@ module.exports = function (grunt) {
           open: false,
           base: [
             'test',
-            '<%= config.app %>',
-            '<%= config.build %>'
+            'app',
+            'build'
           ]
         }
       },
@@ -102,45 +102,38 @@ module.exports = function (grunt) {
           keepalive: true,
           base: [
             'test',
-            '<%= config.app %>',
-            '<%= config.build %>'
+            'app',
+            'build'
           ]
         }
       }
     },
 
-    // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       options: {
         jshintrc: '.jshintrc',
         reporter: require('jshint-stylish')
       },
-      all: [
-        'Gruntfile.js',
-        '<%= config.app %>/scripts/{,*/}*.js',
-        '!<%= config.app %>/scripts/vendor/*',
-        'test/spec/{,*/}*.js'
-      ]
+      all: [ 'Gruntfile.js' ]
     },
 
     ts: {
       options: {
         module: 'amd',
         target: 'es5',
-        sourceMap: true,
-        mapRoot: '/scripts',
-        sourceRoot: '/scripts',
+        inlinesources: true,
         fast: 'never'
       },
 
-      app: {
-        src: ['app/scripts/**/*.ts', 'typings/**/*.d.ts'],
-        outDir: '<%= config.build %>/scripts'
+      all: {
+        src: ['app/scripts/**/*.ts', 'test/**/*.ts', 'typings/**/*.d.ts'],
+        outDir: 'build'
       },
 
+      // TODO: Renable somehow?
       fast: {
         src: ['app/scripts/**/*.ts', 'typings/**/*.d.ts'],
-        outDir: '<%= config.build %>/scripts',
+        outDir: 'build/scripts',
         options: {
           fast: 'watch'
         }
@@ -153,36 +146,35 @@ module.exports = function (grunt) {
         reporters: ['mocha'],
         browsers: ['Chrome'],
         proxies: {
-          "/images/": "/base/build/images/",
+          "/images/": "/base/build/app/images/",
           "/expected-images/": "/base/test/expected-images/",
-          "/scripts/": "/base/build/scripts/"
+          "/scripts/": "/base/build/app/scripts/"
         },
         files: withNoCache([
-          'build/bower_components/chai/chai.js',
-          'build/bower_components/resemblejs/resemble.js',
+          'build/app/bower_components/chai/chai.js',
+          'build/app/bower_components/resemblejs/resemble.js',
 
-          'build/bower_components/sinonjs/sinon.js',
+          'build/app/bower_components/sinonjs/sinon.js',
 
-          'build/bower_components/sinon-chrome/src/chrome-alarms.js',
-          'build/bower_components/sinon-chrome/src/chrome-event.js',
-          'build/bower_components/sinon-chrome/src/chrome.js',
+          'build/app/bower_components/sinon-chrome/src/chrome-alarms.js',
+          'build/app/bower_components/sinon-chrome/src/chrome-event.js',
+          'build/app/bower_components/sinon-chrome/src/chrome.js',
 
-          'build/bower_components/requirejs/require.js',
+          'build/app/bower_components/requirejs/require.js',
 
-          'build/scripts/config/base-config.js',
-          'test/test-main.js',
+          'build/app/scripts/config/base-config.js',
+          'build/test/test-main.js',
 
-          'build/scripts/pages/background-page-binding.js',
-          { pattern: "test/spec/**/*.js", included: false },
-          { pattern: 'test/helpers/**/*.js', included: false },
+          'build/app/scripts/pages/background-page-binding.js',
+          { pattern: "build/test/**/*.js", included: false },
+          { pattern: "build/test/**/*.js.map", included: false },
 
-          { pattern: "build/scripts/**/*.js", included: false },
-          { pattern: "build/scripts/**/*.js.map", included: false },
-          { pattern: "build/scripts/**/*.ts", included: false },
+          { pattern: "build/app/scripts/**/*.js", included: false },
+          { pattern: "build/app/scripts/**/*.js.map", included: false },
 
-          { pattern: "build/bower_components/**/*.js", included: false },
+          { pattern: "build/app/bower_components/**/*.js", included: false },
 
-          { pattern: "build/images/**/*", included: false, served: true },
+          { pattern: "build/app/images/**/*", included: false, served: true },
           { pattern: "test/expected-images/**/*", included: false, served: true }
         ]),
         autoWatch: false
@@ -231,10 +223,10 @@ module.exports = function (grunt) {
         files: [{
           dot: true,
           src: [
-            '<%= config.build %>/*',
-            '!<%= config.build %>/.git*',
-            '<%= config.dist %>/*',
-            '!<%= config.dist %>/.git*'
+            'build/*',
+            '!build/.git*',
+            'dist/*',
+            '!dist/.git*'
           ]
         }]
       }
@@ -245,8 +237,8 @@ module.exports = function (grunt) {
       build: {
         files: [{
           expand: true,
-          cwd: '<%= config.app %>',
-          dest: '<%= config.build %>',
+          cwd: 'app',
+          dest: 'build/app',
           src: [
             'manifest.json',
             '*.{ico,png,txt}',
@@ -266,8 +258,8 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           dot: true,
-          cwd: '<%= config.build %>',
-          dest: '<%= config.dist %>',
+          cwd: 'build/app',
+          dest: 'dist',
           src: [
             '**/*',
 
@@ -371,7 +363,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean',
-    'ts:app',
+    'ts:all',
     'copy:build'
   ]);
 

@@ -1,14 +1,13 @@
-/* global describe, it */
+'use strict';
 
-(function () {
-  'use strict';
-
+define(["pomodoro/pomodoro-service"], function (PomodoroService) {
   var POMODORO_DURATION = 1000 * 60 * 20;
   var BREAK_DURATION = 1000 * 60 * 5;
-  var pomodoroService;
 
   var clockStub;
   var badBehaviourMonitorFake;
+
+  var pomodoroService;
 
   function announceBadBehaviour() {
     var badBehaviourCallback = badBehaviourMonitorFake.onBadBehaviour.firstCall.args[0];
@@ -16,20 +15,20 @@
   }
 
   describe('Pomodoro Integration - Pomodoro service', function () {
-    beforeEach(function (done) {
+    before(function () {
+      clockStub = sinon.useFakeTimers();
+    });
+
+    after(function () {
+      clockStub.restore();
+    });
+
+    beforeEach(function () {
       badBehaviourMonitorFake = {};
       badBehaviourMonitorFake.onBadBehaviour = sinon.spy();
       badBehaviourMonitorFake.onBadBehaviour.remove = sinon.spy();
 
-      require(["pomodoro/pomodoro-service"], function (PomodoroService) {
-        clockStub = sinon.useFakeTimers();
-        pomodoroService = new PomodoroService(badBehaviourMonitorFake);
-        done();
-      });
-    });
-
-    afterEach(function () {
-      clockStub.restore();
+      pomodoroService = new PomodoroService(badBehaviourMonitorFake);
     });
 
     describe(".isActive()", function () {
@@ -223,4 +222,4 @@
       });
     });
   });
-})();
+});

@@ -1,21 +1,14 @@
-/* global describe, it */
+'use strict';
 
-(function () {
-  'use strict';
-
-  var Timer;
+define(["pomodoro/timer"], function (Timer) {
   var clockStub;
 
   describe('Timer', function () {
-    beforeEach(function (done) {
-      require(["pomodoro/timer"], function (loadedClass) {
-        clockStub = sinon.useFakeTimers();
-        Timer = loadedClass;
-        done();
-      });
+    before(function () {
+      clockStub = sinon.useFakeTimers();
     });
 
-    afterEach(function () {
+    after(function () {
       clockStub.restore();
     });
 
@@ -27,7 +20,7 @@
 
     it("should be running once it's started", function () {
       var timer = new Timer();
-      timer.start();
+      timer.start(1000, sinon.stub());
 
       expect(timer.isRunning()).to.equal(true);
     });
@@ -35,7 +28,7 @@
     it("should not be running if started then reset", function () {
       var timer = new Timer();
 
-      timer.start();
+      timer.start(1000, sinon.stub());
       timer.reset();
 
       expect(timer.isRunning()).to.equal(false);
@@ -44,7 +37,7 @@
     it("should be running before the duration is completed", function () {
       var timer = new Timer();
 
-      timer.start(1000);
+      timer.start(1000, sinon.stub());
       clockStub.tick(500);
 
       expect(timer.isRunning()).to.equal(true);
@@ -53,7 +46,7 @@
     it("should not be running after the given duration is completed", function () {
       var timer = new Timer();
 
-      timer.start(1000);
+      timer.start(1000, sinon.stub());
       clockStub.tick(1000);
 
       expect(timer.isRunning()).to.equal(false);
@@ -100,7 +93,7 @@
       it("should be at 50% half way through", function () {
         var timer = new Timer();
 
-        timer.start(10000);
+        timer.start(10000, sinon.stub());
         clockStub.tick(5000);
 
         expect(timer.progress()).to.equal(50);
@@ -109,7 +102,7 @@
       it("should be at 99% just before completion", function () {
         var timer = new Timer();
 
-        timer.start(10000);
+        timer.start(10000, sinon.stub());
         clockStub.tick(9999);
 
         expect(timer.progress()).to.equal(99);
@@ -118,7 +111,7 @@
       it("should be at 100% after completion", function () {
         var timer = new Timer();
 
-        timer.start(10000);
+        timer.start(10000, sinon.stub());
         clockStub.tick(10000);
 
         expect(timer.progress()).to.equal(100);
@@ -127,12 +120,12 @@
       it("should reset to 0% on restart", function () {
         var timer = new Timer();
 
-        timer.start(10000);
+        timer.start(10000, sinon.stub());
         clockStub.tick(10000);
-        timer.start(10000);
+        timer.start(10000, sinon.stub());
 
         expect(timer.progress()).to.equal(0);
       });
     });
   });
-})();
+});

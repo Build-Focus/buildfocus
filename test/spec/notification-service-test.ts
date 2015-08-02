@@ -1,41 +1,37 @@
 /* global describe, it */
 
-(function () {
+define(["notification-service"], function (NotificationService) {
   'use strict';
 
-  var NotificationService;
   var notifications;
 
   var onClickCallback;
   var onBreakCallback;
 
   var clockStub;
+  var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
   var RIVET_NOTIFICATION_NAME = "rivet-pomodoro-notification";
 
-  function clickNotification(notificationName) {
-    chrome.notifications.onClicked.trigger(notificationName || RIVET_NOTIFICATION_NAME);
+  function clickNotification(notificationName?: string) {
+    chromeStub.notifications.onClicked.trigger(notificationName || RIVET_NOTIFICATION_NAME);
   }
 
-  function clickTakeABreak(notificationName) {
-    chrome.notifications.onButtonClicked.trigger(notificationName || RIVET_NOTIFICATION_NAME, 0);
+  function clickTakeABreak(notificationName?: string) {
+    chromeStub.notifications.onButtonClicked.trigger(notificationName || RIVET_NOTIFICATION_NAME, 0);
   }
 
-  function clickMore(notificationName) {
-    chrome.notifications.onButtonClicked.trigger(notificationName || RIVET_NOTIFICATION_NAME, 1);
+  function clickMore(notificationName?: string) {
+    chromeStub.notifications.onButtonClicked.trigger(notificationName || RIVET_NOTIFICATION_NAME, 1);
   }
 
-  function closeNotification(notificationName) {
-    chrome.notifications.onClosed.trigger(notificationName || RIVET_NOTIFICATION_NAME, true);
+  function closeNotification(notificationName?: string) {
+    chromeStub.notifications.onClosed.trigger(notificationName || RIVET_NOTIFICATION_NAME, true);
   }
 
   describe('Notification service', function () {
-    before(function (done) {
-      require(["notification-service"], function (loadedClass) {
-        NotificationService = loadedClass;
-        clockStub = sinon.useFakeTimers();
-        done();
-      });
+    before(function () {
+      clockStub = sinon.useFakeTimers();
     });
 
     after(function () {
@@ -44,11 +40,7 @@
 
     beforeEach(function () {
       clockStub.timers = {};
-
-      chrome.notifications.clear.reset();
-      chrome.notifications.create.reset();
-      chrome.notifications.onClicked.removeListeners();
-      chrome.notifications.onButtonClicked.removeListeners();
+      chromeStub.reset();
 
       notifications = new NotificationService();
       onClickCallback = sinon.stub();
@@ -61,7 +53,7 @@
     it('should create success notification', function () {
       notifications.showSuccessNotification();
 
-      expect(chrome.notifications.create.calledOnce).to.equal(true);
+      expect(chromeStub.notifications.create.calledOnce).to.equal(true);
     });
 
     it('should call onClick callbacks when a pomodoro notification is clicked', function () {
@@ -87,28 +79,28 @@
     describe("notification dismissal", function () {
       it("should clear the notification initially when a new notification arrives", function () {
         notifications.showSuccessNotification();
-        expect(chrome.notifications.clear.calledOnce).to.equal(true);
+        expect(chromeStub.notifications.clear.calledOnce).to.equal(true);
       });
 
       it("should cancel a notification after it's clicked", function () {
         notifications.showSuccessNotification();
 
         clickNotification();
-        expect(chrome.notifications.clear.calledTwice).to.equal(true);
+        expect(chromeStub.notifications.clear.calledTwice).to.equal(true);
       });
 
       it("should cancel a notification after the break button is clicked", function () {
         notifications.showSuccessNotification();
 
         clickTakeABreak();
-        expect(chrome.notifications.clear.calledTwice).to.equal(true);
+        expect(chromeStub.notifications.clear.calledTwice).to.equal(true);
       });
 
       it("should cancel a notification if the not now button is clicked", function () {
         notifications.showSuccessNotification();
 
         clickMore();
-        expect(chrome.notifications.clear.calledTwice).to.equal(true);
+        expect(chromeStub.notifications.clear.calledTwice).to.equal(true);
       });
     });
 
@@ -118,7 +110,7 @@
           showNotification();
 
           clockStub.tick(8000);
-          expect(chrome.notifications.create.callCount).to.equal(2);
+          expect(chromeStub.notifications.create.callCount).to.equal(2);
         });
 
         it("should not reissue " + name + " notifications if they're clicked within 8 seconds", function () {
@@ -126,7 +118,7 @@
 
           clickNotification();
           clockStub.tick(8000);
-          expect(chrome.notifications.create.callCount).to.equal(1);
+          expect(chromeStub.notifications.create.callCount).to.equal(1);
         });
 
         it("should not reissue " + name + " notifications if they're closed within 8 seconds", function () {
@@ -134,16 +126,16 @@
 
           closeNotification();
           clockStub.tick(8000);
-          expect(chrome.notifications.create.callCount).to.equal(1);
+          expect(chromeStub.notifications.create.callCount).to.equal(1);
         });
 
         it("should reissue " + name + " notifications if they're closed by the reissue itself", function () {
           showNotification();
 
           clockStub.tick(8000);
-          chrome.notifications.onClosed.trigger(RIVET_NOTIFICATION_NAME, false);
+          chromeStub.notifications.onClosed.trigger(RIVET_NOTIFICATION_NAME, false);
 
-          expect(chrome.notifications.create.callCount).to.equal(2);
+          expect(chromeStub.notifications.create.callCount).to.equal(2);
         });
       }
 
@@ -156,4 +148,4 @@
       });
     });
   });
-}());
+});

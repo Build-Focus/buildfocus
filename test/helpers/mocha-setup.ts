@@ -8,3 +8,8 @@ define(["test/helpers/image-matcher", "test/helpers/colour-matchers", "test/help
     chai.use(SoonMatcher);
   }
 );
+
+var expect: Chai.ExpectStatic;
+interface Window {
+  expect: Chai.ExpectStatic;
+}

@@ -1,11 +1,6 @@
-/* global describe, it */
+'use strict';
 
-(function () {
-  'use strict';
-
-  var _;
-  var Coord;
-
+define(["lodash", "city/coord"], function (_, Coord) {
   function lexicographicSort(coordA, coordB) {
     if (coordA.x !== coordB.x) {
       return coordA.x > coordB.x ? 1 : -1;
@@ -17,16 +12,6 @@
   }
 
   describe('Coord', function () {
-    before(function (done) {
-      require(["lodash", "city/coord"],
-        function (loadedLodash, loadedCoordClass) {
-          _ = loadedLodash;
-          Coord = loadedCoordClass;
-          done();
-        }
-      );
-    });
-
     it('should save a given x and y', function () {
       var coord = new Coord(10, 20);
 
@@ -55,9 +40,9 @@
 
       expect(coord.getNeighbours().sort(lexicographicSort)).to.deep.equal([
         new Coord(-1, -1), new Coord(0, -1), new Coord(1, -1),
-        new Coord(-1, 0),                    new Coord(1, 0),
-        new Coord(-1, 1),  new Coord(0, 1),  new Coord(1, 1)
+        new Coord(-1, 0), new Coord(1, 0),
+        new Coord(-1, 1), new Coord(0, 1), new Coord(1, 1)
       ].sort(lexicographicSort));
     });
   });
-})();
+});

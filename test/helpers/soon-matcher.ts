@@ -1,5 +1,15 @@
 // TODO: With some proper testing (and subsequent fixing) this could be usefully open-sourced
 
+declare module Chai {
+  interface Assertion {
+    soon: SoonAssertion
+  }
+
+  interface SoonAssertion extends Assertion {
+    (duration: number): Assertion;
+  }
+}
+
 define(function () {
   // Grab this at the start, as some tests mess with it (e.g. Sinon clock stubbing)
   var setTimeout = window.setTimeout;
