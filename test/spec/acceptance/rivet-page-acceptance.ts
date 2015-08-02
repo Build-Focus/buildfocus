@@ -47,16 +47,6 @@ define(["pages/rivet-page", "city/city"], function (RivetPageViewModel, City) {
       clockStub.restore();
     });
 
-    // TODO: Find a useful way to test and thus reenable this
-    xit("should be loaded when the failure script is injected", function (done) {
-      var page = openPageWithScript("scripts/failure-content-script.js");
-
-      setTimeout(function () {
-        expect(page.location.pathname).to.equal("/rivet.html");
-        done();
-      }, 500);
-    });
-
     describe("city", function () {
       it("should be empty initially", function () {
         var viewModel = new RivetPageViewModel();
