@@ -11,21 +11,21 @@ define(["lodash", "city/coord"], function (_, Coord) {
     }
   }
 
-  describe('Coord', function () {
-    it('should save a given x and y', function () {
+  describe('Coord', () => {
+    it('should save a given x and y', () => {
       var coord = new Coord(10, 20);
 
       expect(coord.x).to.equal(10);
       expect(coord.y).to.equal(20);
     });
 
-    it('should print itself clearly', function () {
+    it('should print itself clearly', () => {
       var coord = new Coord(1, -3);
 
       expect(coord.toString()).to.equal("(1, -3)");
     });
 
-    it('should know its neighbouring coordinates', function () {
+    it('should know its neighbouring coordinates', () => {
       var coord = new Coord(10, 10);
 
       expect(coord.getNeighbours().sort(lexicographicSort)).to.deep.equal([
@@ -35,13 +35,13 @@ define(["lodash", "city/coord"], function (_, Coord) {
       ].sort(lexicographicSort));
     });
 
-    it('should get negative coord neighbours correctly too', function () {
+    it('should get negative coord neighbours correctly too', () => {
       var coord = new Coord(0, 0);
 
       expect(coord.getNeighbours().sort(lexicographicSort)).to.deep.equal([
         new Coord(-1, -1), new Coord(0, -1), new Coord(1, -1),
-        new Coord(-1, 0), new Coord(1, 0),
-        new Coord(-1, 1), new Coord(0, 1), new Coord(1, 1)
+        new Coord(-1, 0),                    new Coord(1, 0),
+        new Coord(-1, 1),  new Coord(0, 1),  new Coord(1, 1)
       ].sort(lexicographicSort));
     });
   });

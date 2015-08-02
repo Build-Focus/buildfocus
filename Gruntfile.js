@@ -246,10 +246,7 @@ module.exports = function (grunt) {
             '*.html',
             'styles/**/*.css',
             'styles/fonts/**/*.*',
-            '_locales/**/*.json',
-
-            // We bring the typescript too, for sourcemapping purposes
-            '**/*.ts'
+            '_locales/**/*.json'
           ].concat(bowerDependencies).concat(bowerDevDependencies)
         }]
       },

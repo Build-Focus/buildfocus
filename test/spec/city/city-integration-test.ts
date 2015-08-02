@@ -1,5 +1,3 @@
-/* global describe, it */
-
 define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/building", "city/building-type"],
   function (ko, _, City, Cell, Coord, Building, BuildingType) {
     'use strict';
@@ -8,15 +6,15 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
       return new Coord(x, y);
     }
 
-    describe('City Integration - City', function () {
-      it('should start with one empty cell', function () {
+    describe('City Integration - City', () => {
+      it('should start with one empty cell', () => {
         var city = new City();
 
         expect(city.getCells().length).to.equal(1);
         expect(city.getBuildings().length).to.equal(0);
       });
 
-      it('should construct provided buildings', function () {
+      it('should construct provided buildings', () => {
         var city = new City();
         var onlyCoord = city.getCells()[0].coord;
 
@@ -26,7 +24,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
         expect(city.getBuildings()).to.deep.equal([building]);
       });
 
-      it('should fire a changed event when constructing buildings', function () {
+      it('should fire a changed event when constructing buildings', () => {
         var city = new City();
         var onlyCoord = city.getCells()[0].coord;
         var building = new Building([onlyCoord], BuildingType.BasicHouse);
@@ -38,7 +36,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
         expect(listener.calledOnce).to.equal(true);
       });
 
-      it('should let you delete its buildings', function () {
+      it('should let you delete its buildings', () => {
         var city = new City();
         var building = new Building([city.getCells()[0].coord], BuildingType.BasicHouse);
         city.construct(building);
@@ -48,7 +46,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
         expect(city.getBuildings()).to.deep.equal([]);
       });
 
-      it('should fire a changed event when removing buildings', function () {
+      it('should fire a changed event when removing buildings', () => {
         var city = new City();
         var building = new Building([city.getCells()[0].coord], BuildingType.BasicHouse);
         city.construct(building);
@@ -61,12 +59,10 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
       });
 
       function asCoords(cells) {
-        return _(cells).pluck('coord').map(function (coord) {
-          return [coord.x, coord.y];
-        }).value();
+        return _(cells).pluck('coord').map((coord) => [coord.x, coord.y]).value();
       }
 
-      it('should add new surrounding cells after the first building is added', function () {
+      it('should add new surrounding cells after the first building is added', () => {
         var city = new City();
         var onlyCoord = city.getCells()[0].coord;
 
@@ -79,7 +75,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
         ].sort());
       });
 
-      it('should offer new basic houses on all empty cells', function () {
+      it('should offer new basic houses on all empty cells', () => {
         var city = new City();
         city.construct(new Building([c(0, 0)], BuildingType.BasicHouse));
 
