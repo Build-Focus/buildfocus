@@ -21,6 +21,31 @@ class Coord {
     });
   }
 
+  getDirectNeighbours() {
+    return [
+      this.north(),
+      this.east(),
+      this.south(),
+      this.west()
+    ];
+  }
+
+  north() {
+    return new Coord(this.x, this.y - 1);
+  }
+
+  east() {
+    return new Coord(this.x + 1, this.y);
+  }
+
+  south() {
+    return new Coord(this.x, this.y + 1);
+  }
+
+  west() {
+    return new Coord(this.x - 1, this.y);
+  }
+
   toString() {
     return "(" + this.x + ", " + this.y + ")";
   }

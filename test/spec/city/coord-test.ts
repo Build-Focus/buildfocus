@@ -44,5 +44,24 @@ define(["lodash", "city/coord"], function (_, Coord) {
         new Coord(-1, 1),  new Coord(0, 1),  new Coord(1, 1)
       ].sort(lexicographicSort));
     });
+
+    it('should let you get its direct neighbours', () => {
+      var coord = new Coord(0, 0);
+
+      expect(coord.getDirectNeighbours().sort(lexicographicSort)).to.deep.equal([
+                          new Coord(0, -1),
+        new Coord(-1, 0),                   new Coord(1, 0),
+                          new Coord(0, 1)
+      ].sort(lexicographicSort));
+    });
+    
+    it('should let you get its direct neighbours individually', () => {
+      var coord = new Coord(0, 0);
+
+      expect(coord.north()).to.deep.equal(new Coord(0, -1));
+      expect(coord.east()).to.deep.equal(new Coord(1, 0));
+      expect(coord.south()).to.deep.equal(new Coord(0, 1));
+      expect(coord.west()).to.deep.equal(new Coord(-1, 0));
+    });
   });
 });
