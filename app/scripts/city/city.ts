@@ -35,14 +35,20 @@ class City {
     var buildableCells = _.reject(this.getCells(), (cell) => !!_.findWhere(buildingCoords, cell.coord));
     var greenfieldBuildings = buildableCells.map((cell) => new Building([cell.coord], BuildingType.BasicHouse));
 
-    var buildingUpgrades = _(this.getBuildings()).map((building: Building) => building.getPotentialUpgrades((coord) => {
-      return this.map.getBuildingAt(coord);
-    })).flatten().unique(JSON.stringify).value();
+    var buildingUpgrades = _(this.getBuildings()).map((building: Building) => building.getPotentialUpgrades())
+                                                 .flatten()
+                                                 .unique(JSON.stringify)
+                                                 .filter((building: Building) => building.canBeBuiltOn(this.map))
+                                                 .value();
 
     return greenfieldBuildings.concat(buildingUpgrades);
   }
 
   construct(building: Building): void {
+    if (!building.canBeBuiltOn(this.map)) {
+      throw new Error("Attempt to build invalid building: " + JSON.stringify(building));
+    }
+
     building.coords.map((coord) => this.map.getBuildingAt(coord))
                    .filter((existingBuilding) => existingBuilding !== undefined)
                    .forEach((existingBuilding) => this.map.remove(existingBuilding));

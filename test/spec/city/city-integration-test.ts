@@ -109,7 +109,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
         expect(city.getBuildings()).to.deep.equal([fancyBuilding]);
       });
 
-      xit("should not let you build a fancy building if there weren't two basic houses to upgrade", () => {
+      it("should not let you build a fancy building if there weren't two basic houses to upgrade", () => {
         var city = new City();
 
         var fancyBuilding = new Building([c(0, 0), c(1, 0)], BuildingType.FancyHouse);
