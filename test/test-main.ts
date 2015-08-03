@@ -21,6 +21,8 @@ requirejs.config({
     "test": "/base/build/test"
   },
 
+  urlArgs: "ts=" + Date.now(),
+
   deps: tests.concat(["test/helpers/mocha-setup"]),
   callback: window.__karma__.start
 });
