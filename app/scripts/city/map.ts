@@ -58,10 +58,20 @@ class Map {
     return _.values<Cell>(this.cellLookup);
   }
 
+  getBuildingAt(coord: Coord): Building {
+    return _.find(this.getBuildings(), (building) => {
+      return !!_.findWhere(building.coords, coord);
+    });
+  }
+
   construct(building: Building) {
     if (_.any(building.coords, (coord) => !this.isCellPresent(coord))) {
       throw new Error("Can't build building on cells that don't exist yet");
     }
+    if (_.any(building.coords, (coord) => !!this.getBuildingAt(coord))) {
+      throw new Error("Can't build buildings on non-empty cells");
+    }
+
     this.buildings.push(building);
     this.expandCellsAroundBuilding(building);
   }
@@ -82,9 +92,7 @@ class Map {
       var neighbouringCoords = buildingCoord.getNeighbours();
       var nextCoordsToExpand = neighbouringCoords.filter((coord) => {
         var alreadyPresent = this.getCell(coord) !== undefined;
-        var alreadyExpanding = !!_.find(coordsSoFar, (previousCoord) => {
-          return previousCoord.x === coord.x && previousCoord.y === coord.y;
-        });
+        var alreadyExpanding = !!_.findWhere(coordsSoFar, coord);
 
         return !alreadyPresent && !alreadyExpanding;
       });

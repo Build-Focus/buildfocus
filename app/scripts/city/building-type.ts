@@ -1,7 +1,8 @@
 'use strict';
 
 enum BuildingType {
-  BasicHouse
+  BasicHouse,
+  FancyHouse
 }
 
 export = BuildingType;

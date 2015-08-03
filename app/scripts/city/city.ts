@@ -33,10 +33,20 @@ class City {
   getPossibleUpgrades(): Building[] {
     var buildingCoords = _(this.getBuildings()).pluck('coords').flatten().value();
     var buildableCells = _.reject(this.getCells(), (cell) => !!_.findWhere(buildingCoords, cell.coord));
-    return buildableCells.map((cell) => new Building([cell.coord], BuildingType.BasicHouse));
+    var greenfieldBuildings = buildableCells.map((cell) => new Building([cell.coord], BuildingType.BasicHouse));
+
+    var buildingUpgrades = _(this.getBuildings()).map((building: Building) => building.getPotentialUpgrades((coord) => {
+      return this.map.getBuildingAt(coord);
+    })).flatten().unique(JSON.stringify).value();
+
+    return greenfieldBuildings.concat(buildingUpgrades);
   }
 
   construct(building: Building): void {
+    building.coords.map((coord) => this.map.getBuildingAt(coord))
+                   .filter((existingBuilding) => existingBuilding !== undefined)
+                   .forEach((existingBuilding) => this.map.remove(existingBuilding));
+
     this.map.construct(building);
     this.onChanged.trigger();
   }

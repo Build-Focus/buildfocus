@@ -41,14 +41,14 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
       });
     }
 
-    describe('Map', function () {
-      it('should default to a single empty cell', function () {
+    describe('Map', () => {
+      it('should default to a single empty cell', () => {
         var map = new Map(cellFactory);
 
         expect(map.getCells()).to.deep.equal([buildCell(0, 0)]);
       });
 
-      it("should allow you to add a building", function () {
+      it("should allow you to add a building", () => {
         var building = new Building([c(0, 0)], 0);
         var map = new Map(cellFactory);
 
@@ -57,7 +57,15 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
         expect(map.getBuildings()).to.deep.equal([building]);
       });
 
-      it("should let you remove a building", function () {
+      it("should not allow you to add a building in a non-empty space", () => {
+        var building = new Building([c(0, 0)], 0);
+        var map = new Map(cellFactory);
+
+        map.construct(building);
+        expect(() => map.construct(building)).to.throw();
+      });
+
+      it("should let you remove a building", () => {
         var building = new Building([c(0, 0)], 0);
         var map = new Map(cellFactory);
 
@@ -67,27 +75,23 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
         expect(map.getBuildings()).to.deep.equal([]);
       });
 
-      it("should reject constructions on cells that don't exist", function () {
+      it("should reject constructions on cells that don't exist", () => {
         var map = new Map(cellFactory);
 
-        expect(function () {
-          map.construct({buildingType: null, coords: [c(1, 0)]});
-        }).to.throw();
+        expect(() => map.construct({buildingType: null, coords: [c(1, 0)]})).to.throw();
       });
 
-      it("should reject removing buildings that don't exist", function () {
+      it("should reject removing buildings that don't exist", () => {
         var building = new Building([c(0, 0)], 0);
         var map = new Map(cellFactory);
 
         map.construct(building);
         map.remove(building);
 
-        expect(function () {
-          map.remove(building);
-        }).to.throw();
+        expect(() => map.remove(building)).to.throw();
       });
 
-      it("should allow building remove on equality, not identity", function () {
+      it("should allow building remove on equality, not identity", () => {
         var map = new Map(cellFactory);
 
         map.construct(new Building([c(0, 0)], 0));
@@ -96,17 +100,15 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
         expect(map.getBuildings()).to.deep.equal([]);
       });
 
-      it("should reject removing buildings that don't quite match", function () {
+      it("should reject removing buildings that don't quite match", () => {
         var map = new Map(cellFactory);
 
         map.construct(new Building([c(0, 0)], 0));
 
-        expect(function () {
-          map.remove(new Building([c(0, 0)], 1));
-        }).to.throw();
+        expect(() => map.remove(new Building([c(0, 0)], 1))).to.throw();
       });
 
-      it("should add new cells from the cell factory when a building as added surrounded by space", function () {
+      it("should add new cells from the cell factory when a building as added surrounded by space", () => {
         var map = new Map(cellFactory);
 
         map.construct(new Building([c(0, 0)]));
@@ -119,7 +121,7 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
         ].sort(lexicographicSort));
       });
 
-      it("should add new cells from the cell factory when a building as added at the edge", function () {
+      it("should add new cells from the cell factory when a building as added at the edge", () => {
         var initialCoords = [c(0, 0), c(1, 0), c(2, 0), c(1, 1)];
         var map = Map.deserialize({ cells: toCells(initialCoords), buildings: [] }, cellFactory);
 
@@ -132,7 +134,7 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
         ]).sort(lexicographicSort));
       });
       
-      it("should serialize all its cells", function () {
+      it("should serialize all its cells", () => {
         var map = new Map(cellFactory);
         map.construct(new Building([c(0, 0)]));
         
@@ -145,7 +147,7 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
         ].sort(lexicographicSort));
       });
 
-      it("should serialize its buildings", function () {
+      it("should serialize its buildings", () => {
         var map = new Map(cellFactory);
         var building1 = new Building([c(0, 0)], 0);
         var building2 = new Building([c(0, 1)], 1);
@@ -160,13 +162,13 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
         ]);
       });
 
-      it('should deserialize itself from provided data', function () {
+      it('should deserialize itself from provided data', () => {
         var map = Map.deserialize({ cells: [cellData(0, 0)], buildings: [] }, cellFactory);
 
         expect(map.getCells()).to.deep.equal([buildCell(0, 0)]);
       });
 
-      it("should be unchanged after serialization and deserialization", function () {
+      it("should be unchanged after serialization and deserialization", () => {
         var map = new Map(cellFactory);
         map.construct(new Building([c(0, 0)], 0));
         map.construct(new Building([c(1, 0)], 1));
@@ -178,11 +180,31 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
         expect(newMap.getBuildings()).to.deep.equal(map.getBuildings());
       });
 
-      it("should throw if the cells provided have duplicates", function () {
-        expect(function () {
+      it("should throw if the cells provided have duplicates", () => {
+        expect(() => {
           Map.deserialize({ cells: [buildCell(0, 0), buildCell(0, 0)], buildings: [] },
                           cellFactory);
         }).to.throw();
+      });
+
+      it("should successfully look up buildings by position", () => {
+        var map = new Map(cellFactory);
+        var building = new Building([c(0, 0)], 0);
+        map.construct(building);
+
+        var lookedUpBuilding = map.getBuildingAt(c(0, 0));
+
+        expect(lookedUpBuilding).to.deep.equal(building);
+      });
+
+      it("should return undefined when looking up buildings in empty cells", () => {
+        var map = new Map(cellFactory);
+        var building = new Building([c(0, 0)], 0);
+        map.construct(building);
+
+        var lookedUpBuilding = map.getBuildingAt(c(1, 0));
+
+        expect(lookedUpBuilding).to.be.undefined;
       });
     });
   }

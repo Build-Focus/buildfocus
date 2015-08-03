@@ -87,6 +87,35 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
           c(-1, 1),  c(0, 1),  c(1, 1)
         ].sort());
       });
+      
+      it('should offer to combine two basic houses into one fancy one, but only once', () => {
+        var city = new City();
+        city.construct(new Building([c(0, 0)], BuildingType.BasicHouse));
+        city.construct(new Building([c(1, 0)], BuildingType.BasicHouse));
+
+        var fancyHouseUpgrades = _.where(city.getPossibleUpgrades(), { buildingType: BuildingType.FancyHouse });
+
+        expect(fancyHouseUpgrades.filter(building => _.isEqual(building.coords.sort(), [c(0, 0), c(1, 0)])).length).to.equal(1);
+      });
+
+      it('should let you combine two basic houses into one fancy one', () => {
+        var city = new City();
+        city.construct(new Building([c(0, 0)], BuildingType.BasicHouse));
+        city.construct(new Building([c(1, 0)], BuildingType.BasicHouse));
+
+        var fancyBuilding = new Building([c(0, 0), c(1, 0)], BuildingType.FancyHouse);
+        city.construct(fancyBuilding);
+
+        expect(city.getBuildings()).to.deep.equal([fancyBuilding]);
+      });
+
+      xit("should not let you build a fancy building if there weren't two basic houses to upgrade", () => {
+        var city = new City();
+
+        var fancyBuilding = new Building([c(0, 0), c(1, 0)], BuildingType.FancyHouse);
+
+        expect(() => city.construct(fancyBuilding)).to.throw();
+      });
     });
   }
 );
