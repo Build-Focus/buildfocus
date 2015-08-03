@@ -63,5 +63,23 @@ define(["lodash", "city/coord"], function (_, Coord) {
       expect(coord.south()).to.deep.equal(new Coord(0, 1));
       expect(coord.west()).to.deep.equal(new Coord(-1, 0));
     });
+
+    it('should tell you if another coord is a neighbour', () => {
+      var coord = new Coord(0, 0);
+
+      expect(coord.isDirectNeighbour(new Coord(1, 0))).to.be.true;
+      expect(coord.isDirectNeighbour(new Coord(0, 1))).to.be.true;
+      expect(coord.isDirectNeighbour(new Coord(-1, 0))).to.be.true;
+      expect(coord.isDirectNeighbour(new Coord(0, -1))).to.be.true;
+    });
+
+    it('should tell you if another coord is not a neighbour', () => {
+      var coord = new Coord(0, 0);
+
+      expect(coord.isDirectNeighbour(new Coord(2, 0))).to.be.false;
+      expect(coord.isDirectNeighbour(new Coord(0, -2))).to.be.false;
+      expect(coord.isDirectNeighbour(new Coord(1, 1))).to.be.false;
+      expect(coord.isDirectNeighbour(new Coord(0, 0))).to.be.false;
+    });
   });
 });

@@ -30,6 +30,12 @@ class Coord {
     ];
   }
 
+  isDirectNeighbour(coord: Coord): boolean {
+    var xDifference = Math.abs(coord.x - this.x);
+    var yDifference = Math.abs(coord.y - this.y);
+    return xDifference + yDifference === 1;
+  }
+
   north() {
     return new Coord(this.x, this.y - 1);
   }
