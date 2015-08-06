@@ -1,5 +1,6 @@
-define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/building", "city/building-type"],
-  function (ko, _, City, Cell, Coord, Building, BuildingType) {
+define(["knockout", "lodash", "city/city", "city/cell", "city/coord",
+        "city/buildings/basic-house", "city/buildings/fancy-house", "city/buildings/building-type"],
+  function (ko, _, City, Cell, Coord, BasicHouse, FancyHouse, BuildingType) {
     'use strict';
 
     function c(x, y) {
@@ -18,7 +19,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
         var city = new City();
         var onlyCoord = city.getCells()[0].coord;
 
-        var building = new Building([onlyCoord], BuildingType.BasicHouse);
+        var building = new BasicHouse(onlyCoord);
         city.construct(building);
 
         expect(city.getBuildings()).to.deep.equal([building]);
@@ -27,7 +28,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
       it('should fire a changed event when constructing buildings', () => {
         var city = new City();
         var onlyCoord = city.getCells()[0].coord;
-        var building = new Building([onlyCoord], BuildingType.BasicHouse);
+        var building = new BasicHouse(onlyCoord);
         var listener = sinon.stub();
 
         city.onChanged(listener);
@@ -38,7 +39,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
 
       it('should let you delete its buildings', () => {
         var city = new City();
-        var building = new Building([city.getCells()[0].coord], BuildingType.BasicHouse);
+        var building = new BasicHouse(city.getCells()[0].coord);
         city.construct(building);
 
         city.remove(city.getBuildings()[0]);
@@ -48,7 +49,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
 
       it('should fire a changed event when removing buildings', () => {
         var city = new City();
-        var building = new Building([city.getCells()[0].coord], BuildingType.BasicHouse);
+        var building = new BasicHouse(city.getCells()[0].coord);
         city.construct(building);
 
         var listener = sinon.stub();
@@ -66,7 +67,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
         var city = new City();
         var onlyCoord = city.getCells()[0].coord;
 
-        city.construct(new Building([onlyCoord], BuildingType.BasicHouse));
+        city.construct(new BasicHouse(onlyCoord));
 
         expect(asCoords(city.getCells()).sort()).to.deep.equal([
           [-1, -1], [0, -1], [1, -1],
@@ -77,7 +78,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
 
       it('should offer new basic houses on all empty cells', () => {
         var city = new City();
-        city.construct(new Building([c(0, 0)], BuildingType.BasicHouse));
+        city.construct(new BasicHouse(c(0, 0)));
 
         var potentialBuildings = city.getPossibleUpgrades();
 
@@ -90,8 +91,8 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
       
       it('should offer to combine two basic houses into one fancy one, but only once', () => {
         var city = new City();
-        city.construct(new Building([c(0, 0)], BuildingType.BasicHouse));
-        city.construct(new Building([c(1, 0)], BuildingType.BasicHouse));
+        city.construct(new BasicHouse(c(0, 0)));
+        city.construct(new BasicHouse(c(1, 0)));
 
         var fancyHouseUpgrades = _.where(city.getPossibleUpgrades(), { buildingType: BuildingType.FancyHouse });
 
@@ -100,10 +101,10 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
 
       it('should let you combine two basic houses into one fancy one', () => {
         var city = new City();
-        city.construct(new Building([c(0, 0)], BuildingType.BasicHouse));
-        city.construct(new Building([c(1, 0)], BuildingType.BasicHouse));
+        city.construct(new BasicHouse(c(0, 0)));
+        city.construct(new BasicHouse(c(1, 0)));
 
-        var fancyBuilding = new Building([c(0, 0), c(1, 0)], BuildingType.FancyHouse);
+        var fancyBuilding = new FancyHouse(c(0, 0), c(1, 0));
         city.construct(fancyBuilding);
 
         expect(city.getBuildings()).to.deep.equal([fancyBuilding]);
@@ -112,7 +113,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord", "city/buil
       it("should not let you build a fancy building if there weren't two basic houses to upgrade", () => {
         var city = new City();
 
-        var fancyBuilding = new Building([c(0, 0), c(1, 0)], BuildingType.FancyHouse);
+        var fancyBuilding = new FancyHouse(c(0, 0), c(1, 0));
 
         expect(() => city.construct(fancyBuilding)).to.throw();
       });

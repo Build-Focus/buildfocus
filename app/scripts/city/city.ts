@@ -8,8 +8,11 @@ import Map = require('city/map');
 import Coord = require('city/coord');
 import Cell = require('city/cell');
 import CellType = require('city/cell-type');
-import Building = require('city/building');
-import BuildingType = require('city/building-type');
+
+import Buildings = require('city/buildings/buildings');
+import Building = Buildings.Building;
+
+import BasicHouse = require('city/buildings/basic-house');
 
 // Handles setup and defines the external API of the city model
 class City {
@@ -33,12 +36,12 @@ class City {
   getPossibleUpgrades(): Building[] {
     var buildingCoords = _(this.getBuildings()).pluck('coords').flatten().value();
     var buildableCells = _.reject(this.getCells(), (cell) => !!_.findWhere(buildingCoords, cell.coord));
-    var greenfieldBuildings = buildableCells.map((cell) => new Building([cell.coord], BuildingType.BasicHouse));
+    var greenfieldBuildings = buildableCells.map((cell) => new BasicHouse(cell.coord));
 
-    var buildingUpgrades = _(this.getBuildings()).map((building: Building) => building.getPotentialUpgrades())
+    var buildingUpgrades = _(this.getBuildings()).map((building) => building.getPotentialUpgrades())
                                                  .flatten()
-                                                 .unique(JSON.stringify)
-                                                 .filter((building: Building) => building.canBeBuiltOn(this.map))
+                                                 .unique((building) => JSON.stringify(building.serialize()))
+                                                 .filter((building) => building.canBeBuiltOn(this.map))
                                                  .value();
 
     return greenfieldBuildings.concat(buildingUpgrades);

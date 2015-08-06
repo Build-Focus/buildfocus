@@ -1,7 +1,5 @@
-/* global describe, it */
-
-define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/building"],
-  function (ko, _, Map, Cell, Coord, Building) {
+define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/buildings/basic-house"],
+  function (ko, _, Map, Cell, Coord, BasicHouse) {
     'use strict';
 
     function buildCell(x, y) {
@@ -49,7 +47,7 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
       });
 
       it("should allow you to add a building", () => {
-        var building = new Building([c(0, 0)], 0);
+        var building = new BasicHouse(c(0, 0));
         var map = new Map(cellFactory);
 
         map.construct(building);
@@ -58,7 +56,7 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
       });
 
       it("should not allow you to add a building in a non-empty space", () => {
-        var building = new Building([c(0, 0)], 0);
+        var building = new BasicHouse(c(0, 0));
         var map = new Map(cellFactory);
 
         map.construct(building);
@@ -66,7 +64,7 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
       });
 
       it("should let you remove a building", () => {
-        var building = new Building([c(0, 0)], 0);
+        var building = new BasicHouse(c(0, 0));
         var map = new Map(cellFactory);
 
         map.construct(building);
@@ -78,11 +76,11 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
       it("should reject constructions on cells that don't exist", () => {
         var map = new Map(cellFactory);
 
-        expect(() => map.construct({buildingType: null, coords: [c(1, 0)]})).to.throw();
+        expect(() => map.construct(new BasicHouse(c(1, 0)))).to.throw();
       });
 
       it("should reject removing buildings that don't exist", () => {
-        var building = new Building([c(0, 0)], 0);
+        var building = new BasicHouse(c(0, 0));
         var map = new Map(cellFactory);
 
         map.construct(building);
@@ -94,8 +92,8 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
       it("should allow building remove on equality, not identity", () => {
         var map = new Map(cellFactory);
 
-        map.construct(new Building([c(0, 0)], 0));
-        map.remove(new Building([c(0, 0)], 0));
+        map.construct(new BasicHouse(c(0, 0)));
+        map.remove(new BasicHouse(c(0, 0)));
 
         expect(map.getBuildings()).to.deep.equal([]);
       });
@@ -103,15 +101,15 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
       it("should reject removing buildings that don't quite match", () => {
         var map = new Map(cellFactory);
 
-        map.construct(new Building([c(0, 0)], 0));
+        map.construct(new BasicHouse(c(0, 0)));
 
-        expect(() => map.remove(new Building([c(0, 0)], 1))).to.throw();
+        expect(() => map.remove(new BasicHouse(c(1, 0)))).to.throw();
       });
 
       it("should add new cells from the cell factory when a building as added surrounded by space", () => {
         var map = new Map(cellFactory);
 
-        map.construct(new Building([c(0, 0)]));
+        map.construct(new BasicHouse(c(0, 0)));
 
         var coords = _.pluck(map.getCells(), 'coord');
         expect(coords.sort(lexicographicSort)).to.deep.equal([
@@ -125,7 +123,7 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
         var initialCoords = [c(0, 0), c(1, 0), c(2, 0), c(1, 1)];
         var map = Map.deserialize({ cells: toCells(initialCoords), buildings: [] }, cellFactory);
 
-        map.construct(new Building([c(1, 1)]));
+        map.construct(new BasicHouse(c(1, 1)));
 
         var coords = _.pluck(map.getCells(), 'coord');
         expect(coords.sort(lexicographicSort)).to.deep.equal(initialCoords.concat([
@@ -136,7 +134,7 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
       
       it("should serialize all its cells", () => {
         var map = new Map(cellFactory);
-        map.construct(new Building([c(0, 0)]));
+        map.construct(new BasicHouse(c(0, 0)));
         
         var serialized = map.serialize();
         
@@ -149,8 +147,8 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
 
       it("should serialize its buildings", () => {
         var map = new Map(cellFactory);
-        var building1 = new Building([c(0, 0)], 0);
-        var building2 = new Building([c(0, 1)], 1);
+        var building1 = new BasicHouse(c(0, 0));
+        var building2 = new BasicHouse(c(0, 1));
 
         map.construct(building1);
         map.construct(building2);
@@ -158,7 +156,7 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
 
         expect(serialized.buildings).to.deep.equal([
           { coords: [{x: 0, y: 0}], buildingType: 0 },
-          { coords: [{x: 0, y: 1}], buildingType: 1 },
+          { coords: [{x: 0, y: 1}], buildingType: 0 },
         ]);
       });
 
@@ -170,8 +168,8 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
 
       it("should be unchanged after serialization and deserialization", () => {
         var map = new Map(cellFactory);
-        map.construct(new Building([c(0, 0)], 0));
-        map.construct(new Building([c(1, 0)], 1));
+        map.construct(new BasicHouse(c(0, 0)));
+        map.construct(new BasicHouse(c(1, 0)));
         var serialized = map.serialize();
 
         var newMap = Map.deserialize(serialized, cellFactory);
@@ -189,7 +187,7 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
 
       it("should successfully look up buildings by position", () => {
         var map = new Map(cellFactory);
-        var building = new Building([c(0, 0)], 0);
+        var building = new BasicHouse(c(0, 0));
         map.construct(building);
 
         var lookedUpBuilding = map.getBuildingAt(c(0, 0));
@@ -199,7 +197,7 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
 
       it("should return undefined when looking up buildings in empty cells", () => {
         var map = new Map(cellFactory);
-        var building = new Building([c(0, 0)], 0);
+        var building = new BasicHouse(c(0, 0));
         map.construct(building);
 
         var lookedUpBuilding = map.getBuildingAt(c(1, 0));

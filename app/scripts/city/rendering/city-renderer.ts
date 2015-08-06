@@ -6,8 +6,8 @@ import City = require('city/city');
 import Cell = require('city/cell');
 import CellType = require ('city/cell-type');
 
-import Building = require ('city/building');
-import BuildingType = require ('city/building-type');
+import Buildings = require ('city/buildings/buildings');
+import BuildingType = require ('city/buildings/building-type');
 
 const CELL_WIDTH = 600;
 const CELL_HEIGHT = 345;
@@ -52,7 +52,7 @@ class CityRenderer {
     return results;
   };
 
-  private renderBuilding(building: Building): easeljs.DisplayObject {
+  private renderBuilding(building: Buildings.Building): easeljs.DisplayObject {
     var buildingImage = this.getBuildingImage(building);
 
     // TODO: Consider all coords, not just 0th
@@ -63,7 +63,7 @@ class CityRenderer {
     return buildingImage;
   }
 
-  private getBuildingImage(building: Building): easeljs.Bitmap {
+  private getBuildingImage(building: Buildings.Building): easeljs.Bitmap {
     switch (building.buildingType) {
       case BuildingType.BasicHouse:
         var image = new easeljs.Bitmap("/images/city/basic-house/sw.png");

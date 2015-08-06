@@ -5,9 +5,9 @@ import _ = require('lodash');
 
 import Coord = require('city/coord');
 import Cell = require('city/cell');
-import CellType = require('city/cell-type');
-import NullCell = require('city/null-cell');
-import Building = require('city/building');
+
+import Buildings = require('city/buildings/buildings');
+import Building = Buildings.Building;
 
 import serialization = require('city/city-serialization');
 
@@ -117,7 +117,7 @@ class Map {
 
   static deserialize(data: serialization.MapData, cellFactory: CellFactory): Map {
     var cells = data.cells.map(Cell.deserialize);
-    var buildings = data.buildings.map(Building.deserialize);
+    var buildings = data.buildings.map(Buildings.deserialize);
 
     var map = new Map(cellFactory);
     map.loadData(cells, buildings);
