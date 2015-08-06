@@ -33,19 +33,25 @@ class City {
     return this.map.getBuildings();
   }
 
-  getPossibleUpgrades(): Building[] {
+  private getPossibleNewBuildings(): Building[] {
     var buildingCoords = _(this.getBuildings()).pluck('coords').flatten().value();
     var buildableCells = _.reject(this.getCells(), (cell) => !!_.findWhere(buildingCoords, cell.coord));
-    var greenfieldBuildings = buildableCells.map((cell) => new BasicHouse(cell.coord));
-
-    var buildingUpgrades = _(this.getBuildings()).map((building) => building.getPotentialUpgrades())
-                                                 .flatten()
-                                                 .unique((building) => JSON.stringify(building.serialize()))
-                                                 .filter((building) => building.canBeBuiltOn(this.map))
-                                                 .value();
-
-    return greenfieldBuildings.concat(buildingUpgrades);
+    return buildableCells.map((cell) => new BasicHouse(cell.coord));
   }
+
+  private getPossibleBuildingUpgrades(): Building[] {
+    return _(this.getBuildings()).map((building) => building.getPotentialUpgrades())
+                                 .flatten()
+                                 .unique((building) => JSON.stringify(building.serialize()))
+                                 .filter((building) => building.canBeBuiltOn(this.map))
+                                 .value();
+  }
+
+  getPossibleUpgrades(): Building[] {
+    return this.getPossibleNewBuildings().concat(this.getPossibleBuildingUpgrades());
+  }
+
+  onChanged = subscribableEvent();
 
   construct(building: Building): void {
     if (!building.canBeBuiltOn(this.map)) {
@@ -64,8 +70,6 @@ class City {
     this.map.remove(building);
     this.onChanged.trigger();
   }
-
-  onChanged = subscribableEvent();
 
   updateFromJSON(json: string): void {
     var data = JSON.parse(json);
