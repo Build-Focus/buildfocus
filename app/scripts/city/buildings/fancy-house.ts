@@ -14,7 +14,7 @@ class FancyHouse extends Buildings.AbstractBuilding implements Buildings.Buildin
 
   canBeBuiltOn(lookup: Buildings.BuildingLookup) {
     var twoNeighbouringCells = this.coord1.isDirectNeighbour(this.coord2);
-    var existingBuildingsAreHouses = _.all([this.coord1, this.coord2], (coord) => {
+    var existingBuildingsAreHouses = _.all(this.coords, (coord) => {
       var existingBuilding = lookup.getBuildingAt(coord);
       return existingBuilding && existingBuilding.buildingType === BuildingType.BasicHouse;
     });

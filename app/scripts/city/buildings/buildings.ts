@@ -47,8 +47,7 @@ export class AbstractBuilding {
 
   serialize(): serialization.BuildingData {
     return {
-      // Sort these so that serialization is canonical
-      coords: this.coords.sort().map(c => c.serialize()),
+      coords: this.coords.map(c => c.serialize()),
       buildingType: this.buildingType
     };
   }

@@ -1,6 +1,7 @@
 define(["knockout", "lodash", "city/city", "city/cell", "city/coord",
-        "city/buildings/basic-house", "city/buildings/fancy-house", "city/buildings/building-type"],
-  function (ko, _, City, Cell, Coord, BasicHouse, FancyHouse, BuildingType) {
+        "city/buildings/basic-house", "city/buildings/fancy-house",
+        "city/buildings/buildings", "city/buildings/building-type"],
+  function (ko, _, City, Cell, Coord, BasicHouse, FancyHouse, Buildings, BuildingType) {
     'use strict';
 
     function c(x, y) {
@@ -117,6 +118,30 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord",
 
         expect(() => city.construct(fancyBuilding)).to.throw();
       });
+
+      it("should successfully serialize every reachable form of building", () => {
+        var possibleBuildings = getAllReachableBuildings();
+
+        for (let building of possibleBuildings) {
+          expect(Buildings.deserialize(building.serialize())).to.deep.equal(building);
+        }
+      });
+
+      function getAllReachableBuildings() {
+        let unexpanded = [new BasicHouse(c(0, 0))];
+        let foundBuildings = [];
+
+        while (unexpanded.length > 0) {
+          let building = unexpanded.pop();
+          unexpanded = _(unexpanded).concat(building.getPotentialUpgrades())
+                                    .unique((building) => building.buildingType)
+                                    .reject((building) => _.any(foundBuildings, {buildingType: building.buildingType}))
+                                    .value();
+          foundBuildings.push(building);
+        }
+
+        return foundBuildings;
+      }
     });
   }
 );

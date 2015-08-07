@@ -14,6 +14,12 @@ import Building = Buildings.Building;
 
 import BasicHouse = require('city/buildings/basic-house');
 
+function canonicalForm(building: Building) {
+  var data = building.serialize();
+  data.coords = _.sortBy(data.coords, (coord) => JSON.stringify(coord));
+  return JSON.stringify(data);
+}
+
 // Handles setup and defines the external API of the city model
 class City {
   private cellFactory: (Coord) => Cell;
@@ -42,7 +48,7 @@ class City {
   private getPossibleBuildingUpgrades(): Building[] {
     return _(this.getBuildings()).map((building) => building.getPotentialUpgrades())
                                  .flatten()
-                                 .unique((building) => JSON.stringify(building.serialize()))
+                                 .unique((building: Building) => JSON.stringify(canonicalForm(building)))
                                  .filter((building) => building.canBeBuiltOn(this.map))
                                  .value();
   }
