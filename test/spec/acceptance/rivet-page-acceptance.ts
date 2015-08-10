@@ -54,7 +54,7 @@ define(["pages/rivet-page", "city/city"], function (RivetPageViewModel, City) {
         var renderedOutput = viewModel.renderCity();
 
         // Just one empty cell
-        expect(renderedOutput().length).to.equal(1);
+        expect(renderedOutput.length).to.equal(1);
       });
 
       it("should load from persisted data", function () {
@@ -66,7 +66,7 @@ define(["pages/rivet-page", "city/city"], function (RivetPageViewModel, City) {
         var renderedOutput = viewModel.renderCity();
 
         // Nine cells + one building
-        expect(renderedOutput().length).to.equal(10);
+        expect(renderedOutput.length).to.equal(10);
       });
 
       it("should update the city when it's updated remotely", function () {
@@ -80,7 +80,7 @@ define(["pages/rivet-page", "city/city"], function (RivetPageViewModel, City) {
         var renderedOutput = viewModel.renderCity();
 
         // Nine cells + one building
-        expect(renderedOutput().length).to.equal(10);
+        expect(renderedOutput.length).to.equal(10);
       });
     });
 

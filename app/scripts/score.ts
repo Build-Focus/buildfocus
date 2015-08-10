@@ -16,14 +16,14 @@ class Score {
   }
 
   addSuccess() {
-    this.city.construct(this.city.getPossibleUpgrades()[0]);
+    var possibleUpgrades = this.city.getPossibleUpgrades();
+    var randomUpgrade = _.sample(possibleUpgrades);
+    this.city.construct(randomUpgrade);
   }
 
   addFailure() {
-    var buildingToRemove = this.city.getBuildings()[0];
-    if (buildingToRemove) {
-      this.city.remove(buildingToRemove);
-    }
+    var buildingToRemove = _.sample(this.city.getBuildings());
+    if (buildingToRemove) this.city.remove(buildingToRemove);
   }
 }
 

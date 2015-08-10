@@ -1,7 +1,6 @@
-/* global describe, it */
-
-define(["jquery", "createjs", "knockout", "city/city", "city/rendering/city-renderer"],
-  function ($, easeljs, ko, City, CityRenderer) {
+define(["jquery", "createjs", "knockout", "city/city", "city/rendering/city-renderer",
+        "city/buildings/building-type"],
+  function ($, easeljs, ko, City, CityRenderer, BuildingType) {
     'use strict';
 
     function render(city) {
@@ -30,6 +29,14 @@ define(["jquery", "createjs", "knockout", "city/city", "city/rendering/city-rend
         testDiv.parentElement.removeChild(testDiv);
       });
 
+      it("should show an empty cell correctly", function () {
+        var city = new City();
+
+        var canvas = render(city);
+
+        return expect(canvas).to.soon.be.image("expected-images/empty-cell.png");
+      });
+
       it("should render a building", function () {
         var city = new City();
 
@@ -39,26 +46,6 @@ define(["jquery", "createjs", "knockout", "city/city", "city/rendering/city-rend
         return expect(canvas).to.soon.be.image("expected-images/single-building.png");
       });
 
-      it("should show an empty cell correctly", function () {
-        var city = new City();
-
-        var canvas = render(city);
-
-        return expect(canvas).to.soon.be.image("expected-images/empty-cell.png");
-      });
-
-      it("should render a block correctly", function () {
-        var city = new City();
-
-        for (var i = 0; i < 10; i++) {
-          city.construct(city.getPossibleUpgrades()[0]);
-        }
-
-        var canvas = render(city);
-
-        return expect(canvas).to.soon.be.image("expected-images/10x-0th-upgrade-city.png");
-      });
-
       it("should update as new buildings are added", function () {
         var city = new City();
         var canvas = render(city);
@@ -66,6 +53,29 @@ define(["jquery", "createjs", "knockout", "city/city", "city/rendering/city-rend
         city.construct(city.getPossibleUpgrades()[0]);
 
         return expect(canvas).to.soon.be.image("expected-images/single-building.png");
+      });
+
+      it("should render a block correctly", function () {
+        var city = new City();
+
+        _.times(10, () => city.construct(_.first(city.getPossibleUpgrades())));
+        var canvas = render(city);
+
+        return expect(canvas).to.soon.be.image("expected-images/10x-0th-upgrade-city.png");
+      });
+
+      it("should render upgrades correctly", function () {
+        var city = new City();
+
+        _.times(10, () => city.construct(_(<Array<any>> city.getPossibleUpgrades())
+                                          .where({ buildingType: BuildingType.BasicHouse })
+                                          .first()));
+        _.times(5, () => city.construct(_(<Array<any>> city.getPossibleUpgrades())
+                                         .reject({ buildingType: BuildingType.BasicHouse })
+                                         .first()));
+        var canvas = render(city);
+
+        return expect(canvas).to.soon.be.image("expected-images/10x-new-5x-upgrade-city.png");
       });
     });
   }

@@ -4,7 +4,7 @@ import serialization = require('city/city-serialization');
 import Map = require('city/map');
 import BuildingType = require('city/buildings/building-type');
 import Coord = require('city/coord');
-import FancyHouse = require('city/buildings/fancy-house');
+import NiceHouse = require('city/buildings/nice-house');
 
 class BasicHouse extends Buildings.AbstractBuilding implements Buildings.Building {
 
@@ -17,8 +17,7 @@ class BasicHouse extends Buildings.AbstractBuilding implements Buildings.Buildin
   }
 
   getPotentialUpgrades(): Buildings.Building[] {
-    return this.coord.getDirectNeighbours()
-                     .map((neighbouringCoord) => new FancyHouse(this.coord, neighbouringCoord));
+    return [new NiceHouse(this.coord)];
   }
 
   static deserialize(coords: Coord[]): Buildings.Building {

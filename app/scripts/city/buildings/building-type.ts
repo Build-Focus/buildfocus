@@ -2,7 +2,8 @@
 
 enum BuildingType {
   BasicHouse,
-  FancyHouse
+  NiceHouse,
+  FancyHouse,
 }
 
 export = BuildingType;

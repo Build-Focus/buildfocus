@@ -4,7 +4,7 @@ import serialization = require('city/city-serialization');
 import Map = require('city/map');
 import BuildingType = require('city/buildings/building-type');
 import Coord = require('city/coord');
-import BasicHouse = require('city/buildings/basic-house');
+import NiceHouse = require('city/buildings/nice-house');
 
 class FancyHouse extends Buildings.AbstractBuilding implements Buildings.Building {
 
@@ -14,11 +14,11 @@ class FancyHouse extends Buildings.AbstractBuilding implements Buildings.Buildin
 
   canBeBuiltOn(lookup: Buildings.BuildingLookup) {
     var twoNeighbouringCells = this.coord1.isDirectNeighbour(this.coord2);
-    var existingBuildingsAreHouses = _.all(this.coords, (coord) => {
+    var existingBuildingsAreNiceHouses = _.all(this.coords, (coord) => {
       var existingBuilding = lookup.getBuildingAt(coord);
-      return existingBuilding && existingBuilding.buildingType === BuildingType.BasicHouse;
+      return existingBuilding && existingBuilding.buildingType === BuildingType.NiceHouse;
     });
-    return twoNeighbouringCells && existingBuildingsAreHouses;
+    return twoNeighbouringCells && existingBuildingsAreNiceHouses;
   }
 
   getPotentialUpgrades(): Buildings.Building[] {

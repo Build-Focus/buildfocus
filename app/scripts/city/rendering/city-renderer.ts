@@ -14,10 +14,15 @@ import buildingRenderConfig = require('city/rendering/building-rendering-config'
 const CELL_WIDTH = 600;
 const CELL_HEIGHT = 345;
 
-function byCoordsDiagonally(cellA, cellB) {
-  var coordA = cellA.coord;
-  var coordB = cellB.coord;
+function compareCellCoords(cellA, cellB) {
+  return compareCoords(cellA.coord, cellB.coord);
+}
 
+function compareBuildingCoords(buildingA, buildingB) {
+  return compareCoords(buildingA.coords[0], buildingB.coords[0]);
+}
+
+function compareCoords(coordA, coordB) {
   var coordATotal = coordA.x + coordA.y;
   var coordBTotal = coordB.x + coordB.y;
 
@@ -41,23 +46,21 @@ class CityRenderer {
     this.city = city;
   }
 
-  render = (): KnockoutObservableArray<easeljs.DisplayObject> => {
-    var results = ko.observableArray([]);
-    for (var cell of this.city.getCells().sort(byCoordsDiagonally)) {
-      results.push(this.renderCell(cell));
-    }
+  render = (): Array<easeljs.DisplayObject> => {
+    var cellRenderings = this.city.getCells()
+                                  .sort(compareCellCoords)
+                                  .map((cell) => this.renderCell(cell));
+    var buildingRenderings = this.city.getBuildings()
+                                      .sort(compareBuildingCoords)
+                                      .map((building) => this.renderBuilding(building));
 
-    // TODO: Sort buildings correctly
-    for (var building of this.city.getBuildings()) {
-      results.push(this.renderBuilding(building));
-    }
-    return results;
+    return cellRenderings.concat(buildingRenderings);
   };
 
   private renderBuilding(building: Buildings.Building): easeljs.DisplayObject {
     var buildingImage = this.getBuildingImage(building);
 
-    // TODO: Consider all coords, not just 0th
+    // TODO: Consider all coords, not just 0th (here and when sorting)
     var buildingCoord = building.coords[0];
     buildingImage.x += buildingCoord.x * (CELL_WIDTH / 2) - buildingCoord.y * (CELL_WIDTH / 2);
     buildingImage.y += buildingCoord.x * (CELL_HEIGHT / 2) + buildingCoord.y * (CELL_HEIGHT / 2);

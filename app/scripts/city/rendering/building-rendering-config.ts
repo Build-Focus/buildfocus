@@ -11,6 +11,11 @@ var config: { [buildingType: number]: BuildingConfig } = {
     xOffset: 136,
     yOffset: 6,
     imagePath: "/images/city/basic-house/sw.png",
+  },
+  [BuildingType.NiceHouse]: {
+    xOffset: 0,
+    yOffset: -66,
+    imagePath: "/images/city/nice-house/sw.png",
   }
 };
 
