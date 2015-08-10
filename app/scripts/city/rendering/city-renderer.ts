@@ -4,10 +4,12 @@ import ko = require('knockout');
 import City = require('city/city');
 
 import Cell = require('city/cell');
-import CellType = require ('city/cell-type');
+import CellType = require('city/cell-type');
 
-import Buildings = require ('city/buildings/buildings');
-import BuildingType = require ('city/buildings/building-type');
+import Buildings = require('city/buildings/buildings');
+import BuildingType = require('city/buildings/building-type');
+
+import buildingRenderConfig = require('city/rendering/building-rendering-config');
 
 const CELL_WIDTH = 600;
 const CELL_HEIGHT = 345;
@@ -64,15 +66,13 @@ class CityRenderer {
   }
 
   private getBuildingImage(building: Buildings.Building): easeljs.Bitmap {
-    switch (building.buildingType) {
-      case BuildingType.BasicHouse:
-        var image = new easeljs.Bitmap("/images/city/basic-house/sw.png");
-        image.x = 136;
-        image.y = 6;
-        return image;
-      default:
-        throw new Error("Failed to render building, unknown building type: " + building.buildingType);
-    }
+    var config = buildingRenderConfig[building.buildingType];
+    if (!config) throw new Error("Failed to render building, unknown type: " + building.buildingType);
+
+    var image = new easeljs.Bitmap(config.imagePath);
+    image.x = config.xOffset;
+    image.y = config.yOffset;
+    return image;
   }
 
   private renderCell(cell: Cell): easeljs.DisplayObject {
@@ -87,7 +87,7 @@ class CityRenderer {
       case CellType.Grass:
         return new easeljs.Bitmap("/images/city/grass/grass.png");
       default:
-        throw new Error("Failed to render building, unknown building type: " + cell.cellType);
+        throw new Error("Failed to render cell, unknown cell type: " + cell.cellType);
     }
   }
 }
