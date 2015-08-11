@@ -33,8 +33,16 @@ define(function () {
       return args[0]["city-data"];
     }).reject(_.isUndefined).last();
 
+    var buildingPointsValue = {
+      0: 1,
+      1: 2,
+      2: 5
+    };
+
     if (lastStoredCityData) {
-      return JSON.parse(lastStoredCityData).map.buildings.length;
+      return _.sum(JSON.parse(lastStoredCityData).map.buildings, (building: any) => {
+        return buildingPointsValue[building.buildingType]
+      });
     } else {
       return 0;
     }
