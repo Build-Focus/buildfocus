@@ -18,7 +18,13 @@ requirejs.config({
   baseUrl: "/base/build/app/scripts",
 
   paths: {
-    "test": "/base/build/test"
+    "test": "/base/build/test",
+  },
+
+  map: {
+    'test': {
+      'app/scripts/city': 'city'
+    }
   },
 
   urlArgs: "ts=" + Date.now(),
