@@ -18,7 +18,7 @@ function c(x, y) {
   return new Coord(x, y);
 }
 
-describe.only('City Integration - City', () => {
+describe('City Integration - City', () => {
   it('should start with one empty cell', () => {
     var city = new City();
 
@@ -151,12 +151,12 @@ describe.only('City Integration - City', () => {
   });
 
   function getAllReachableBuildings() {
-    let unexpanded: Array<Buildings.Building> = [new BasicHouse(c(0, 0))];
+    let unexpanded: Buildings.Building[] = [new BasicHouse(c(0, 0))];
     let foundBuildings: Buildings.Building[] = [];
 
     while (unexpanded.length > 0) {
       let building = unexpanded.pop();
-      unexpanded = (<_.LoDashArrayWrapper<Buildings.Building>> _(unexpanded)).concat(<Buildings.Building[]> building.getPotentialUpgrades())
+      unexpanded = _(unexpanded).concat(building.getPotentialUpgrades())
                                 .unique((building) => building.buildingType)
                                 .reject((building) => _.any(foundBuildings, {buildingType: building.buildingType}))
                                 .value();

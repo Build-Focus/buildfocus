@@ -3,7 +3,7 @@
 import ko = require('knockout');
 import _ = require('lodash');
 
-export = function synchronizedObservable<T>(valueName: string, initialValue: T, storageArea = "local"): KnockoutObservable<T> {
+export = function synchronizedObservable<T>(valueName: string, initialValue: T = undefined, storageArea = "local"): KnockoutObservable<T> {
   var observable: KnockoutObservable<T> = ko.observable(initialValue)
                                             .extend({notify: 'always'}); // Required to stop some races
 

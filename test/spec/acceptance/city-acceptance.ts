@@ -1,82 +1,87 @@
-define(["jquery", "createjs", "knockout", "city/city", "city/rendering/city-renderer",
-        "city/buildings/building-type"],
-  function ($, easeljs, ko, City, CityRenderer, BuildingType) {
-    'use strict';
+'use strict';
 
-    function render(city) {
-      var element = document.createElement("div");
-      testDiv.appendChild(element);
-      element.setAttribute("data-bind", "render: render");
-      element.style.width = "500px";
-      element.style.height = "500px";
+import $ = require("jquery");
+import easeljs = require("createjs");
+import ko = require("knockout");
 
-      ko.applyBindings(new CityRenderer(city), element);
+import Buildings = require("app/scripts/city/buildings/buildings");
 
-      return $(element).find("canvas")[0];
-    }
+import City = require("app/scripts/city/city");
+import CityRenderer = require("app/scripts/city/rendering/city-renderer");
+import BuildingType = require("app/scripts/city/buildings/building-type");
 
-    var testDiv;
+function render(city) {
+  var element = document.createElement("div");
+  testDiv.appendChild(element);
+  element.setAttribute("data-bind", "render: render");
+  element.style.width = "500px";
+  element.style.height = "500px";
 
-    describe('Acceptance: City', function () {
-      beforeEach(function () {
-        testDiv = document.createElement("div");
-        testDiv.style.display = "block";
-        testDiv.style.visibility = "hidden";
-        document.body.appendChild(testDiv);
-      });
+  ko.applyBindings(new CityRenderer(city), element);
 
-      afterEach(function () {
-        testDiv.parentElement.removeChild(testDiv);
-      });
+  return $(element).find("canvas")[0];
+}
 
-      it("should show an empty cell correctly", function () {
-        var city = new City();
+var testDiv;
 
-        var canvas = render(city);
+describe('Acceptance: City', function () {
+  beforeEach(function () {
+    testDiv = document.createElement("div");
+    testDiv.style.display = "block";
+    testDiv.style.visibility = "hidden";
+    document.body.appendChild(testDiv);
+  });
 
-        return expect(canvas).to.soon.be.image("expected-images/empty-cell.png");
-      });
+  afterEach(function () {
+    testDiv.parentElement.removeChild(testDiv);
+  });
 
-      it("should render a building", function () {
-        var city = new City();
+  it("should show an empty cell correctly", function () {
+    var city = new City();
 
-        city.construct(city.getPossibleUpgrades()[0]);
-        var canvas = render(city);
+    var canvas = render(city);
 
-        return expect(canvas).to.soon.be.image("expected-images/single-building.png");
-      });
+    return expect(canvas).to.soon.be.image("expected-images/empty-cell.png");
+  });
 
-      it("should update as new buildings are added", function () {
-        var city = new City();
-        var canvas = render(city);
+  it("should render a building", function () {
+    var city = new City();
 
-        city.construct(city.getPossibleUpgrades()[0]);
+    city.construct(city.getPossibleUpgrades()[0]);
+    var canvas = render(city);
 
-        return expect(canvas).to.soon.be.image("expected-images/single-building.png");
-      });
+    return expect(canvas).to.soon.be.image("expected-images/single-building.png");
+  });
 
-      it("should render a block correctly", function () {
-        var city = new City();
+  it("should update as new buildings are added", function () {
+    var city = new City();
+    var canvas = render(city);
 
-        _.times(10, () => city.construct(_.first(city.getPossibleUpgrades())));
-        var canvas = render(city);
+    city.construct(city.getPossibleUpgrades()[0]);
 
-        return expect(canvas).to.soon.be.image("expected-images/10x-0th-upgrade-city.png");
-      });
+    return expect(canvas).to.soon.be.image("expected-images/single-building.png");
+  });
 
-      it("should render upgrades correctly", function () {
-        var city = new City();
+  it("should render a block correctly", function () {
+    var city = new City();
 
-        _.times(10, () => city.construct(_(<Array<any>> city.getPossibleUpgrades())
-                                          .where({ buildingType: BuildingType.BasicHouse })
-                                          .first()));
-        _.times(5, () => city.construct(_(<Array<any>> city.getPossibleUpgrades())
-                                         .reject({ buildingType: BuildingType.BasicHouse })
-                                         .last()));
-        var canvas = render(city);
+    _.times(10, () => city.construct(_.first(city.getPossibleUpgrades())));
+    var canvas = render(city);
 
-        return expect(canvas).to.soon.be.image("expected-images/10x-new-5x-upgrade-city.png");
-      });
-    });
-  }
-);
+    return expect(canvas).to.soon.be.image("expected-images/10x-0th-upgrade-city.png");
+  });
+
+  it("should render upgrades correctly", function () {
+    var city = new City();
+
+    _.times(10, () => city.construct(_(city.getPossibleUpgrades())
+                                      .where({ buildingType: BuildingType.BasicHouse })
+                                      .first()));
+    _.times(5, () => city.construct(_(city.getPossibleUpgrades())
+                                     .reject({ buildingType: BuildingType.BasicHouse })
+                                     .last()));
+    var canvas = render(city);
+
+    return expect(canvas).to.soon.be.image("expected-images/10x-new-5x-upgrade-city.png");
+  });
+});

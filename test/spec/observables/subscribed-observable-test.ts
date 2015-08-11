@@ -1,58 +1,57 @@
-/* global describe, it */
+'use strict';
 
-define(["knockout", "observables/subscribed-observable"], function (ko, SubscribedObservable) {
-  'use strict';
+import ko = require("knockout");
+import subscribedObservable = require("app/scripts/observables/subscribed-observable");
 
-  var chromeStub = <typeof SinonChrome> <any> window.chrome;
+var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
-  describe('Subscribed Observable', function () {
-    beforeEach(function () {
-      chromeStub.reset();
+describe('Subscribed Observable', function () {
+  beforeEach(function () {
+    chromeStub.reset();
 
-      chromeStub.storage.local.get.yields({});
-      chromeStub.storage.sync.get.yields({});
-    });
+    chromeStub.storage.local.get.yields({});
+    chromeStub.storage.sync.get.yields({});
+  });
 
-    it('should be undefined if no stored values are available', function () {
-      var observable = new SubscribedObservable("value-name");
+  it('should be undefined if no stored values are available', function () {
+    var observable = subscribedObservable("value-name");
 
-      expect(observable()).to.equal(undefined);
-    });
+    expect(observable()).to.equal(undefined);
+  });
 
-    it("should use a given initial value, if provided", function () {
-      var observable = new SubscribedObservable("value-name", 0);
+  it("should use a given initial value, if provided", function () {
+    var observable = subscribedObservable("value-name", 0);
 
-      expect(observable()).to.equal(0);
-    });
+    expect(observable()).to.equal(0);
+  });
 
-    it("should override the given initial observable value if a saved value is present", function () {
-      chromeStub.storage.local.get.yields({"value-name": 1});
-      var observable = new SubscribedObservable("value-name", 0);
+  it("should override the given initial observable value if a saved value is present", function () {
+    chromeStub.storage.local.get.yields({"value-name": 1});
+    var observable = subscribedObservable("value-name", 0);
 
-      expect(observable()).to.equal(1);
-    });
+    expect(observable()).to.equal(1);
+  });
 
-    it('should not allow you to write values', function () {
-      var observable = new SubscribedObservable("value-name");
+  it('should not allow you to write values', function () {
+    var observable = subscribedObservable("value-name");
 
-      expect(function () {
-        observable("new-value");
-      }).to.throw();
-    });
+    expect(function () {
+      observable("new-value");
+    }).to.throw();
+  });
 
-    it('should be updated after remote changes to chrome local storage', function () {
-      var observable = new SubscribedObservable("value-name", "initial-value");
+  it('should be updated after remote changes to chrome local storage', function () {
+    var observable = subscribedObservable("value-name", "initial-value");
 
-      chromeStub.storage.onChanged.trigger({"value-name": {"newValue": "updated-value"}});
+    chromeStub.storage.onChanged.trigger({"value-name": {"newValue": "updated-value"}});
 
-      expect(observable()).to.equal("updated-value");
-    });
+    expect(observable()).to.equal("updated-value");
+  });
 
-    it("uses the sync storage area instead, if requested", function () {
-      new SubscribedObservable("sync-value-name", "initial-value", "sync");
+  it("uses the sync storage area instead, if requested", function () {
+    subscribedObservable("sync-value-name", "initial-value", "sync");
 
-      expect(chromeStub.storage.local.get.called).to.equal(false);
-      expect(chromeStub.storage.sync.get.called).to.equal(true);
-    });
+    expect(chromeStub.storage.local.get.called).to.equal(false);
+    expect(chromeStub.storage.sync.get.called).to.equal(true);
   });
 });
