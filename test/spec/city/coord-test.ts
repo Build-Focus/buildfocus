@@ -1,6 +1,6 @@
 'use strict';
 
-define(["lodash", "city/coord"], function (_, Coord) {
+define(["lodash", "city/coord", "city/direction"], function (_, Coord, Direction) {
   function lexicographicSort(coordA, coordB) {
     if (coordA.x !== coordB.x) {
       return coordA.x > coordB.x ? 1 : -1;
@@ -80,6 +80,15 @@ define(["lodash", "city/coord"], function (_, Coord) {
       expect(coord.isDirectNeighbour(new Coord(0, -2))).to.be.false;
       expect(coord.isDirectNeighbour(new Coord(1, 1))).to.be.false;
       expect(coord.isDirectNeighbour(new Coord(0, 0))).to.be.false;
+    });
+
+    it('can give you direction towards another cell', () => {
+      var coord = new Coord(0, 0);
+
+      expect(coord.getDirectionToward(new Coord(0, -1))).to.equal(Direction.North);
+      expect(coord.getDirectionToward(new Coord(1, 0))).to.equal(Direction.East);
+      expect(coord.getDirectionToward(new Coord(0, 1))).to.equal(Direction.South);
+      expect(coord.getDirectionToward(new Coord(-1, 0))).to.equal(Direction.West);
     });
   });
 });

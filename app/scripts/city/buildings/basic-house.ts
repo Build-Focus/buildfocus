@@ -1,6 +1,7 @@
 import Buildings = require('city/buildings/buildings');
 import serialization = require('city/city-serialization');
 
+import Direction = require('city/direction');
 import Map = require('city/map');
 import BuildingType = require('city/buildings/building-type');
 import Coord = require('city/coord');
@@ -9,7 +10,7 @@ import NiceHouse = require('city/buildings/nice-house');
 class BasicHouse extends Buildings.AbstractBuilding implements Buildings.Building {
 
   constructor(private coord: Coord) {
-    super(BuildingType.BasicHouse, [coord]);
+    super(BuildingType.BasicHouse, [coord], Direction.South);
   }
 
   canBeBuiltOn(lookup: Buildings.BuildingLookup) {
@@ -17,7 +18,7 @@ class BasicHouse extends Buildings.AbstractBuilding implements Buildings.Buildin
   }
 
   getPotentialUpgrades(): Buildings.Building[] {
-    return [new NiceHouse(this.coord)];
+    return [new NiceHouse(this.coord, this.direction)];
   }
 
   static deserialize(coords: Coord[]): Buildings.Building {

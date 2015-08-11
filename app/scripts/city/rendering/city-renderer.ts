@@ -2,6 +2,7 @@ import easeljs = require('createjs');
 import ko = require('knockout');
 
 import City = require('city/city');
+import Coord = require('city/coord');
 
 import Cell = require('city/cell');
 import CellType = require('city/cell-type');
@@ -19,7 +20,9 @@ function compareCellCoords(cellA, cellB) {
 }
 
 function compareBuildingCoords(buildingA, buildingB) {
-  return compareCoords(buildingA.coords[0], buildingB.coords[0]);
+  var maxBuildingACoord = _.last(buildingA.coords.sort(compareCoords));
+  var maxBuildingBCoord = _.last(buildingB.coords.sort(compareCoords));
+  return compareCoords(maxBuildingACoord, maxBuildingBCoord);
 }
 
 function compareCoords(coordA, coordB) {
@@ -60,8 +63,7 @@ class CityRenderer {
   private renderBuilding(building: Buildings.Building): easeljs.DisplayObject {
     var buildingImage = this.getBuildingImage(building);
 
-    // TODO: Consider all coords, not just 0th (here and when sorting)
-    var buildingCoord = building.coords[0];
+    var buildingCoord = _.last(building.coords.sort(compareCoords));
     buildingImage.x += buildingCoord.x * (CELL_WIDTH / 2) - buildingCoord.y * (CELL_WIDTH / 2);
     buildingImage.y += buildingCoord.x * (CELL_HEIGHT / 2) + buildingCoord.y * (CELL_HEIGHT / 2);
 
@@ -69,8 +71,10 @@ class CityRenderer {
   }
 
   private getBuildingImage(building: Buildings.Building): easeljs.Bitmap {
-    var config = buildingRenderConfig[building.buildingType];
-    if (!config) throw new Error("Failed to render building, unknown type: " + building.buildingType);
+    var config = buildingRenderConfig[building.buildingType][building.direction];
+
+    if (!config) throw new Error("Failed to render building, no image for type: " + building.buildingType +
+                                 "and direction: " + building.direction);
 
     var image = new easeljs.Bitmap(config.imagePath);
     image.x = config.xOffset;

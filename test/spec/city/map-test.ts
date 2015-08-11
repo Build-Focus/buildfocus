@@ -155,8 +155,8 @@ define(["knockout", "lodash", "city/map", "city/cell", "city/coord", "city/build
         var serialized = map.serialize();
 
         expect(serialized.buildings).to.deep.equal([
-          { coords: [{x: 0, y: 0}], buildingType: 0 },
-          { coords: [{x: 0, y: 1}], buildingType: 0 },
+          { coords: [{x: 0, y: 0}], buildingType: 0, direction: 2 },
+          { coords: [{x: 0, y: 1}], buildingType: 0, direction: 2 },
         ]);
       });
 

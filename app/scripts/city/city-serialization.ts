@@ -15,6 +15,7 @@ export interface CellData {
 export interface BuildingData {
   coords: CoordData[];
   buildingType: number;
+  direction: number
 }
 
 export interface CoordData {

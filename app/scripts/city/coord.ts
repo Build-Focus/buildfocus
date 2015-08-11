@@ -1,3 +1,4 @@
+import Direction = require('city/direction');
 import serialize = require('city/city-serialization');
 
 const NEIGHBOUR_OFFSETS = [
@@ -34,6 +35,19 @@ class Coord {
     var xDifference = Math.abs(coord.x - this.x);
     var yDifference = Math.abs(coord.y - this.y);
     return xDifference + yDifference === 1;
+  }
+
+  getDirectionToward(coord: Coord): Direction {
+    var xDifference = Math.abs(coord.x - this.x);
+    var yDifference = Math.abs(coord.y - this.y);
+
+    if (xDifference > yDifference) {
+      if (this.x > coord.x) return Direction.West;
+      else return Direction.East;
+    } else {
+      if (this.y > coord.y) return Direction.North;
+      else return Direction.South;
+    }
   }
 
   north() {

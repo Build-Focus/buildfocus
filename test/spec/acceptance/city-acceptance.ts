@@ -72,7 +72,7 @@ define(["jquery", "createjs", "knockout", "city/city", "city/rendering/city-rend
                                           .first()));
         _.times(5, () => city.construct(_(<Array<any>> city.getPossibleUpgrades())
                                          .reject({ buildingType: BuildingType.BasicHouse })
-                                         .first()));
+                                         .last()));
         var canvas = render(city);
 
         return expect(canvas).to.soon.be.image("expected-images/10x-new-5x-upgrade-city.png");

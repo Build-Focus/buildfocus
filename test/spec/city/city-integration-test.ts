@@ -1,9 +1,15 @@
-define(["knockout", "lodash", "city/city", "city/cell", "city/coord",
-        "city/buildings/basic-house", "city/buildings/nice-house",
-        "city/buildings/fancy-house", "city/buildings/buildings",
+define(["knockout",
+        "lodash",
+        "city/city",
+        "city/cell",
+        "city/coord",
+        "city/direction",
+        "city/buildings/basic-house",
+        "city/buildings/nice-house",
+        "city/buildings/fancy-house",
+        "city/buildings/buildings",
         "city/buildings/building-type"],
-  function (ko, _, City, Cell, Coord, BasicHouse, NiceHouse, FancyHouse,
-            Buildings, BuildingType) {
+  function (ko, _, City, Cell, Coord, Direction, BasicHouse, NiceHouse, FancyHouse, Buildings, BuildingType) {
     'use strict';
 
     function c(x, y) {
@@ -101,24 +107,26 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord",
       function buildTwoNiceHouses(city) {
         city.construct(new BasicHouse(c(0, 0)));
         city.construct(new BasicHouse(c(1, 0)));
-        city.construct(new NiceHouse(c(0, 0)));
-        city.construct(new NiceHouse(c(1, 0)));
+        city.construct(new NiceHouse(c(0, 0), Direction.South));
+        city.construct(new NiceHouse(c(1, 0), Direction.South));
       }
       
-      it('should offer to combine two nice houses into one fancy one, but only once', () => {
+      it('should offer to combine two nice houses into one fancy one, in both directions', () => {
         var city = new City();
         buildTwoNiceHouses(city);
 
         var fancyHouseUpgrades = _.where(city.getPossibleUpgrades(), { buildingType: BuildingType.FancyHouse });
 
-        expect(fancyHouseUpgrades.filter(building => _.isEqual(building.coords.sort(), [c(0, 0), c(1, 0)])).length).to.equal(1);
+        expect(fancyHouseUpgrades.length).to.equal(2);
+        expect(fancyHouseUpgrades[0]).to.deep.equal(new FancyHouse(c(0, 0), c(1, 0), Direction.North));
+        expect(fancyHouseUpgrades[1]).to.deep.equal(new FancyHouse(c(0, 0), c(1, 0), Direction.South));
       });
 
       it('should let you combine two nice houses into one fancy one', () => {
         var city = new City();
         buildTwoNiceHouses(city);
 
-        var fancyBuilding = new FancyHouse(c(0, 0), c(1, 0));
+        var fancyBuilding = new FancyHouse(c(0, 0), c(1, 0), Direction.South);
         city.construct(fancyBuilding);
 
         expect(city.getBuildings()).to.deep.equal([fancyBuilding]);
@@ -127,7 +135,7 @@ define(["knockout", "lodash", "city/city", "city/cell", "city/coord",
       it("should not let you build a fancy building if there weren't two basic houses to upgrade", () => {
         var city = new City();
 
-        var fancyBuilding = new FancyHouse(c(0, 0), c(1, 0));
+        var fancyBuilding = new FancyHouse(c(0, 0), c(1, 0), Direction.North);
 
         expect(() => city.construct(fancyBuilding)).to.throw();
       });
