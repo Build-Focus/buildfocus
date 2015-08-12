@@ -50,6 +50,12 @@ function yOffset(coord: Coord) {
   return coord.y * (CELL_HEIGHT / 2) + coord.x * (CELL_HEIGHT / 2)
 }
 
+const CELL_SHADES = ["light", "normal", "dark"];
+
+function positiveModulus(x, n) {
+  return ((x % n) + n) % n;
+}
+
 class CityRenderer {
   private city: City;
 
@@ -94,13 +100,17 @@ class CityRenderer {
     var cellImage = this.getCellImage(cell);
     cellImage.x = xOffset(cell.coord);
     cellImage.y = yOffset(cell.coord);
+
     return cellImage;
   }
 
   private getCellImage(cell: Cell): easeljs.Bitmap {
+    var shadeIndex = positiveModulus((1061 * cell.coord.x + 859 * cell.coord.y + 733) ^ 6991, 3);
+    var shade = CELL_SHADES[shadeIndex];
+
     switch (cell.cellType) {
       case CellType.Grass:
-        return new easeljs.Bitmap("/images/city/grass/grass.png");
+        return new easeljs.Bitmap("/images/city/grass/grass-" + shade + ".png");
       default:
         throw new Error("Failed to render cell, unknown cell type: " + cell.cellType);
     }
