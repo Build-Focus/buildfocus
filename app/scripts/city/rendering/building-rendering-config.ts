@@ -26,21 +26,26 @@ var config: { [buildingType: number]: BuildingRenderingConfig } = {
     }
   },
 
+  // TODO: Actually create a north + west images for this (and fix the East shadows too)
   [BuildingType.FancyHouse]: {
+    [Direction.North]: {
+      xOffset: -284,
+      yOffset: -225,
+      imagePath: "images/city/fancy-house/South.png",
+    },
     [Direction.South]: {
-      xOffset: 20,
-      yOffset: -50,
+      xOffset: -284,
+      yOffset: -225,
       imagePath: "images/city/fancy-house/South.png",
     },
     [Direction.East]: {
-      xOffset: -42,
-      yOffset: -222,
+      xOffset: -37,
+      yOffset: -224,
       imagePath: "images/city/fancy-house/East.png",
     },
-    // TODO: Actually create a 'west' image for this building (and fix the East shadows too)
     [Direction.West]: {
-      xOffset: -42,
-      yOffset: -222,
+      xOffset: -37,
+      yOffset: -224,
       imagePath: "images/city/fancy-house/East.png",
     }
   }

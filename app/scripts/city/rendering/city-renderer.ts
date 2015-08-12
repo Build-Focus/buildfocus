@@ -42,6 +42,14 @@ function compareCoords(coordA, coordB) {
   }
 }
 
+function xOffset(coord: Coord) {
+  return coord.x * (CELL_WIDTH / 2) - coord.y * (CELL_WIDTH / 2)
+}
+
+function yOffset(coord: Coord) {
+  return coord.y * (CELL_HEIGHT / 2) + coord.x * (CELL_HEIGHT / 2)
+}
+
 class CityRenderer {
   private city: City;
 
@@ -63,9 +71,9 @@ class CityRenderer {
   private renderBuilding(building: Buildings.Building): easeljs.DisplayObject {
     var buildingImage = this.getBuildingImage(building);
 
-    var buildingCoord = _.last(building.coords.sort(compareCoords));
-    buildingImage.x += buildingCoord.x * (CELL_WIDTH / 2) - buildingCoord.y * (CELL_WIDTH / 2);
-    buildingImage.y += buildingCoord.x * (CELL_HEIGHT / 2) + buildingCoord.y * (CELL_HEIGHT / 2);
+    var buildingCoord = _.last(<Coord[]> building.coords.sort(compareCoords));
+    buildingImage.x += xOffset(buildingCoord);
+    buildingImage.y += yOffset(buildingCoord);
 
     return buildingImage;
   }
@@ -84,8 +92,8 @@ class CityRenderer {
 
   private renderCell(cell: Cell): easeljs.DisplayObject {
     var cellImage = this.getCellImage(cell);
-    cellImage.x = cell.coord.x * (CELL_WIDTH / 2) - cell.coord.y * (CELL_WIDTH / 2);
-    cellImage.y = cell.coord.x * (CELL_HEIGHT / 2) + cell.coord.y * (CELL_HEIGHT / 2);
+    cellImage.x = xOffset(cell.coord);
+    cellImage.y = yOffset(cell.coord);
     return cellImage;
   }
 
