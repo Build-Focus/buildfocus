@@ -44,7 +44,6 @@ module.exports = function (grunt) {
     watch: {
       js: {
         files: ['app/scripts/**/*.ts',
-                'app/**/*.html',
                 'test/**/*.ts'],
         tasks: ['build', 'karma:continually:run'],
         options: {
@@ -52,6 +51,11 @@ module.exports = function (grunt) {
           atBegin: true,
           livereloadOnError: false
         }
+      },
+      content: {
+        files: ['app/**/*.css',
+                'app/**/*.html'],
+        tasks: ['copy:build']
       },
       gruntfile: {
         files: ['Gruntfile.js'],
