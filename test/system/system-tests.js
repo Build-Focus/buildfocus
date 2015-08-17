@@ -77,6 +77,8 @@ describe("System tests - ", function () {
     return driver.get(extensionPage("main.html")).then(function () {
       return driver.wait(sw.until.elementLocated({css: ".city > canvas"}), 1000);
     }).then(function (cityCanvas) {
+      return sw.promise.delayed(200).then(function () { return cityCanvas; });
+    }).then(function (cityCanvas) {
       return canvasContainsDrawnPixels(cityCanvas);
     }).then(function (canvasContainsDrawnPixels) {
       expect(canvasContainsDrawnPixels).to.equal(true,
