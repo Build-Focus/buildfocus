@@ -26,11 +26,21 @@ describe("System tests - ", function () {
     });
   }
 
+  function scrollTo(element) {
+    return driver.executeScript(function (element) {
+      element.scrollIntoView(true);
+    }, element).then(function () {
+      return element;
+    });
+  }
+
   function startPomodoro() {
     return openNewTab().then(function () {
-      return driver.get(extensionPage("main.html"))
+      return driver.get(extensionPage("main.html"));
     }).then(function () {
       return driver.findElement({css: ".startPomodoro"});
+    }).then(function (startButton) {
+      return scrollTo(startButton);
     }).then(function (startButton) {
       return startButton.click();
     });
