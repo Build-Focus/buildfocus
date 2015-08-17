@@ -126,19 +126,5 @@ describe("System tests - ", function () {
 
   xit("Can complete a pomodoro", function () {
     // TODO: Implement this once there's a nice way to detect that a pomodoro is in progress
-
-    var expectedPoints = null;
-
-    return startPomodoro().then(function () {
-      return driver.get(extensionPage("main.html"));
-    }).then(function () {
-      driver.findElement({css: '.score'})
-    }).then(function (scoreElement) {
-      driver.wait(sw.until.elementTextIs(scoreElement, "1 Points"))
-    });
-    // Wait up to 26 minutes, until the pomodoro's completed
-
-    // Check it was about 25 minutes
-    // Check we're a point up on where we started
   });
 });
