@@ -103,10 +103,10 @@ describe("System tests - ", function () {
   });
 
   it("Can fail a pomodoro", function () {
-    return addBadDomain("twitter.com").then(
+    return addBadDomain("example.com").then(
       startPomodoro
     ).then(function () {
-      return driver.get("http://twitter.com");
+      return driver.get("http://example.com");
     }).then(function () {
       return driver.getCurrentUrl();
     }).then(function (loadedUrl) {
