@@ -8,18 +8,6 @@ function extensionPage(pagePath) {
 describe("System tests - ", function () {
   var driver;
 
-  function addBadDomain(domain) {
-    return driver.get(extensionPage("options.html")).then(function () {
-      return driver.findElement({css: "input[type=text]"});
-    }).then(function (domainEntry) {
-      return domainEntry.sendKeys(domain);
-    }).then(function () {
-      return driver.findElement({css: "button[type=submit]"});
-    }).then(function (submitButton) {
-      return submitButton.click();
-    });
-  }
-
   function openNewTab() {
     return driver.findElement({css: "body"}).then(function (element) {
       return element.sendKeys(sw.Key.CONTROL + "t");
@@ -34,15 +22,33 @@ describe("System tests - ", function () {
     });
   }
 
+  function waitUntilVisible(element) {
+    return driver.wait(sw.until.elementIsVisible(element)).then(function () {
+      return element;
+    }, 1000);
+  }
+
   function startPomodoro() {
     return openNewTab().then(function () {
       return driver.get(extensionPage("main.html"));
     }).then(function () {
       return driver.findElement({css: ".startPomodoro"});
-    }).then(function (startButton) {
+    }).then(waitUntilVisible).then(function (startButton) {
       return scrollTo(startButton);
     }).then(function (startButton) {
       return startButton.click();
+    });
+  }
+
+  function addBadDomain(domain) {
+    return driver.get(extensionPage("options.html")).then(function () {
+      return driver.findElement({css: "input[type=text]"});
+    }).then(waitUntilVisible).then(function (domainEntry) {
+      return domainEntry.sendKeys(domain);
+    }).then(function () {
+      return driver.findElement({css: "button[type=submit]"});
+    }).then(function (submitButton) {
+      return submitButton.click();
     });
   }
 
