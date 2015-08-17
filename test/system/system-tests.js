@@ -66,7 +66,7 @@ describe("System tests - ", function () {
     }, canvas);
   }
 
-  before(function () {
+  beforeEach(function () {
     var capabilities = sw.Capabilities.chrome();
     capabilities.set('chromeOptions', { 'args': ['--load-extension=' + process.env.EXTENSION_PATH] });
 
@@ -77,6 +77,10 @@ describe("System tests - ", function () {
 
     // Need to do an initial load to make the driver live and working in the tests, for some reason (??)
     return driver.get(extensionPage("options.html"));
+  });
+
+  afterEach(function () {
+    return driver.quit();
   });
 
   it("Can open main page", function () {
