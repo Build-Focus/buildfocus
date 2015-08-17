@@ -23,9 +23,9 @@ describe("System tests - ", function () {
   }
 
   function waitUntilVisible(element) {
-    return driver.wait(sw.until.elementIsVisible(element)).then(function () {
+    return driver.wait(sw.until.elementIsVisible(element), 1000).then(function () {
       return element;
-    }, 1000);
+    });
   }
 
   function startPomodoro() {
