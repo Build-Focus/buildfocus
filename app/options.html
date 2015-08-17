@@ -1,21 +1,26 @@
 <!doctype html>
 <html>
   <head>
-    <title>RIVET - Settings</title>
+    <title>Build Focus - Settings</title>
     <link href="styles/options.css" rel="stylesheet">
+    <link rel="icon" href="/images/icon-32.png">
   </head>
   <body>
     <main style="display: none" data-bind="visible: true">
       <nav>
-        <h2 class="logo">
-          <a href="/rivet.html">RIVET</a>
-        </h2>
-        <h1 class="settings active">
-          <a href="/options.html">Settings</a>
-        </h1>
+        <a href="/main.html">
+          <div class="logo">
+            <img src="/images/logo.svg" />
+          </div>
+        </a>
+        <a href="/options.html">
+          <h2 class="settings active">
+            Settings
+          </h2>
+        </a>
       </nav>
 
-      <div class="domainPatterns">
+      <section class="domainPatterns">
         <h3>Distracting sites:</h3>
 
         <form data-bind="submit: saveEnteredBadDomain">
@@ -35,7 +40,7 @@
             <div class="domainName" data-bind="text: $data.toString()"></div>
           </li>
         </ul>
-      </div>
+      </section>
     </main>
 
     <script src="bower_components/requirejs/require.js"></script>

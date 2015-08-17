@@ -6,7 +6,7 @@ import BuildingType = require('app/scripts/city/buildings/building-type');
 
 var POMODORO_DURATION = 1000 * 60 * 20;
 var BREAK_DURATION = 1000 * 60 * 5;
-var NOTIFICATION_ID = "rivet-pomodoro-notification";
+var NOTIFICATION_ID = "pomodoro-notification";
 
 var clockStub;
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
@@ -85,13 +85,13 @@ function getBadgePixel(x, y) {
 }
 
 function badgeIconColour() {
-  return getBadgePixel(10, 3); // Top line of the R
+  return getBadgePixel(11, 5); // Top left of the F
 }
 
 var POMODORO_COLOUR = [224, 5, 5];
 var BREAK_COLOUR = [34, 187, 4];
-var BADGE_BACKGROUND_COLOUR = [251, 189, 72];
-var BADGE_R_COLOUR = [53, 40, 26];
+var BADGE_BACKGROUND_COLOUR = [251, 184, 65];
+var BADGE_TEXT_COLOUR = [0, 0, 0];
 
 function activateTab(url) {
   chromeStub.tabs.query.yields([{ "url": url }]);
@@ -224,11 +224,11 @@ describe('Acceptance: Pomodoros', function () {
       chromeStub.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 1);
 
       clockStub.tick(1);
-      expect(badgeIconColour()).to.be.rgbPixel(BADGE_R_COLOUR);
+      expect(badgeIconColour()).to.be.rgbPixel(BADGE_TEXT_COLOUR);
       expect(chromeStub.notifications.create.callCount).to.equal(1);
 
       clockStub.tick(BREAK_DURATION);
-      expect(badgeIconColour()).to.be.rgbPixel(BADGE_R_COLOUR);
+      expect(badgeIconColour()).to.be.rgbPixel(BADGE_TEXT_COLOUR);
       expect(chromeStub.notifications.create.callCount).to.equal(1);
     });
   });

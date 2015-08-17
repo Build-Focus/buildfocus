@@ -1,12 +1,12 @@
 'use strict';
 
-import RivetPageViewModel = require('app/scripts/pages/rivet-page');
+import MainPageViewModel = require('app/scripts/pages/main-page');
 import City = require('app/scripts/city/city');
 
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 var clockStub;
 
-describe('Acceptance: Rivet page', function () {
+describe('Acceptance: Main page', function () {
   before(function () {
     clockStub = sinon.useFakeTimers();
   });
@@ -25,7 +25,7 @@ describe('Acceptance: Rivet page', function () {
 
   describe("city", function () {
     it("should be empty initially", function () {
-      var viewModel = new RivetPageViewModel();
+      var viewModel = new MainPageViewModel();
 
       var renderedOutput = viewModel.renderCity();
 
@@ -37,7 +37,7 @@ describe('Acceptance: Rivet page', function () {
       var city = new City();
       city.construct(city.getPossibleUpgrades()[0]);
 
-      var viewModel = new RivetPageViewModel();
+      var viewModel = new MainPageViewModel();
       chromeStub.storage.sync.get.yield({ "city-data": city.toJSON() });
       var renderedOutput = viewModel.renderCity();
 
@@ -49,7 +49,7 @@ describe('Acceptance: Rivet page', function () {
       var cityWithNewBuilding = new City();
       cityWithNewBuilding.construct(cityWithNewBuilding.getPossibleUpgrades()[0]);
 
-      var viewModel = new RivetPageViewModel();
+      var viewModel = new MainPageViewModel();
       chromeStub.storage.onChanged.trigger(
         { "city-data": { "newValue": cityWithNewBuilding.toJSON() } }
       );
@@ -61,7 +61,7 @@ describe('Acceptance: Rivet page', function () {
   });
 
   it("should let you start anything initially", function () {
-    var viewModel = new RivetPageViewModel();
+    var viewModel = new MainPageViewModel();
 
     expect(viewModel.canStartPomodoro()).to.equal(true);
     expect(viewModel.canStartBreak()).to.equal(true);
@@ -71,7 +71,7 @@ describe('Acceptance: Rivet page', function () {
   function shouldCloseTabsIffOtherTabsArePresent(triggerMethodName) {
     it("should close the tab, if other tabs are present", function () {
       chromeStub.tabs.query.yields([{ id: "this-tab" }, { id: "other-tab" }]);
-      var viewModel = new RivetPageViewModel();
+      var viewModel = new MainPageViewModel();
 
       viewModel[triggerMethodName]();
 
@@ -80,7 +80,7 @@ describe('Acceptance: Rivet page', function () {
 
     it("should not close the tab if it's the only tab", function () {
       chromeStub.tabs.query.yields([{ id: "this-tab" }]);
-      var viewModel = new RivetPageViewModel();
+      var viewModel = new MainPageViewModel();
 
       viewModel[triggerMethodName]();
 
@@ -90,7 +90,7 @@ describe('Acceptance: Rivet page', function () {
 
   function shouldSendMessage(triggerMethodName, messageAction) {
     it("should send a " + messageAction + " message when clicked", function () {
-      var viewModel = new RivetPageViewModel();
+      var viewModel = new MainPageViewModel();
 
       viewModel[triggerMethodName]();
 
@@ -111,7 +111,7 @@ describe('Acceptance: Rivet page', function () {
 
   describe("When a pomodoro is active", function () {
     it("should disable all buttons", function () {
-      var viewModel = new RivetPageViewModel();
+      var viewModel = new MainPageViewModel();
 
       chromeStub.storage.onChanged.trigger({"pomodoro-is-active": {"newValue": true}});
 
@@ -123,7 +123,7 @@ describe('Acceptance: Rivet page', function () {
 
   describe("When a break is active", function () {
     it("should disable the break and not now buttons", function () {
-      var viewModel = new RivetPageViewModel();
+      var viewModel = new MainPageViewModel();
 
       chromeStub.storage.onChanged.trigger({"break-is-active": {"newValue": true}});
 

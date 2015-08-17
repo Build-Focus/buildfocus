@@ -10,22 +10,22 @@ var onBreakCallback;
 var clockStub;
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
-var RIVET_NOTIFICATION_NAME = "rivet-pomodoro-notification";
+var NOTIFICATION_NAME = "pomodoro-notification";
 
 function clickNotification(notificationName?: string) {
-  chromeStub.notifications.onClicked.trigger(notificationName || RIVET_NOTIFICATION_NAME);
+  chromeStub.notifications.onClicked.trigger(notificationName || NOTIFICATION_NAME);
 }
 
 function clickTakeABreak(notificationName?: string) {
-  chromeStub.notifications.onButtonClicked.trigger(notificationName || RIVET_NOTIFICATION_NAME, 0);
+  chromeStub.notifications.onButtonClicked.trigger(notificationName || NOTIFICATION_NAME, 0);
 }
 
 function clickMore(notificationName?: string) {
-  chromeStub.notifications.onButtonClicked.trigger(notificationName || RIVET_NOTIFICATION_NAME, 1);
+  chromeStub.notifications.onButtonClicked.trigger(notificationName || NOTIFICATION_NAME, 1);
 }
 
 function closeNotification(notificationName?: string) {
-  chromeStub.notifications.onClosed.trigger(notificationName || RIVET_NOTIFICATION_NAME, true);
+  chromeStub.notifications.onClosed.trigger(notificationName || NOTIFICATION_NAME, true);
 }
 
 describe('Notification service', function () {
@@ -132,7 +132,7 @@ describe('Notification service', function () {
         showNotification();
 
         clockStub.tick(8000);
-        chromeStub.notifications.onClosed.trigger(RIVET_NOTIFICATION_NAME, false);
+        chromeStub.notifications.onClosed.trigger(NOTIFICATION_NAME, false);
 
         expect(chromeStub.notifications.create.callCount).to.equal(2);
       });

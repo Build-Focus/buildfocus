@@ -28,7 +28,7 @@ describe("System tests - ", function () {
 
   function startPomodoro() {
     return openNewTab().then(function () {
-      return driver.get(extensionPage("rivet.html"))
+      return driver.get(extensionPage("main.html"))
     }).then(function () {
       return driver.findElement({css: ".startPomodoro"});
     }).then(function (startButton) {
@@ -62,8 +62,8 @@ describe("System tests - ", function () {
     return driver.get(extensionPage("options.html"));
   });
 
-  it("Can open Rivet page", function () {
-    return driver.get(extensionPage("rivet.html")).then(function () {
+  it("Can open main page", function () {
+    return driver.get(extensionPage("main.html")).then(function () {
       return driver.wait(sw.until.elementLocated({css: ".city > canvas"}), 1000);
     }).then(function (cityCanvas) {
       return canvasContainsDrawnPixels(cityCanvas);
@@ -97,7 +97,7 @@ describe("System tests - ", function () {
     }).then(function () {
       return driver.getCurrentUrl();
     }).then(function (loadedUrl) {
-      expect(loadedUrl).to.equal(extensionPage("rivet.html?failed=true"));
+      expect(loadedUrl).to.equal(extensionPage("main.html?failed=true"));
     });
   });
 
@@ -107,7 +107,7 @@ describe("System tests - ", function () {
     var expectedPoints = null;
 
     return startPomodoro().then(function () {
-      return driver.get(extensionPage("rivet.html"));
+      return driver.get(extensionPage("main.html"));
     }).then(function () {
       driver.findElement({css: '.score'})
     }).then(function (scoreElement) {

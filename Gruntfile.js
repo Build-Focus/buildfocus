@@ -267,7 +267,7 @@ module.exports = function (grunt) {
             // Drop all config except prod config
             '!scripts/config/**/*.js',
             'scripts/config/base-config.js',
-            'scripts/config/prod-rivet-config.js',
+            'scripts/config/prod-config.js',
 
             // Don't copy all bower components, only bowerDependencies (no dev deps)
             '!bower_components/**/*'
@@ -308,7 +308,7 @@ module.exports = function (grunt) {
         options: {
           archive: function() {
             var manifest = grunt.file.readJSON('app/manifest.json');
-            return 'package/rivet-' + manifest.version + '.zip';
+            return 'package/buildfocus-' + manifest.version + '.zip';
           }
         },
         files: [{
@@ -344,7 +344,7 @@ module.exports = function (grunt) {
         }
       },
       "extensions": {
-        "rivet": {
+        "buildfocus": {
           "appID": "apckocnmlmkhhigodidbpiakommhmiik",
           "zip": "package/", // Uploads the most recent zip in this folder
           "publish": true,

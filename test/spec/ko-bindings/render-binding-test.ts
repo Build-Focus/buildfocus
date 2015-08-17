@@ -8,7 +8,12 @@ import easeljs = require("createjs");
 function elementWithBinding(binding) {
   var testElement = $("#test-element");
   var boundElement = $("<div data-bind='" + binding + "'></div>")[0];
+
+  boundElement.style.width = "100px";
+  boundElement.style.height = "80px";
+
   testElement.append(boundElement);
+
   return boundElement;
 }
 
@@ -34,7 +39,10 @@ function blackDot(x, y) {
 
 describe('Render binding', function () {
   beforeEach(function () {
-    document.body.appendChild($("<div id='test-element'></div>")[0]);
+    var testElement = document.createElement("div");
+    testElement.id = "test-element";
+
+    document.body.appendChild(testElement);
   });
 
   afterEach(function () {

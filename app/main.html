@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <title>Build Focus</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="icon" href="/images/icon-32.png">
+</head>
+<body>
+  <main style="display: none" data-bind="visible: true">
+    <nav>
+      <a href="/main.html">
+        <div class="logo">
+          <img src="/images/logo.svg" />
+        </div>
+      </a>
+      <a href="/options.html">
+        <h2 class="settings">
+          Settings
+        </h2>
+      </a>
+    </nav>
+
+    <section class="city-and-buttons">
+      <h2 class="failed-tag" data-bind="if: failed">FAILED</h2>
+
+      <div class="city" data-bind="render: renderCity"></div>
+
+      <div class="buttons">
+        <button class="startPomodoro pure-button"
+                data-bind="click: startPomodoro, enable: canStartPomodoro">
+          Focus
+        </button>
+
+        <button class="takeABreak pure-button"
+                data-bind="click: startBreak, enable: canStartBreak">
+          Take a break
+        </button>
+
+        <button class="notNow pure-button"
+                data-bind="click: notNow, enable: canSayNotNow">
+          Not now
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script src="bower_components/requirejs/require.js"></script>
+  <script src="scripts/config/base-config.js"></script>
+  <script src="scripts/pages/main-page-binding.js"></script>
+</body>
+</html>

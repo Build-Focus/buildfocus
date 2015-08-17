@@ -9,7 +9,7 @@ export = function FocusButton(progressObservable, pomodoroActiveObservable) {
   this.onClick = subscribableEvent();
   chrome.browserAction.onClicked.addListener(this.onClick.trigger);
 
-  var rivetIcon = observableImage("/images/icon-19.png");
+  var logoIcon = observableImage("/images/icon-19.png");
   var pomodoroIcon = observableImage("/images/icon-19-red.png");
   var breakIcon = observableImage("/images/icon-19-green.png");
 
@@ -68,7 +68,7 @@ export = function FocusButton(progressObservable, pomodoroActiveObservable) {
         drawOutline(context, "#22bb04", progressDistance, 3);
       }
     } else {
-      drawBackground(context, rivetIcon);
+      drawBackground(context, logoIcon);
     }
 
     return context.getImageData(0, 0, 19, 19);

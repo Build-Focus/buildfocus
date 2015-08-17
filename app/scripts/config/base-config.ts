@@ -26,7 +26,7 @@ requirejs.config({
     "raw-rollbar": "../bower_components/rollbar/dist/rollbar.amd",
     "rollbar": "lib-wrappers/rollbar",
 
-    "config": "config/" + configPrefix + "-rivet-config"
+    "config": "config/" + configPrefix + "-config"
   },
   map: {
     'knockout-es5': {

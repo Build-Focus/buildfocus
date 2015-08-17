@@ -24,7 +24,7 @@ function closeThisTab() {
   });
 }
 
-class RivetPageViewModel {
+class MainPageViewModel {
   private pomodoroService = new ProxyPomodoroService();
   private score = new Score();
   private cityRenderer = new CityRenderer(this.score.city);
@@ -56,4 +56,4 @@ class RivetPageViewModel {
   renderCity = () => this.cityRenderer.render();
 }
 
-export = RivetPageViewModel;
+export = MainPageViewModel;

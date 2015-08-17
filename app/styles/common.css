@@ -24,52 +24,37 @@ body {
   margin: 0;
 
   text-align: center;
-  background-color: #384145;
+  background-color: #A5D6F5;
+  background-image: radial-gradient(circle at 50% 40%, #C8E0EF 0%, #a1d2e8 95%);
 
   font-family: 'tertreextra_bold';
 }
 
-main {
-  margin: 0;
-  padding: 0 20px;
-  display: inline-block;
-  text-align: left;
-  position: relative;
+nav .logo {
+  position: absolute;
+  top: 16px;
+  left: 15px;
 
-  background-color: rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  color: #fff;
-
-  min-height: 100%;
-  min-width: 40vw;
+  box-shadow: 0 0 10px rgba(100, 100, 100,0.5);
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-nav .logo, nav .settings {
-  display: inline-block;
-  vertical-align: top;
+nav .logo img {
+  display: block;
+}
+
+nav .settings {
+  position: absolute;
+  right: 15px;
 
   margin: 0;
-  cursor: pointer;
 
   color: #ccc;
   background-color: #384145;
 }
 
-nav .logo:hover, nav .settings:hover {
+nav .settings:hover {
   color: #fff;
-}
-
-nav .logo {
-  padding: 15px;
-  line-height: 0.7;
-
-  font-family: 'tertreextra_bold';
-  font-weight: normal;
-  font-size: 60pt;
-
-  text-shadow: 0 2px 6px rgba(0,0,0,0.2);
-
-  box-shadow: 0 0 10px rgba(0,0,0,0.9);
 }
 
 nav .settings {
@@ -77,14 +62,10 @@ nav .settings {
   font-size: 18pt;
 }
 
-nav .active {
+nav .settings.active {
   opacity: 1;
-  background-color: #FBB840;
-  background-image: linear-gradient(#FBCA5F, #FBB840);
+  background: #FBB840 linear-gradient(#FBCA5F, #FBB840);
   color: #35281a;
-
-  z-index: 1;
-  position: relative;
 
   box-shadow: 0 0 10px rgba(0,0,0,0.9);
 }

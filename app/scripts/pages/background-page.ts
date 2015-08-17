@@ -40,10 +40,10 @@ export = function setupBackgroundPage() {
   pomodoroService.onBreakStart(notificationService.clearNotifications);
   pomodoroService.onBreakEnd(notificationService.showBreakNotification);
 
-  function showRivetPage() {
-    chrome.tabs.create({url: chrome.extension.getURL("rivet.html")});
+  function showMainPage() {
+    chrome.tabs.create({url: chrome.extension.getURL("main.html")});
   }
 
-  focusButton.onClick(showRivetPage);
-  notificationService.onMore(showRivetPage);
+  focusButton.onClick(showMainPage);
+  notificationService.onMore(showMainPage);
 }

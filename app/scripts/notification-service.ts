@@ -3,7 +3,7 @@
 import _ = require('lodash');
 import SubscribableEvent = require('subscribable-event');
 
-const NOTIFICATION_ID = "rivet-pomodoro-notification";
+const NOTIFICATION_ID = "pomodoro-notification";
 
 class NotificationService {
   private notificationReissueTimeoutId: number;

@@ -15,7 +15,7 @@ function render(city) {
   testDiv.appendChild(element);
   element.setAttribute("data-bind", "render: render");
   element.style.width = "500px";
-  element.style.height = "500px";
+  element.style.height = "400px";
 
   ko.applyBindings(new CityRenderer(city), element);
 

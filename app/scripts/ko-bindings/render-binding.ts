@@ -10,11 +10,9 @@ interface Renderable {
 
 ko.bindingHandlers['render'] = {
   init: function (element: HTMLElement, valueAccessor: () => Renderable) {
-    var width = element.clientWidth;
-
     var canvas = <HTMLCanvasElement> document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = width * 0.8;
+    canvas.width = element.clientWidth;
+    canvas.height = element.clientHeight;
     $(element).append(canvas);
 
     var stage = new easeljs.Stage(canvas);

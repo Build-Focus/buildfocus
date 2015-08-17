@@ -2,7 +2,12 @@
 
 .domainPatterns {
   font-family: "trebuchet ms", arial, sans;
-  font-size: 120%
+  font-size: 120%;
+  padding: 20px 0;
+
+  width: 600px;
+  text-align: left;
+  margin: 0 auto;
 }
 
 .domainPatterns h3 {
