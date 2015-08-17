@@ -118,6 +118,8 @@ describe("System tests - ", function () {
     ).then(function () {
       return driver.get("http://example.com");
     }).then(function () {
+      return sw.promise.delayed(1000);
+    }).then(function () {
       return driver.getCurrentUrl();
     }).then(function (loadedUrl) {
       expect(loadedUrl).to.equal(extensionPage("main.html?failed=true"));
