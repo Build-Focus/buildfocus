@@ -112,7 +112,8 @@ describe("System tests - ", function () {
     });
   });
 
-  it("Can fail a pomodoro", function () {
+  // TODO: Reenable this, once https://code.google.com/p/chromium/issues/detail?id=519952 is fixed.
+  xit("Can fail a pomodoro", function () {
     return addBadDomain("example.com").then(
       startPomodoro
     ).then(function () {
