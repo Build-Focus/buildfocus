@@ -51,11 +51,12 @@ describe("System tests - ", function () {
       var canvasContext = canvas.getContext("2d");
       var canvasMiddleBytes = canvasContext.getImageData(canvas.width/2 - 10, canvas.height/2 - 10, 20, 20).data;
       var canvasMiddleBytesArray = [].slice.call(canvasMiddleBytes);
-      var nonZeroBytes = canvasMiddleBytesArray.filter(function (byte) {
+
+      var nonZeroByteCount = canvasMiddleBytesArray.filter(function (byte) {
         return byte !== 0;
       }).length;
 
-      return nonZeroBytes > 0;
+      return nonZeroByteCount > 0;
     }, canvas);
   }
 
