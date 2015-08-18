@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="108.214"
+   height="108.214"
+   id="svg3101"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="mini-logo.svg"
+   inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/icon-19.png"
+   inkscape:export-xdpi="15.8"
+   inkscape:export-ydpi="15.8">
+  <defs
+     id="defs3103" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2"
+     inkscape:cx="120.02453"
+     inkscape:cy="-26.287888"
+     inkscape:document-units="px"
+     inkscape:current-layer="g3064"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1058"
+     inkscape:window-x="0"
+     inkscape:window-y="22"
+     inkscape:window-maximized="0"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata3106">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-360.17872,-472.54092)">
+    <g
+       id="g3064"
+       transform="translate(-415.04937,301.50427)">
+      <rect
+         ry="0.74249232"
+         y="171.03665"
+         x="775.22809"
+         height="108.214"
+         width="108.214"
+         id="rect3095-2"
+         style="fill:#fbb840;fill-opacity:1;stroke:none"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/icon-19.png"
+         inkscape:export-xdpi="15.8"
+         inkscape:export-ydpi="15.8" />
+      <g
+         transform="matrix(0.90885716,0,0,0.90885716,358.7392,-71.545844)"
+         id="g3053-5-8"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/icon-19.png"
+         inkscape:export-xdpi="15.8"
+         inkscape:export-ydpi="15.8">
+        <text
+           xml:space="preserve"
+           style="font-size:174.35700989px;font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;line-height:125%;letter-spacing:-3.26600909px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Tertre;-inkscape-font-specification:Tertre Ultra-Bold"
+           x="466.52811"
+           y="359.10248"
+           id="text2985-7-5-14"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="466.52811"
+             y="359.10248"
+             style="font-size:93.31456757px;font-weight:normal;letter-spacing:-3.26600909px"
+             id="tspan3830">BF</tspan></text>
+      </g>
+      <rect
+         ry="0.74249232"
+         y="171.14365"
+         x="930.12109"
+         height="108.214"
+         width="108.214"
+         id="rect3095-2-6"
+         style="fill:#ffffff;fill-opacity:0;stroke:none"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/icon-19-red.png"
+         inkscape:export-xdpi="15.8"
+         inkscape:export-ydpi="15.8" />
+      <g
+         transform="matrix(0.90885716,0,0,0.90885716,513.6322,-71.438843)"
+         id="g3053-5-8-4"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/icon-19-red.png"
+         inkscape:export-xdpi="15.8"
+         inkscape:export-ydpi="15.8"
+         style="fill:#e00f0f;fill-opacity:1">
+        <text
+           xml:space="preserve"
+           style="font-size:174.35700989px;font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;line-height:125%;letter-spacing:-3.26600909px;word-spacing:0px;fill:#e00f0f;fill-opacity:1;stroke:none;font-family:Tertre;-inkscape-font-specification:Tertre Ultra-Bold"
+           x="466.52811"
+           y="359.10248"
+           id="text2985-7-5-14-4"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="466.52811"
+             y="359.10248"
+             style="font-size:93.31456757px;font-weight:normal;letter-spacing:-3.26600909px;fill:#e00f0f;fill-opacity:1"
+             id="tspan3830-8">BF</tspan></text>
+      </g>
+      <rect
+         ry="0.74249232"
+         y="171.14365"
+         x="1078.1211"
+         height="108.214"
+         width="108.214"
+         id="rect3095-2-1"
+         style="fill:#ffffff;fill-opacity:0;stroke:none"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/icon-19-green.png"
+         inkscape:export-xdpi="15.8"
+         inkscape:export-ydpi="15.8" />
+      <g
+         transform="matrix(0.90885716,0,0,0.90885716,661.6322,-71.438843)"
+         id="g3053-5-8-5"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/icon-19-green.png"
+         inkscape:export-xdpi="15.8"
+         inkscape:export-ydpi="15.8"
+         style="fill:#22bb04;fill-opacity:1">
+        <text
+           xml:space="preserve"
+           style="font-size:174.35700989px;font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;line-height:125%;letter-spacing:-3.26600909px;word-spacing:0px;fill:#22bb04;fill-opacity:1;stroke:none;font-family:Tertre;-inkscape-font-specification:Tertre Ultra-Bold"
+           x="466.52811"
+           y="359.10248"
+           id="text2985-7-5-14-7"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="466.52811"
+             y="359.10248"
+             style="font-size:93.31456757px;font-weight:normal;letter-spacing:-3.26600909px;fill:#22bb04;fill-opacity:1"
+             id="tspan3830-65">BF</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>
