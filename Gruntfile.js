@@ -36,7 +36,6 @@ module.exports = function (grunt) {
   }
 
   grunt.initConfig({
-
     // Project settings
     config: config,
 
@@ -53,9 +52,9 @@ module.exports = function (grunt) {
         }
       },
       content: {
-        files: ['app/**/*.css',
+        files: ['app/**/*.scss',
                 'app/**/*.html'],
-        tasks: ['copy:build']
+        tasks: ['build-content']
       },
       gruntfile: {
         files: ['Gruntfile.js'],
@@ -140,6 +139,17 @@ module.exports = function (grunt) {
         outDir: 'build/scripts',
         options: {
           fast: 'watch'
+        }
+      }
+    },
+
+    sass: {
+      options: {
+        sourceMap: true // TODO: make these actually work
+      },
+      build: {
+        files: {
+          'build/app/styles/main.css': 'app/styles/main.scss'
         }
       }
     },
@@ -248,7 +258,7 @@ module.exports = function (grunt) {
             '*.{ico,png,txt}',
             'images/**/*.{webp,gif,png,svg}',
             '*.html',
-            'styles/**/*.css',
+            'styles/libs/**/*.*',
             'styles/fonts/**/*.*',
             '_locales/**/*.json'
           ].concat(bowerDependencies).concat(bowerDevDependencies)
@@ -365,7 +375,12 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean',
     'ts:all',
-    'copy:build'
+    'build-content'
+  ]);
+
+  grunt.registerTask('build-content', [
+    'copy:build',
+    'sass:build'
   ]);
 
   grunt.registerTask('test', [

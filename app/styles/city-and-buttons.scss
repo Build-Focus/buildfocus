@@ -1,0 +1,74 @@
+.city-and-buttons {
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  align-items: center;
+
+  flex-direction: column;
+  justify-content: space-between;
+
+  .city {
+    flex-grow: 1;
+
+    box-sizing: border-box;
+    margin: 40px;
+
+    min-height: 600px;
+    width: 100%;
+  }
+
+  .buttons {
+    flex-shrink: 0;
+    max-width: 800px;
+  }
+
+  // TODO: Do this plain, no pure
+  .pure-button {
+    font-size: 4em;
+    color: #fff;
+
+    border-radius: 4px;
+    border: solid 1px rgba(100, 100, 100, 0.3);
+    box-shadow: 0 0 30px rgba(100, 100, 100, 0.2);
+
+    margin-bottom: 20px;
+    padding: 20px 2px;
+  }
+
+  .startPomodoro {
+    background-color: #006acc;
+
+    width: 100%;
+
+    font-size: 9em;
+    line-height: 95%;
+    font-weight: bolder;
+  }
+
+  .takeABreak, .notNow {
+    float: left;
+    width: 49%;
+  }
+
+  .takeABreak {
+    background-color: #1aa73b;
+    margin-right: 2%;
+  }
+
+  .notNow {
+    background-color: #aeaeae;
+  }
+
+  .failed-tag {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 2%;
+    transform: rotate(-30deg);
+
+    font-size: 18em;
+    color: rgba(255,0,0,0.8);
+    text-align: center;
+  }
+}

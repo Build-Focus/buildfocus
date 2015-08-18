@@ -1,0 +1,57 @@
+.domainPatterns {
+  font-family: "trebuchet ms", arial, sans;
+  font-size: 120%;
+  padding: 20px 0;
+
+  width: 600px;
+  text-align: left;
+  margin: 0 auto;
+
+  h3 {
+    font-size: 28pt;
+    padding: 0;
+    margin: 20px 0;
+  }
+
+  input[type=text] {
+    box-sizing: border-box;
+    min-width: 300px;
+    height: 35px;
+    margin-top: 1px;
+    padding: 3px;
+    border: none;
+  }
+
+  button[type=submit] {
+    box-sizing: border-box;
+    height: 35px;
+    margin-top: -4px;
+
+    background-color: #0078e7;
+    color: #fff;
+
+    font-weight: bold;
+  }
+
+  ul {
+    clear: both;
+    list-style: none;
+    padding-left: 0;
+
+    li {
+      margin: 5px 0;
+    }
+
+    .deleteButton {
+      cursor: pointer;
+      color: #f00;
+      padding: 2px;
+    }
+
+    .domainName {
+      display: inline-block;
+      width: 50%;
+      margin-top: 2px;
+    }
+  }
+}
