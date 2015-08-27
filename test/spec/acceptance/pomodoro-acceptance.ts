@@ -12,8 +12,7 @@ var clockStub: Sinon.SinonFakeTimers;
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
 function resetSpies() {
-  // Timer's isn't supposed to be exposed, so we have to sneak our way in to reset it. TODO: add proper reset?
-  (<any>clockStub).timers = {};
+  clockStub.reset();
 
   chromeStub.notifications.clear.reset();
   chromeStub.notifications.create.reset();

@@ -38,7 +38,7 @@ describe('Notification service', function () {
   });
 
   beforeEach(function () {
-    clockStub.timers = {};
+    clockStub.reset();
     chromeStub.reset();
 
     notifications = new NotificationService();

@@ -25,7 +25,7 @@ describe("Failure indicator", () => {
   });
 
   beforeEach(() => {
-    (<any>clockStub).timers = {};
+    clockStub.reset();
     chromeStub.reset();
   });
 
