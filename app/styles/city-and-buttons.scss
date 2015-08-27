@@ -16,6 +16,33 @@
 
     min-height: 600px;
     width: 100%;
+
+    animation: fadeInLoad 0.3s;
+    -webkit-animation: fadeInLoad 0.3s;
+  }
+
+  @keyframes fadeInLoad {
+    from {
+      opacity: 0;
+    }
+    25% {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @-webkit-keyframes fadeInLoad {
+    from {
+      opacity: 0;
+    }
+    25% {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   .buttons {
