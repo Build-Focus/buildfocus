@@ -11,14 +11,15 @@ import PomodoroService = require("pomodoro/pomodoro-service");
 import FocusButton = require("focus-button");
 import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
 import NotificationService = require("notification-service");
+import indicateFailure = require("failure-notification/failure-indicator");
 
 export = function setupBackgroundPage() {
   var score = new Score();
   var settings = new SettingsRepository();
-  var notificationService = new NotificationService();
   var badBehaviourMonitor = new BadBehaviourMonitor(currentUrls, settings);
   var pomodoroService = new PomodoroService(badBehaviourMonitor);
   var focusButton = new FocusButton(pomodoroService.progress, pomodoroService.isActive);
+  var notificationService = new NotificationService();
 
   notificationService.onClick(pomodoroService.start);
   pomodoroService.onPomodoroStart(notificationService.clearNotifications);
@@ -28,12 +29,9 @@ export = function setupBackgroundPage() {
     notificationService.showSuccessNotification();
   });
 
-  pomodoroService.onPomodoroFailure(function () {
+  pomodoroService.onPomodoroFailure(function (tabId: number) {
     score.addFailure();
-    chrome.tabs.executeScript(null, {
-      file: "scripts/failure-content-script.js",
-      runAt: "document_start"
-    });
+    indicateFailure(tabId);
   });
 
   notificationService.onBreak(pomodoroService.takeABreak);

@@ -1,7 +1,7 @@
 import _ = require('lodash');
 
 interface callback {
-  (): void
+  (...args: any[]): void
 }
 
 interface SubscribableEvent {

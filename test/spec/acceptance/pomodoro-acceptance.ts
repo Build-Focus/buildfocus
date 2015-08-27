@@ -8,11 +8,12 @@ var POMODORO_DURATION = 1000 * 60 * 20;
 var BREAK_DURATION = 1000 * 60 * 5;
 var NOTIFICATION_ID = "pomodoro-notification";
 
-var clockStub;
+var clockStub: Sinon.SinonFakeTimers;
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
 function resetSpies() {
-  clockStub.timers = {};
+  // Timer's isn't supposed to be exposed, so we have to sneak our way in to reset it. TODO: add proper reset?
+  (<any>clockStub).timers = {};
 
   chromeStub.notifications.clear.reset();
   chromeStub.notifications.create.reset();
@@ -271,6 +272,7 @@ describe('Acceptance: Pomodoros', function () {
     startPomodoro();
     activateTab("http://twitter.com");
 
+    clockStub.tick(1000);
     expect(chromeStub.tabs.executeScript.calledOnce).to.equal(true);
   });
 
