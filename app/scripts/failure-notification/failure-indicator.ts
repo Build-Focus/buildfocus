@@ -1,35 +1,30 @@
 import _ = require("lodash");
 
-const INJECTION_TIMEOUT = 1500;
+const FAILURE_PAGE = chrome.extension.getURL("main.html?failed=true")
 
-function injectScript(tabId: number, onSuccess: () => void, onError: (e: string) => void) {
-  chrome.tabs.executeScript(tabId, {
-    file: "scripts/failure-notification/failure-content-script.js",
-    runAt: "document_start"
-  }, () => {
-    if (chrome.runtime.lastError) onError(chrome.runtime.lastError.message);
-    else onSuccess();
+function showFailureInPage(tabId: number, onSuccess: () => void, onError: (e: string) => void) {
+  chrome.tabs.update(tabId, {url: FAILURE_PAGE, active: true}, () => {
+    if (chrome.runtime.lastError) {
+      onError(chrome.runtime.lastError.message);
+    } else {
+      setTimeout(() => checkFailureInjectionWorked(tabId, onSuccess, onError), 100);
+    }
   });
 }
 
-function repeatedlyRetryInjection(tabId: number) {
-  var startTimestamp = Date.now();
-
-  var repeatInjectionInterval = setInterval(function () {
-    injectScript(tabId, () => {
-      console.info("Eventually successfully injected failure indication");
-      clearInterval(repeatInjectionInterval);
-    }, () => {
-      if (Date.now() - startTimestamp >= INJECTION_TIMEOUT) {
-        clearInterval(repeatInjectionInterval);
-        giveUpOnInjection();
-      }
-    });
-  }, 250);
+function checkFailureInjectionWorked(tabId: number, onSuccess: () => void, onError: (e: string) => void) {
+  chrome.tabs.get(tabId, (tab) => {
+    if (chrome.runtime.lastError !== undefined) {
+      onError("Couldn't get details of updated tab after update");
+    } else if (!_.contains(tab.url, 'main.html?failed=true')) {
+      onError("Tab not showing updated URL, instead showing: " + tab.url);
+    } else {
+      onSuccess();
+    }
+  });
 }
 
-function giveUpOnInjection() {
-  console.warn(`Failed to inject within ${INJECTION_TIMEOUT}, opening new tab instead`);
+function showNewFailureTab() {
   chrome.tabs.create({
     url: chrome.extension.getURL("main.html?failed=true"),
     active: true
@@ -37,10 +32,10 @@ function giveUpOnInjection() {
 }
 
 export = function indicateFailure(tabId: number) {
-  injectScript(tabId, () => {
-    console.info("Successfully injected failure indication");
+  showFailureInPage(tabId, () => {
+    console.info("Successfully showed failure indication");
   }, (e) => {
-    console.warn(`Failed to inject initial script into tab ${tabId}: ${e}`);
-    repeatedlyRetryInjection(tabId);
+    console.warn(`Failed to show failure in tab ${tabId}: ${e}`);
+    showNewFailureTab();
   });
 }

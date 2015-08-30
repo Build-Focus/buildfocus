@@ -14,10 +14,14 @@ var chromeStub = <typeof SinonChrome> <any> window.chrome;
 function resetSpies() {
   clockStub.reset();
 
+  chromeStub.runtime.lastError = undefined;
   chromeStub.notifications.clear.reset();
   chromeStub.notifications.create.reset();
   chromeStub.tabs.create.reset();
-  chromeStub.tabs.executeScript.reset();
+  chromeStub.tabs.update.reset();
+
+  chromeStub.tabs.get.yields({url: "main.html?failed=true"});
+  chromeStub.tabs.update.yields();
   chromeStub.storage.sync.get.yields({});
   chromeStub.storage.local.get.yields({});
 
@@ -94,8 +98,13 @@ var BADGE_BACKGROUND_COLOUR = [251, 184, 65];
 var BADGE_TEXT_COLOUR = [0, 0, 0];
 
 function activateTab(url) {
-  chromeStub.tabs.query.yields([{ "url": url }]);
+  chromeStub.tabs.query.yields([{ "url": url, "id": 1 }]);
   chromeStub.tabs.onActivated.trigger();
+}
+
+function closeTab() {
+  chrome.runtime.lastError = { "message": "No tab with id..." };
+  chromeStub.tabs.get.yields();
 }
 
 function givenBadDomain(urlPattern) {
@@ -272,7 +281,20 @@ describe('Acceptance: Pomodoros', function () {
     activateTab("http://twitter.com");
 
     clockStub.tick(1000);
-    expect(chromeStub.tabs.executeScript.calledOnce).to.equal(true);
+    expect(chromeStub.tabs.update.calledOnce).to.equal(true, "should update tab url to failure page");
+    expect(chromeStub.tabs.create.calledOnce).to.equal(false, "should not open new failure tab");
+  });
+
+  it("should show a separate failure page when a pomodoro is failed if the tab's immediately closed", function () {
+    givenBadDomain("twitter.com");
+
+    startPomodoro();
+    activateTab("http://twitter.com");
+    closeTab();
+
+    clockStub.tick(1000);
+    expect(chromeStub.tabs.update.calledOnce).to.equal(true, "should try and update tab url to failure page");
+    expect(chromeStub.tabs.create.calledOnce).to.equal(true, "should open new failure tab when tab update doesn't work");
   });
 
   describe("Progress bar", function () {

@@ -1,131 +1,133 @@
-/* global describe, it */
+'use strict';
 
-(function () {
-  'use strict';
+import ko = require('knockout');
+import SettingsRepository = require("app/scripts/repositories/settings-repository");
+import BadBehaviourMonitor = require("app/scripts/url-monitoring/bad-behaviour-monitor")
+var badBehaviourCallback;
 
-  var ko;
-  var BadBehaviourMonitor;
-  var badBehaviourCallback;
-
-  function allDomainsBad() {
-    return {
-      badDomains: ko.observableArray([
-        {
-          matches: function () {
-            return true;
-          }
+function allDomainsBad() {
+  return <SettingsRepository> <any> {
+    badDomains: ko.observableArray([
+      {
+        matches: function () {
+          return true;
         }
-      ])
-    };
-  }
+      }
+    ])
+  };
+}
 
-  function noBadDomains() {
-    return {
-      badDomains: ko.observableArray([])
-    };
-  }
+function noBadDomains() {
+  return <SettingsRepository> <any> {
+    badDomains: ko.observableArray([])
+  };
+}
 
-  function matchBadDomain(badUrl) {
-    return {
-      badDomains: ko.observableArray([
-        {
-          matches: function (url) {
-            return url === badUrl;
-          }
+function matchBadDomain(badUrl) {
+  return <SettingsRepository> <any> {
+    badDomains: ko.observableArray([
+      {
+        matches: function (url) {
+          return url === badUrl;
         }
-      ])
-    };
-  }
+      }
+    ])
+  };
+}
 
-  describe('Bad behaviour monitor', function () {
-    before(function (done) {
-      require(["knockout", "url-monitoring/bad-behaviour-monitor"], function (loadedKo, loadedClass) {
-        BadBehaviourMonitor = loadedClass;
-        ko = loadedKo;
-        done();
-      });
-    });
+function tabs(...urls: string[]): KnockoutObservableArray<{url: string, id: number}> {
+  return ko.observableArray(urls.map(tab));
+}
 
-    beforeEach(function () {
-      badBehaviourCallback = sinon.stub();
-    });
+function tab(url: string, id: number = 0) {
+  return {
+    url: url,
+    id: id
+  };
+}
 
-    it('should not fire bad behaviour callbacks initially on good sites', function () {
-      var currentUrls = ko.observableArray(["google.com"]);
-      var monitor = new BadBehaviourMonitor(currentUrls, noBadDomains());
-
-      monitor.onBadBehaviour(badBehaviourCallback);
-
-      expect(badBehaviourCallback.called).to.equal(false);
-    });
-
-    it('should not fire bad behaviour callbacks initially on bad sites', function () {
-      var currentUrls = ko.observableArray(["google.com"]);
-      var monitor = new BadBehaviourMonitor(currentUrls, allDomainsBad());
-
-      monitor.onBadBehaviour(badBehaviourCallback);
-
-      expect(badBehaviourCallback.called).to.equal(false);
-    });
-
-    it('should fire bad behaviour callbacks when moving from good to bad sites', function () {
-      var currentUrls = ko.observableArray(["google.com"]);
-      var monitor = new BadBehaviourMonitor(currentUrls, matchBadDomain("facebook.com"));
-      monitor.onBadBehaviour(badBehaviourCallback);
-
-      currentUrls(["facebook.com"]);
-
-      expect(badBehaviourCallback.called).to.equal(true);
-    });
-
-    it('should not fire bad behaviour callbacks when moving from good to good sites', function () {
-      var currentUrls = ko.observableArray(["google.com"]);
-      var monitor = new BadBehaviourMonitor(currentUrls, matchBadDomain("facebook.com"));
-      monitor.onBadBehaviour(badBehaviourCallback);
-
-      currentUrls(["bbc.co.uk"]);
-
-      expect(badBehaviourCallback.called).to.equal(false);
-    });
-
-    it('should fire bad behaviour callbacks if new bad tab appears', function () {
-      var currentUrls = ko.observableArray(["google.com"]);
-      var monitor = new BadBehaviourMonitor(currentUrls, matchBadDomain("facebook.com"));
-      monitor.onBadBehaviour(badBehaviourCallback);
-
-      currentUrls.push("facebook.com");
-
-      expect(badBehaviourCallback.called).to.equal(true);
-    });
-
-    it('should not fire bad behaviour callbacks if new good tab appears', function () {
-      var currentUrls = ko.observableArray(["google.com"]);
-      var monitor = new BadBehaviourMonitor(currentUrls, matchBadDomain("facebook.com"));
-      monitor.onBadBehaviour(badBehaviourCallback);
-
-      currentUrls.push("bbc.co.uk");
-
-      expect(badBehaviourCallback.called).to.equal(false);
-    });
-
-    it("should not trigger callbacks that have been unregistered", function () {
-      var currentUrls = ko.observableArray(["google.com"]);
-      var monitor = new BadBehaviourMonitor(currentUrls, matchBadDomain("facebook.com"));
-      var callback = monitor.onBadBehaviour(badBehaviourCallback);
-
-      monitor.onBadBehaviour.remove(callback);
-      currentUrls.push("facebook.com");
-
-      expect(badBehaviourCallback.called).to.equal(false);
-    });
-
-    it("should fail loudly if you attempt to remove an unregistered callback", function () {
-      var currentUrls = ko.observableArray(["google.com"]);
-      var monitor = new BadBehaviourMonitor(currentUrls, noBadDomains());
-
-      expect(function () {
-        monitor.onBadBehaviour.remove(badBehaviourCallback);
-      }).to.throw(/wasn't registered/);
-    });
+describe('Bad behaviour monitor', function () {
+  beforeEach(function () {
+    badBehaviourCallback = sinon.stub();
   });
-}());
+
+  it('should not fire bad behaviour callbacks initially on good sites', function () {
+    var currentTabs = tabs("google.com");
+    var monitor = new BadBehaviourMonitor(currentTabs, noBadDomains());
+
+    monitor.onBadBehaviour(badBehaviourCallback);
+
+    expect(badBehaviourCallback.called).to.equal(false);
+  });
+
+  it('should not fire bad behaviour callbacks initially on bad sites', function () {
+    var currentTabs = tabs("google.com");
+    var monitor = new BadBehaviourMonitor(currentTabs, allDomainsBad());
+
+    monitor.onBadBehaviour(badBehaviourCallback);
+
+    expect(badBehaviourCallback.called).to.equal(false);
+  });
+
+  it('should fire bad behaviour callbacks when moving from good to bad sites', function () {
+    var currentTabs = tabs("google.com");
+    var monitor = new BadBehaviourMonitor(currentTabs, matchBadDomain("facebook.com"));
+    monitor.onBadBehaviour(badBehaviourCallback);
+
+    currentTabs([tab("facebook.com")]);
+
+    expect(badBehaviourCallback.called).to.equal(true);
+    expect(badBehaviourCallback.lastCall.args[1]).to.equal("facebook.com");
+  });
+
+  it('should not fire bad behaviour callbacks when moving from good to good sites', function () {
+    var currentTabs = tabs("google.com");
+    var monitor = new BadBehaviourMonitor(currentTabs, matchBadDomain("facebook.com"));
+    monitor.onBadBehaviour(badBehaviourCallback);
+
+    currentTabs([tab("bbc.co.uk")]);
+
+    expect(badBehaviourCallback.called).to.equal(false);
+  });
+
+  it('should fire bad behaviour callbacks if new bad tab appears', function () {
+    var currentTabs = tabs("google.com");
+    var monitor = new BadBehaviourMonitor(currentTabs, matchBadDomain("facebook.com"));
+    monitor.onBadBehaviour(badBehaviourCallback);
+
+    currentTabs.push(tab("facebook.com"));
+
+    expect(badBehaviourCallback.called).to.equal(true);
+    expect(badBehaviourCallback.lastCall.args[1]).to.equal("facebook.com");
+  });
+
+  it('should not fire bad behaviour callbacks if new good tab appears', function () {
+    var currentTabs = tabs("google.com");
+    var monitor = new BadBehaviourMonitor(currentTabs, matchBadDomain("facebook.com"));
+    monitor.onBadBehaviour(badBehaviourCallback);
+
+    currentTabs.push(tab("bbc.co.uk"));
+
+    expect(badBehaviourCallback.called).to.equal(false);
+  });
+
+  it("should not trigger callbacks that have been unregistered", function () {
+    var currentTabs = tabs("google.com");
+    var monitor = new BadBehaviourMonitor(currentTabs, matchBadDomain("facebook.com"));
+    var callback = monitor.onBadBehaviour(badBehaviourCallback);
+
+    monitor.onBadBehaviour.remove(callback);
+    currentTabs.push(tab("facebook.com"));
+
+    expect(badBehaviourCallback.called).to.equal(false);
+  });
+
+  it("should fail loudly if you attempt to remove an unregistered callback", function () {
+    var currentTabs = tabs("google.com");
+    var monitor = new BadBehaviourMonitor(currentTabs, noBadDomains());
+
+    expect(function () {
+      monitor.onBadBehaviour.remove(badBehaviourCallback);
+    }).to.throw(/wasn't registered/);
+  });
+});

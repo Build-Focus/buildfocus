@@ -5,14 +5,35 @@ import indicateFailure = require('app/scripts/failure-notification/failure-indic
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 var clockStub: Sinon.SinonFakeTimers;
 
-function makeExecutionsFail() {
-  chromeStub.runtime.lastError = { "message": "ERROR" };
-  chromeStub.tabs.executeScript.yields();
+function makeUpdatesFail() {
+  chromeStub.runtime.lastError = { "message": "No tab with id" };
+  chromeStub.tabs.update.yields();
 }
 
-function makeExecutionsSucceed() {
+function makeUpdatesSucceed() {
   chromeStub.runtime.lastError = undefined;
-  chromeStub.tabs.executeScript.yields();
+  chromeStub.tabs.update.yields();
+}
+
+function letTabUrlUpdate() {
+  chromeStub.runtime.lastError = undefined;
+  chromeStub.tabs.get.yields({
+    url: '/main.html?failed=true',
+    active: true
+  });
+}
+
+function closeTab() {
+  chromeStub.runtime.lastError = { "message": "No tab with id" };
+  chromeStub.tabs.get.yields();
+}
+
+function dontLetTabUrlUpdate() {
+  chromeStub.runtime.lastError = undefined;
+  chromeStub.tabs.get.yields({
+    url: 'http://facebook.com',
+    active: true
+  });
 }
 
 describe("Failure indicator", () => {
@@ -29,61 +50,57 @@ describe("Failure indicator", () => {
     chromeStub.reset();
   });
 
-  it("should inject into the tab immediately", () => {
-    makeExecutionsSucceed();
+  it("should update tab url immediately", () => {
+    makeUpdatesSucceed();
     indicateFailure(10);
 
-    expect(chromeStub.tabs.executeScript.callCount).to.equal(1);
-    expect(chromeStub.tabs.executeScript.args[0][0]).to.equal(10);
+    expect(chromeStub.tabs.update.callCount).to.equal(1);
   });
 
-  it("should stop injecting on success", () => {
-    makeExecutionsSucceed();
-    indicateFailure(10);
+  it("should update the URL of the failing tab", () => {
+    makeUpdatesSucceed();
+    indicateFailure(101);
 
+    expect(chromeStub.tabs.update.args[0][0]).to.equal(101);
+  });
+
+  it("should stop updating on success", () => {
+    makeUpdatesSucceed();
+
+    indicateFailure(10);
+    letTabUrlUpdate();
     clockStub.tick(1000);
 
-    expect(chromeStub.tabs.executeScript.callCount).to.equal(1);
+    expect(chromeStub.tabs.update.callCount).to.equal(1);
+    expect(chromeStub.tabs.create.callCount).to.equal(0);
   });
 
-  it("should try to inject again slightly later if the first injection fails", () => {
-    makeExecutionsFail();
+  it("should open failure page in a new tab if the first update fails", () => {
+    makeUpdatesFail();
+
     indicateFailure(3);
+    clockStub.tick(250);
 
-    clockStub.tick(500);
-
-    expect(chromeStub.tabs.executeScript.callCount).to.be.greaterThan(1);
+    expect(chromeStub.tabs.create.callCount).to.equal(1);
   });
 
-  it("should keep trying to inject for a while  until injection succeeds", () => {
-    makeExecutionsFail();
-    indicateFailure(5);
+  it("should open failure page in a new tab if update works but URL doesn't stick", () => {
+    makeUpdatesSucceed();
 
-    clockStub.tick(1499);
+    indicateFailure(3);
+    dontLetTabUrlUpdate();
+    clockStub.tick(250);
 
-    expect(chromeStub.tabs.executeScript.callCount).to.be.greaterThan(3);
+    expect(chromeStub.tabs.create.callCount).to.equal(1);
   });
 
-  it("should stop trying to inject once injection succeeds", () => {
-    makeExecutionsFail();
-    indicateFailure(5);
+  it("should open failure page in a new tab if update works but tab is already closed", () => {
+    makeUpdatesSucceed();
 
-    makeExecutionsSucceed();
-    clockStub.tick(1499);
+    indicateFailure(3);
+    closeTab();
+    clockStub.tick(250);
 
-    expect(chromeStub.tabs.executeScript.callCount).to.equal(2);
-  });
-
-  it("should eventually give up and open a new failure tab", () => {
-    makeExecutionsFail();
-    indicateFailure(7);
-
-    clockStub.tick(1500);
-    var countAfter2Seconds = chromeStub.tabs.executeScript.callCount;
-    clockStub.tick(8500);
-    var countAfter10Seconds = chromeStub.tabs.executeScript.callCount;
-
-    expect(countAfter2Seconds).to.equal(countAfter10Seconds);
     expect(chromeStub.tabs.create.callCount).to.equal(1);
   });
 });

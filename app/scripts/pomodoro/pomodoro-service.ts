@@ -14,7 +14,7 @@ class PomodoroService {
 
   onPomodoroStart = subscribableEvent();
   onPomodoroSuccess = subscribableEvent();
-  onPomodoroFailure = subscribableEvent();
+  onPomodoroFailure = subscribableEvent<number, string>();
 
   onBreakStart = subscribableEvent();
   onBreakEnd = subscribableEvent();
@@ -55,11 +55,11 @@ class PomodoroService {
       this.onPomodoroSuccess.trigger();
     });
 
-    var badBehaviourRegistration = this.badBehaviourMonitor.onBadBehaviour(() => {
+    var badBehaviourRegistration = this.badBehaviourMonitor.onBadBehaviour((tabId, url) => {
       this.pomodoroTimer.reset();
       this.badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
 
-      this.onPomodoroFailure.trigger();
+      this.onPomodoroFailure.trigger(tabId, url);
     });
 
     this.onPomodoroStart.trigger();
