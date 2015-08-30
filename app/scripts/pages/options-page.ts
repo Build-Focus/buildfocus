@@ -1,6 +1,8 @@
 'use strict';
 
-import rollbar = require('rollbar');
+import Rollbar = require("rollbar");
+Rollbar.enable();
+
 import ko = require('knockout');
 import score = require('score');
 
