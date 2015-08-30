@@ -46,7 +46,7 @@ describe('Render binding', function () {
   });
 
   afterEach(function () {
-    $("#test-element").remove();
+    $("#test-element").each((i, element) => ko.cleanNode(element)).remove();
 
     // Clear ticker listeners, so that the stage stops getting updated
     easeljs.Ticker.removeAllEventListeners();

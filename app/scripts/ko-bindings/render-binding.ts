@@ -19,7 +19,8 @@ ko.bindingHandlers['render'] = {
     ko.utils.domData.set(element, STAGE_DATA_KEY, stage);
 
     easeljs.Ticker.framerate = 24;
-    easeljs.Ticker.addEventListener("tick", (event) => {
+
+    var tickCallback = (event) => {
       var bounds = stage.getBounds();
       if (bounds && !bounds.isEmpty()) {
         var scaleFactor = Math.min(canvas.width / bounds.width,
@@ -36,6 +37,12 @@ ko.bindingHandlers['render'] = {
         stage.y += (canvas.height - (bounds.height * scaleFactor)) / 2;
       }
       stage.update();
+    };
+
+    easeljs.Ticker.addEventListener("tick", tickCallback);
+    ko.utils.domNodeDisposal.addDisposeCallback(element, () => {
+      easeljs.Ticker.removeEventListener("tick", tickCallback);
+      stage.enableDOMEvents(false);
     });
   },
   update: function (element: HTMLElement, valueAccessor: () => Renderable) {

@@ -25,7 +25,6 @@ interface Window {
       var testRequirePath = matcherResult[1].replace(/\.js$|\.js\.map$/, "");
       var correctRequirePath = matcherResult[2].replace(/\.js$|\.js\.map$/, "");
       testRequirePathMapping[testRequirePath] = correctRequirePath;
-      return
     }
   });
 

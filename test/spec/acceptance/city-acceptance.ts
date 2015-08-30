@@ -33,7 +33,11 @@ describe('Acceptance: City', function () {
   });
 
   afterEach(function () {
+    ko.cleanNode(testDiv);
     testDiv.parentElement.removeChild(testDiv);
+
+    // Clear ticker listeners, so that the stage stops getting updated
+    easeljs.Ticker.removeAllEventListeners();
   });
 
   it("should show an empty cell correctly", function () {
