@@ -34,7 +34,7 @@ function startPomodoro() {
 }
 
 function getCityData(): string {
-  return _(chromeStub.storage.sync.set.args).map(function (args) {
+  return _(chromeStub.storage.local.set.args).map(function (args) {
     return args[0]["city-data"];
   }).reject(_.isUndefined).last();
 }

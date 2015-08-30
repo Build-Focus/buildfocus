@@ -8,7 +8,7 @@ import City = require('city/city');
 
 class Score {
   city = new City();
-  private cityData = synchronizedObservable("city-data", this.city.toJSON(), "sync");
+  private cityData = synchronizedObservable("city-data", this.city.toJSON(), "local");
 
   constructor() {
     this.cityData.subscribe((newCityData) => this.city.updateFromJSON(newCityData));

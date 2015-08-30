@@ -38,7 +38,7 @@ describe('Acceptance: Main page', function () {
       city.construct(city.getPossibleUpgrades()[0]);
 
       var viewModel = new MainPageViewModel();
-      chromeStub.storage.sync.get.yield({ "city-data": city.toJSON() });
+      chromeStub.storage.local.get.yield({ "city-data": city.toJSON() });
       var renderedOutput = viewModel.renderCity();
 
       // Nine cells + one building
