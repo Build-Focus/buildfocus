@@ -34,6 +34,11 @@
         <button class="takeABreak pure-button"
                 data-bind="click: startBreak, enable: canStartBreak">
           Take a break
+
+          <small data-bind="if: failed && failingUrl">
+            <br/>
+            (at <span data-bind="text: failingDomain"></span>)
+          </small>
         </button>
 
         <button class="notNow pure-button"

@@ -36,6 +36,10 @@ function dontLetTabUrlUpdate() {
   });
 }
 
+function showFailureIndicator(tabId = 1, url = "http://twitter.com") {
+  indicateFailure(tabId, url);
+}
+
 describe("Failure indicator", () => {
   before(() => {
     clockStub = sinon.useFakeTimers();
@@ -52,22 +56,23 @@ describe("Failure indicator", () => {
 
   it("should update tab url immediately", () => {
     makeUpdatesSucceed();
-    indicateFailure(10);
+    showFailureIndicator();
 
     expect(chromeStub.tabs.update.callCount).to.equal(1);
   });
 
   it("should update the URL of the failing tab", () => {
     makeUpdatesSucceed();
-    indicateFailure(101);
+    showFailureIndicator(101, "http://facebook.com");
 
     expect(chromeStub.tabs.update.args[0][0]).to.equal(101);
+    expect(chromeStub.tabs.update.args[0][1].url).to.include("main.html?failed=true&failingUrl=http%3A%2F%2Ffacebook.com");
   });
 
   it("should stop updating on success", () => {
     makeUpdatesSucceed();
 
-    indicateFailure(10);
+    showFailureIndicator();
     letTabUrlUpdate();
     clockStub.tick(1000);
 
@@ -78,7 +83,7 @@ describe("Failure indicator", () => {
   it("should open failure page in a new tab if the first update fails", () => {
     makeUpdatesFail();
 
-    indicateFailure(3);
+    showFailureIndicator();
     clockStub.tick(250);
 
     expect(chromeStub.tabs.create.callCount).to.equal(1);
@@ -87,7 +92,7 @@ describe("Failure indicator", () => {
   it("should open failure page in a new tab if update works but URL doesn't stick", () => {
     makeUpdatesSucceed();
 
-    indicateFailure(3);
+    showFailureIndicator();
     dontLetTabUrlUpdate();
     clockStub.tick(250);
 
@@ -97,7 +102,7 @@ describe("Failure indicator", () => {
   it("should open failure page in a new tab if update works but tab is already closed", () => {
     makeUpdatesSucceed();
 
-    indicateFailure(3);
+    showFailureIndicator();
     closeTab();
     clockStub.tick(250);
 

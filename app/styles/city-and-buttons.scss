@@ -76,11 +76,21 @@
   .takeABreak, .notNow {
     float: left;
     width: 49%;
+
+    box-sizing: border-box;
+    height: 101px;
+
+    line-height: 0.62;
   }
 
   .takeABreak {
     background-color: #1aa73b;
     margin-right: 2%;
+
+    small {
+      font-size: 60%;
+      opacity: 0.9;
+    }
   }
 
   .notNow {

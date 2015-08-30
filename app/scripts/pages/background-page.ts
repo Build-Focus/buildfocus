@@ -31,7 +31,7 @@ export = function setupBackgroundPage() {
 
   pomodoroService.onPomodoroFailure(function (tabId, url) {
     score.addFailure();
-    indicateFailure(tabId);
+    indicateFailure(tabId, url);
   });
 
   notificationService.onBreak(pomodoroService.takeABreak);

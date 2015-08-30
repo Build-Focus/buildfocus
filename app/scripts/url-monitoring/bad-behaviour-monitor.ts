@@ -11,17 +11,11 @@ interface Tab {
 }
 
 class BadBehaviourMonitor {
-  public onBadBehaviour = SubscribableEvent<number, string>();
+  constructor(private currentTabs: KnockoutObservableArray<Tab>, private settings: SettingsRepository) { }
 
-  constructor(currentTabs: KnockoutObservableArray<Tab>, settings: SettingsRepository) {
-    var currentBadTabs = ko.computed(function () {
-      return _.filter(currentTabs(), (tab) => _.any(settings.badDomains(), (domain) => domain.matches(tab.url)));
-    });
-
-    currentBadTabs.subscribe(() => {
-      currentBadTabs().forEach((tab) => this.onBadBehaviour.trigger(tab.id, tab.url));
-    });
-  }
+  currentBadTabs = ko.computed(() => _.filter(this.currentTabs(), (tab) => {
+    return _.any(this.settings.badDomains(), (domain) => domain.matches(tab.url));
+  }));
 }
 
 export = BadBehaviourMonitor

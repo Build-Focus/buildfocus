@@ -1,5 +1,6 @@
 'use strict';
 
+import ko = require('knockout');
 import PomodoroService = require("app/scripts/pomodoro/pomodoro-service");
 
 var POMODORO_DURATION = 1000 * 60 * 20;
@@ -8,11 +9,10 @@ var BREAK_DURATION = 1000 * 60 * 5;
 var clockStub;
 var badBehaviourMonitorFake;
 
-var pomodoroService;
+var pomodoroService: PomodoroService;
 
-function announceBadBehaviour() {
-  var badBehaviourCallback = badBehaviourMonitorFake.onBadBehaviour.firstCall.args[0];
-  badBehaviourCallback();
+function behaveBadly() {
+  badBehaviourMonitorFake.currentBadTabs([{ url: "twitter.com", id: 1}]);
 }
 
 describe('Pomodoro Integration - Pomodoro service', function () {
@@ -25,10 +25,7 @@ describe('Pomodoro Integration - Pomodoro service', function () {
   });
 
   beforeEach(function () {
-    badBehaviourMonitorFake = {};
-    badBehaviourMonitorFake.onBadBehaviour = sinon.spy();
-    badBehaviourMonitorFake.onBadBehaviour.remove = sinon.spy();
-
+    badBehaviourMonitorFake = { currentBadTabs: ko.observableArray([]) };
     pomodoroService = new PomodoroService(badBehaviourMonitorFake);
   });
 
@@ -38,18 +35,18 @@ describe('Pomodoro Integration - Pomodoro service', function () {
     });
 
     it("should be true once a pomodoro's started", function () {
-      pomodoroService.start(sinon.stub(), sinon.stub());
+      pomodoroService.start();
       expect(pomodoroService.isActive()).to.equal(true);
     });
 
     it("should be false after a pomodoro's completed", function () {
-      pomodoroService.start(sinon.stub(), sinon.stub());
+      pomodoroService.start();
       clockStub.tick(POMODORO_DURATION);
       expect(pomodoroService.isActive()).to.equal(false);
     });
 
     it("should be false during breaks", function () {
-      pomodoroService.takeABreak(sinon.stub());
+      pomodoroService.takeABreak();
       expect(pomodoroService.isActive()).to.equal(false);
     });
   });
@@ -84,10 +81,23 @@ describe('Pomodoro Integration - Pomodoro service', function () {
       pomodoroService.onPomodoroSuccess(successCallback);
       pomodoroService.onPomodoroFailure(errorCallback);
       pomodoroService.start();
-      announceBadBehaviour();
+      behaveBadly();
 
       expect(successCallback.called).to.equal(false);
       expect(errorCallback.calledOnce).to.equal(true);
+    });
+
+    it("should call the error callback if a bad URL is open initially", function () {
+      var successCallback = sinon.stub(), errorCallback = sinon.stub();
+      badBehaviourMonitorFake.currentBadTabs([{url: "google.com", id: 1}]);
+
+      pomodoroService.onPomodoroSuccess(successCallback);
+      pomodoroService.onPomodoroFailure(errorCallback);
+      pomodoroService.start();
+
+      expect(successCallback.called).to.equal(false);
+      expect(errorCallback.calledOnce).to.equal(true);
+      expect(pomodoroService.isActive()).to.equal(false);
     });
 
     it("should never call success after an error occurred, even after full duration", function () {
@@ -96,7 +106,7 @@ describe('Pomodoro Integration - Pomodoro service', function () {
       pomodoroService.onPomodoroSuccess(successCallback);
       pomodoroService.onPomodoroFailure(errorCallback);
       pomodoroService.start();
-      announceBadBehaviour();
+      behaveBadly();
       clockStub.tick(POMODORO_DURATION);
 
       expect(successCallback.called).to.equal(false);
@@ -167,47 +177,47 @@ describe('Pomodoro Integration - Pomodoro service', function () {
     });
 
     it("should be 0% when a pomodoro is first started", function () {
-      pomodoroService.start(sinon.stub(), sinon.stub());
+      pomodoroService.start();
       expect(pomodoroService.progress()).to.equal(0);
     });
 
     it("should be 50% when a pomodoro is half finished", function () {
-      pomodoroService.start(sinon.stub(), sinon.stub());
+      pomodoroService.start();
       clockStub.tick(POMODORO_DURATION / 2);
 
       expect(pomodoroService.progress()).to.equal(50);
     });
 
     it("should be 99% when a pomodoro is nearly finished", function () {
-      pomodoroService.start(sinon.stub(), sinon.stub());
+      pomodoroService.start();
       clockStub.tick(POMODORO_DURATION - 1);
 
       expect(pomodoroService.progress()).to.equal(99);
     });
 
     it("should be null when a pomodoro is completed", function () {
-      pomodoroService.start(sinon.stub(), sinon.stub());
+      pomodoroService.start();
       clockStub.tick(POMODORO_DURATION);
 
       expect(pomodoroService.progress()).to.equal(null);
     });
 
     it("should be null if a pomodoro is failed half way", function () {
-      pomodoroService.start(sinon.stub(), sinon.stub());
+      pomodoroService.start();
 
       clockStub.tick(POMODORO_DURATION / 2);
-      announceBadBehaviour();
+      behaveBadly();
 
       expect(pomodoroService.progress()).to.equal(null);
     });
 
     it("should be 0% when a break is first started", function () {
-      pomodoroService.takeABreak(sinon.stub());
+      pomodoroService.takeABreak();
       expect(pomodoroService.progress()).to.equal(0);
     });
 
     it("should be 99% when a break is nearly completed", function () {
-      pomodoroService.takeABreak(sinon.stub());
+      pomodoroService.takeABreak();
 
       clockStub.tick(BREAK_DURATION - 1);
 
@@ -215,7 +225,7 @@ describe('Pomodoro Integration - Pomodoro service', function () {
     });
 
     it("should be null when a break is completed", function () {
-      pomodoroService.takeABreak(sinon.stub());
+      pomodoroService.takeABreak();
 
       clockStub.tick(BREAK_DURATION);
 

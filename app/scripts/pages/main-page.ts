@@ -8,9 +8,15 @@ import easeljs = require('createjs');
 import ProxyPomodoroService = require('pomodoro/proxy-pomodoro-service');
 import CityRenderer = require('city/rendering/city-renderer');
 
-function getQueryParameter(name) {
+function getQueryParameter(name: string) {
   var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
   return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+function getDomainFromUrl(url: string): string {
+  var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+  var domain = matches && matches[1];
+  return domain;
 }
 
 function closeThisTab() {
@@ -30,6 +36,8 @@ class MainPageViewModel {
   private cityRenderer = new CityRenderer(this.score.city);
 
   failed = (getQueryParameter("failed") === "true");
+  failingUrl = getQueryParameter("failingUrl");
+  failingDomain = ko.computed(() => this.failingUrl ? getDomainFromUrl(this.failingUrl) : null);
 
   canStartPomodoro = ko.computed(() => !this.pomodoroService.isActive());
 
@@ -46,7 +54,12 @@ class MainPageViewModel {
 
   startBreak() {
     this.pomodoroService.takeABreak();
-    closeThisTab();
+
+    if (this.failingUrl) {
+      window.location.href = this.failingUrl;
+    } else {
+      closeThisTab();
+    }
   }
 
   notNow() {

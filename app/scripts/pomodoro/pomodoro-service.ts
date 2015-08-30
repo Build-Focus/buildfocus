@@ -43,27 +43,41 @@ class PomodoroService {
     });
   }
 
+  private badTabSubscription: KnockoutSubscription;
+
   start = () => {
     if (this.isActive()) {
       return;
     }
 
-    this.breakTimer.reset();
-    this.pomodoroTimer.start(config.pomodoroDuration, () => {
-      this.badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
+    this.onPomodoroStart.trigger();
 
+    this.breakTimer.reset();
+
+    this.pomodoroTimer.start(config.pomodoroDuration, () => {
+      this.clearBehaviourSubscription();
       this.onPomodoroSuccess.trigger();
     });
 
-    var badBehaviourRegistration = this.badBehaviourMonitor.onBadBehaviour((tabId, url) => {
-      this.pomodoroTimer.reset();
-      this.badBehaviourMonitor.onBadBehaviour.remove(badBehaviourRegistration);
-
-      this.onPomodoroFailure.trigger(tabId, url);
+    this.badTabSubscription = this.badBehaviourMonitor.currentBadTabs.subscribeAndUpdate((tabs) => {
+      if (tabs.length > 0) {
+        var firstBadTab = this.badBehaviourMonitor.currentBadTabs()[0];
+        this.failPomodoro(firstBadTab.id, firstBadTab.url);
+      }
     });
-
-    this.onPomodoroStart.trigger();
   };
+
+  private clearBehaviourSubscription() {
+    if (this.badTabSubscription) {
+      this.badTabSubscription.dispose();
+    }
+  }
+
+  private failPomodoro(tabId, url) {
+    this.clearBehaviourSubscription();
+    this.pomodoroTimer.reset();
+    this.onPomodoroFailure.trigger(tabId, url);
+  }
 
   takeABreak = () => {
     if (this.isActive()) {
