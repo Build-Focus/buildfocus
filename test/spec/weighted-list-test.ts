@@ -43,8 +43,9 @@ describe("A weighted list", () => {
 
     var results = _.range(10000).map(() => list.get());
     var counts = _.countBy(results);
+
     expect(counts["a"] + counts["b"] + counts["c"]).to.equal(10000);
-    expect(counts["c"]).to.be.within(counts["a"] * 3.6, counts["a"] * 4.4);
-    expect(counts["b"]).to.be.within(counts["a"] * 1.6, counts["a"] * 2.4);
+    expect(counts["c"]).to.be.approx(counts["a"] * 4);
+    expect(counts["b"]).to.be.approx(counts["a"] * 2);
   });
 });

@@ -3,6 +3,7 @@
 import ko = require('knockout');
 import _ = require('lodash');
 
+import weightUpgrades = require('city/weight-upgrades');
 import synchronizedObservable = require('observables/synchronized-observable');
 import City = require('city/city');
 
@@ -16,8 +17,8 @@ class Score {
   }
 
   addSuccess() {
-    var possibleUpgrades = this.city.getPossibleUpgrades();
-    var randomUpgrade = _.sample(possibleUpgrades);
+    var possibleUpgrades = weightUpgrades(this.city.getPossibleUpgrades());
+    var randomUpgrade = possibleUpgrades.get();
     this.city.construct(randomUpgrade);
   }
 
