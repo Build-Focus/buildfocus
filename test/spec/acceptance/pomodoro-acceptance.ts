@@ -184,6 +184,13 @@ describe('Acceptance: Pomodoros', function () {
       expect(chromeStub.notifications.create.calledOnce).to.equal(true);
     });
 
+    it("should show the new building, if you complete a pomodoro", () => {
+      startPomodoro();
+      clockStub.tick(POMODORO_DURATION);
+
+      expect(chromeStub.notifications.create.args[0][1].iconUrl).to.include("images/city/");
+    });
+
     it("should start a new pomodoro when clicked", function () {
       startPomodoro();
       clockStub.tick(POMODORO_DURATION);

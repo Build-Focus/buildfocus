@@ -5,6 +5,8 @@ import _ = require('lodash');
 
 import weightUpgrades = require('city/weight-upgrades');
 import synchronizedObservable = require('observables/synchronized-observable');
+
+import Buildings = require('city/buildings/buildings');
 import City = require('city/city');
 
 class Score {
@@ -16,10 +18,11 @@ class Score {
     this.city.onChanged(() => this.cityData(this.city.toJSON()));
   }
 
-  addSuccess() {
+  addSuccess(): Buildings.Building {
     var possibleUpgrades = weightUpgrades(this.city.getPossibleUpgrades());
     var randomUpgrade = possibleUpgrades.get();
     this.city.construct(randomUpgrade);
+    return randomUpgrade;
   }
 
   addFailure() {

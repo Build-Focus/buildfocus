@@ -41,7 +41,8 @@ describe('Notification service', function () {
     clockStub.reset();
     chromeStub.reset();
 
-    notifications = new NotificationService();
+    var imageSource = sinon.stub().returns({ imagePath: "building-image" });
+    notifications = new NotificationService(imageSource);
     onClickCallback = sinon.stub();
     onBreakCallback = sinon.stub();
 
@@ -49,30 +50,50 @@ describe('Notification service', function () {
     notifications.onBreak(onBreakCallback);
   });
 
-  it('should create success notification', function () {
-    notifications.showSuccessNotification();
+  describe("success notifications", () => {
+    beforeEach(() => notifications.showSuccessNotification());
 
-    expect(chromeStub.notifications.create.calledOnce).to.equal(true);
+    it('should appear', function () {
+      expect(chromeStub.notifications.create.calledOnce).to.equal(true);
+    });
+
+    it('should show a new building image', function () {
+      expect(chromeStub.notifications.create.args[0][1].iconUrl).to.equal("building-image");
+    });
   });
 
-  it('should call onClick callbacks when a pomodoro notification is clicked', function () {
-    clickNotification();
-    expect(onClickCallback.calledOnce).to.equal(true);
+  describe("break notifiations", () => {
+    beforeEach(() => notifications.showBreakNotification());
+
+    it('should appear', function () {
+      expect(chromeStub.notifications.create.calledOnce).to.equal(true);
+    });
+
+    it('should show the BF logo', function () {
+      expect(chromeStub.notifications.create.args[0][1].iconUrl).to.equal("images/icon-128.png");
+    });
   });
 
-  it('should not call onClick callbacks when some other notification is clicked', function () {
-    clickNotification("other-notification");
-    expect(onClickCallback.called).to.equal(false);
-  });
+  describe("button subscriptions", () => {
+    it('should call onClick callbacks when a pomodoro notification is clicked', function () {
+      clickNotification();
+      expect(onClickCallback.calledOnce).to.equal(true);
+    });
 
-  it('should call onBreak callbacks when a pomodoro break button is clicked', function () {
-    clickTakeABreak();
-    expect(onBreakCallback.calledOnce).to.equal(true);
-  });
+    it('should not call onClick callbacks when some other notification is clicked', function () {
+      clickNotification("other-notification");
+      expect(onClickCallback.called).to.equal(false);
+    });
 
-  it('should not call onBreak callbacks when a button on some other notification is clicked', function () {
-    clickTakeABreak("other-notification");
-    expect(onBreakCallback.calledOnce).to.equal(false);
+    it('should call onBreak callbacks when a pomodoro break button is clicked', function () {
+      clickTakeABreak();
+      expect(onBreakCallback.calledOnce).to.equal(true);
+    });
+
+    it('should not call onBreak callbacks when a button on some other notification is clicked', function () {
+      clickTakeABreak("other-notification");
+      expect(onBreakCallback.calledOnce).to.equal(false);
+    });
   });
 
   describe("notification dismissal", function () {
@@ -105,45 +126,36 @@ describe('Notification service', function () {
 
   describe("notification persistence", function () {
     function shouldReissueNotificationOnlyIfUntouched(name, showNotification) {
-      it("should cancel and reissue " + name + " notifications that aren't touched within 8 seconds", function () {
-        showNotification();
+      describe(`of ${name} notifications`, () => {
+        beforeEach(showNotification);
 
-        clockStub.tick(8000);
-        expect(chromeStub.notifications.create.callCount).to.equal(2);
-      });
+        it(`should cancel and reissue ${name} notifications that aren't touched within 8 seconds`, function () {
+          clockStub.tick(8000);
+          expect(chromeStub.notifications.create.callCount).to.equal(2);
+        });
 
-      it("should not reissue " + name + " notifications if they're clicked within 8 seconds", function () {
-        showNotification();
+        it(`should not reissue ${name} notifications if they're clicked within 8 seconds`, function () {
+          clickNotification();
+          clockStub.tick(8000);
+          expect(chromeStub.notifications.create.callCount).to.equal(1);
+        });
 
-        clickNotification();
-        clockStub.tick(8000);
-        expect(chromeStub.notifications.create.callCount).to.equal(1);
-      });
+        it(`should not reissue ${name} notifications if they're closed within 8 seconds`, function () {
+          closeNotification();
+          clockStub.tick(8000);
+          expect(chromeStub.notifications.create.callCount).to.equal(1);
+        });
 
-      it("should not reissue " + name + " notifications if they're closed within 8 seconds", function () {
-        showNotification();
+        it(`should reissue ${name} notifications if they're closed by the reissue itself`, function () {
+          clockStub.tick(8000);
+          chromeStub.notifications.onClosed.trigger(NOTIFICATION_NAME, false);
 
-        closeNotification();
-        clockStub.tick(8000);
-        expect(chromeStub.notifications.create.callCount).to.equal(1);
-      });
-
-      it("should reissue " + name + " notifications if they're closed by the reissue itself", function () {
-        showNotification();
-
-        clockStub.tick(8000);
-        chromeStub.notifications.onClosed.trigger(NOTIFICATION_NAME, false);
-
-        expect(chromeStub.notifications.create.callCount).to.equal(2);
+          expect(chromeStub.notifications.create.callCount).to.equal(2);
+        });
       });
     }
 
-    shouldReissueNotificationOnlyIfUntouched("success", function () {
-      notifications.showSuccessNotification();
-    });
-
-    shouldReissueNotificationOnlyIfUntouched("break", function () {
-      notifications.showBreakNotification();
-    });
+    shouldReissueNotificationOnlyIfUntouched("success", () => notifications.showSuccessNotification());
+    shouldReissueNotificationOnlyIfUntouched("break", () => notifications.showBreakNotification());
   });
 });

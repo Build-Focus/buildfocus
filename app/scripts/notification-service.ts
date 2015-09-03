@@ -2,8 +2,15 @@
 
 import _ = require('lodash');
 import SubscribableEvent = require('subscribable-event');
+import reportChromeErrors = require('report-chrome-errors');
+
+import Buildings = require('city/buildings/buildings');
 
 const NOTIFICATION_ID = "pomodoro-notification";
+
+interface ImageConfigSource {
+  (building: Buildings.Building): { imagePath: string }
+}
 
 class NotificationService {
   private notificationReissueTimeoutId: number;
@@ -12,7 +19,7 @@ class NotificationService {
   public onBreak = SubscribableEvent();
   public onMore = SubscribableEvent();
 
-  constructor() {
+  constructor(private getBuildingConfig: ImageConfigSource) {
     chrome.notifications.onClicked.addListener((clickedNotificationId) => {
       if (clickedNotificationId === NOTIFICATION_ID) {
         this.clearNotifications();
@@ -38,17 +45,20 @@ class NotificationService {
     });
   }
 
-  public showSuccessNotification = () => {
+  public showSuccessNotification = (building: Buildings.Building) => {
+    var buildingConfig = this.getBuildingConfig(building);
+
     var notification = this.buildNotification(
       "Success! Go again?",
       "Click to start a new Pomodoro",
-      [{"title": "Take a break"}, {"title": "More..."}]
+      [{"title": "Take a break"}, {"title": "More..."}],
+      buildingConfig ? buildingConfig.imagePath : undefined
     );
 
     this.clearNotifications();
-    chrome.notifications.create(NOTIFICATION_ID, notification, function () { });
-    this.notificationReissueTimeoutId = setTimeout(this.showSuccessNotification.bind(this), 7500);
-  }
+    chrome.notifications.create(NOTIFICATION_ID, notification, () => reportChromeErrors());
+    this.notificationReissueTimeoutId = setTimeout(() => this.showSuccessNotification(building), 7500);
+  };
 
   public showBreakNotification = () => {
     var notification = this.buildNotification(
@@ -58,22 +68,22 @@ class NotificationService {
     );
 
     this.clearNotifications();
-    chrome.notifications.create(NOTIFICATION_ID, notification, function () { });
+    chrome.notifications.create(NOTIFICATION_ID, notification, () => reportChromeErrors());
     this.notificationReissueTimeoutId = setTimeout(this.showBreakNotification.bind(this), 7500);
-  }
+  };
 
   public clearNotifications = () => {
     clearTimeout(this.notificationReissueTimeoutId);
-    chrome.notifications.clear(NOTIFICATION_ID, function () { });
-  }
+    chrome.notifications.clear(NOTIFICATION_ID, () => reportChromeErrors());
+  };
 
-  private buildNotification = (title: string, message: string, buttons: Array<any>) => {
+  private buildNotification = (title: string, message: string, buttons: Array<any>,
+                               imageUrl: string = "images/icon-128.png") => {
     return {
       "type": "basic",
       "title": title,
       "message": message,
-      // Solid green block image:
-      "iconUrl": "data:image/gif;base64,R0lGODlhAQABAPAAAADdAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==",
+      "iconUrl": imageUrl,
       "buttons": buttons,
       "isClickable": true
     };

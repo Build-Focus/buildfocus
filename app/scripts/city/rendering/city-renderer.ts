@@ -10,7 +10,7 @@ import CellType = require('city/cell-type');
 import Buildings = require('city/buildings/buildings');
 import BuildingType = require('city/buildings/building-type');
 
-import buildingRenderConfig = require('city/rendering/building-rendering-config');
+import getBuildingConfig = require('city/rendering/building-rendering-config');
 
 const CELL_WIDTH = 600;
 const CELL_HEIGHT = 345;
@@ -85,7 +85,7 @@ class CityRenderer {
   }
 
   private getBuildingImage(building: Buildings.Building): easeljs.Bitmap {
-    var config = buildingRenderConfig[building.buildingType][building.direction];
+    var config = getBuildingConfig(building);
 
     if (!config) throw new Error("Failed to render building, no image for type: " + building.buildingType +
                                  "and direction: " + building.direction);

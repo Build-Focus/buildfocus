@@ -1,15 +1,14 @@
+import Buildings = require('city/buildings/buildings');
 import Direction = require('city/direction');
 import BuildingType = require('city/buildings/building-type');
 
 interface BuildingRenderingConfig {
-  [direction: number]: {
-    xOffset: number;
-    yOffset: number;
-    imagePath: string;
-  }
+  xOffset: number;
+  yOffset: number;
+  imagePath: string;
 }
 
-var config: { [buildingType: number]: BuildingRenderingConfig } = {
+var config: { [buildingType: number]: { [direction: number]: BuildingRenderingConfig } } = {
   [BuildingType.BasicHouse]: {
     [Direction.South]: {
       xOffset: 136,
@@ -51,4 +50,11 @@ var config: { [buildingType: number]: BuildingRenderingConfig } = {
   }
 };
 
-export = config;
+export = function getBuildingConfig(building: Buildings.Building): BuildingRenderingConfig {
+  var buildingConfig = config[building.buildingType];
+  if (buildingConfig) {
+    return buildingConfig[building.direction];
+  } else {
+    return undefined;
+  }
+}
