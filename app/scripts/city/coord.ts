@@ -80,6 +80,23 @@ class Coord {
   static deserialize(data: serialize.CoordData): Coord {
     return new Coord(data.x, data.y);
   }
+
+  static diagonalCompare(coordA: Coord, coordB: Coord): number {
+    var coordATotal = coordA.x + coordA.y;
+    var coordBTotal = coordB.x + coordB.y;
+
+    if (coordATotal > coordBTotal) {
+      return 1;
+    } else if (coordATotal < coordBTotal) {
+      return -1;
+    } else if (coordA.x > coordB.x) {
+      return 1;
+    } else if (coordA.x < coordB.x) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
 }
 
 export = Coord;

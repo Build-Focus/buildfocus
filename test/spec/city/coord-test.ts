@@ -93,4 +93,26 @@ describe('Coord', () => {
     expect(coord.getDirectionToward(new Coord(0, 1))).to.equal(Direction.South);
     expect(coord.getDirectionToward(new Coord(-1, 0))).to.equal(Direction.West);
   });
+
+  describe("diagonal comparison", () => {
+    it('should consider coords in the previous diagonal row to be lesser', () => {
+      expect(Coord.diagonalCompare(new Coord(2, 2), new Coord(3, 3))).to.equal(-1);
+    });
+
+    it('should consider coords in the next diagonal row to be greater', () => {
+      expect(Coord.diagonalCompare(new Coord(3, 3), new Coord(2, 2))).to.equal(1);
+    });
+
+    it('should consider coords earlier in the current diagonal row to be lesser', () => {
+      expect(Coord.diagonalCompare(new Coord(3, 3), new Coord(2, 4))).to.equal(1);
+    });
+
+    it('should consider coords later in the current diagonal row to be greater', () => {
+      expect(Coord.diagonalCompare(new Coord(3, 3), new Coord(4, 2))).to.equal(-1);
+    });
+
+    it('should consider the same coord to be equal', () => {
+      expect(Coord.diagonalCompare(new Coord(3, 3), new Coord(3, 3))).to.equal(0);
+    });
+  });
 });
