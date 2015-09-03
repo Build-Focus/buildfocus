@@ -9,6 +9,7 @@ import Cell = require("app/scripts/city/cell");
 import CellType = require("app/scripts/city/cell-type");
 
 import Coord = require("app/scripts/city/coord");
+import Direction = require("app/scripts/city/direction");
 import BasicHouse = require("app/scripts/city/buildings/basic-house");
 import serialization = require("app/scripts/city/city-serialization");
 
@@ -57,7 +58,7 @@ describe('Map', () => {
   });
 
   it("should allow you to add a building", () => {
-    var building = new BasicHouse(c(0, 0));
+    var building = new BasicHouse(c(0, 0), Direction.South);
     var map = new Map(cellFactory);
 
     map.construct(building);
@@ -66,7 +67,7 @@ describe('Map', () => {
   });
 
   it("should not allow you to add a building in a non-empty space", () => {
-    var building = new BasicHouse(c(0, 0));
+    var building = new BasicHouse(c(0, 0), Direction.South);
     var map = new Map(cellFactory);
 
     map.construct(building);
@@ -74,7 +75,7 @@ describe('Map', () => {
   });
 
   it("should let you remove a building", () => {
-    var building = new BasicHouse(c(0, 0));
+    var building = new BasicHouse(c(0, 0), Direction.South);
     var map = new Map(cellFactory);
 
     map.construct(building);
@@ -86,11 +87,11 @@ describe('Map', () => {
   it("should reject constructions on cells that don't exist", () => {
     var map = new Map(cellFactory);
 
-    expect(() => map.construct(new BasicHouse(c(1, 0)))).to.throw();
+    expect(() => map.construct(new BasicHouse(c(1, 0), Direction.South))).to.throw();
   });
 
   it("should reject removing buildings that don't exist", () => {
-    var building = new BasicHouse(c(0, 0));
+    var building = new BasicHouse(c(0, 0), Direction.South);
     var map = new Map(cellFactory);
 
     map.construct(building);
@@ -102,8 +103,8 @@ describe('Map', () => {
   it("should allow building remove on equality, not identity", () => {
     var map = new Map(cellFactory);
 
-    map.construct(new BasicHouse(c(0, 0)));
-    map.remove(new BasicHouse(c(0, 0)));
+    map.construct(new BasicHouse(c(0, 0), Direction.South));
+    map.remove(new BasicHouse(c(0, 0), Direction.South));
 
     expect(map.getBuildings()).to.deep.equal([]);
   });
@@ -111,15 +112,15 @@ describe('Map', () => {
   it("should reject removing buildings that don't quite match", () => {
     var map = new Map(cellFactory);
 
-    map.construct(new BasicHouse(c(0, 0)));
+    map.construct(new BasicHouse(c(0, 0), Direction.South));
 
-    expect(() => map.remove(new BasicHouse(c(1, 0)))).to.throw();
+    expect(() => map.remove(new BasicHouse(c(1, 0), Direction.South))).to.throw();
   });
 
   it("should add new cells from the cell factory when a building as added surrounded by space", () => {
     var map = new Map(cellFactory);
 
-    map.construct(new BasicHouse(c(0, 0)));
+    map.construct(new BasicHouse(c(0, 0), Direction.South));
 
     var coords = _.pluck(map.getCells(), 'coord');
     expect(coords.sort(lexicographicSort)).to.deep.equal([
@@ -133,7 +134,7 @@ describe('Map', () => {
     var initialCoords = [c(0, 0), c(1, 0), c(2, 0), c(1, 1)];
     var map = Map.deserialize({ cells: toCells(initialCoords), buildings: [] }, cellFactory);
 
-    map.construct(new BasicHouse(c(1, 1)));
+    map.construct(new BasicHouse(c(1, 1), Direction.South));
 
     var coords = _.pluck(map.getCells(), 'coord');
     expect(coords.sort(lexicographicSort)).to.deep.equal(initialCoords.concat([
@@ -144,7 +145,7 @@ describe('Map', () => {
 
   it("should serialize all its cells", () => {
     var map = new Map(cellFactory);
-    map.construct(new BasicHouse(c(0, 0)));
+    map.construct(new BasicHouse(c(0, 0), Direction.South));
 
     var serialized = map.serialize();
 
@@ -157,8 +158,8 @@ describe('Map', () => {
 
   it("should serialize its buildings", () => {
     var map = new Map(cellFactory);
-    var building1 = new BasicHouse(c(0, 0));
-    var building2 = new BasicHouse(c(0, 1));
+    var building1 = new BasicHouse(c(0, 0), Direction.South);
+    var building2 = new BasicHouse(c(0, 1), Direction.South);
 
     map.construct(building1);
     map.construct(building2);
@@ -178,8 +179,8 @@ describe('Map', () => {
 
   it("should be unchanged after serialization and deserialization", () => {
     var map = new Map(cellFactory);
-    map.construct(new BasicHouse(c(0, 0)));
-    map.construct(new BasicHouse(c(1, 0)));
+    map.construct(new BasicHouse(c(0, 0), Direction.South));
+    map.construct(new BasicHouse(c(1, 0), Direction.South));
     var serialized = map.serialize();
 
     var newMap = Map.deserialize(serialized, cellFactory);
@@ -197,7 +198,7 @@ describe('Map', () => {
 
   it("should successfully look up buildings by position", () => {
     var map = new Map(cellFactory);
-    var building = new BasicHouse(c(0, 0));
+    var building = new BasicHouse(c(0, 0), Direction.South);
     map.construct(building);
 
     var lookedUpBuilding = map.getBuildingAt(c(0, 0));
@@ -207,7 +208,7 @@ describe('Map', () => {
 
   it("should return undefined when looking up buildings in empty cells", () => {
     var map = new Map(cellFactory);
-    var building = new BasicHouse(c(0, 0));
+    var building = new BasicHouse(c(0, 0), Direction.South);
     map.construct(building);
 
     var lookedUpBuilding = map.getBuildingAt(c(1, 0));

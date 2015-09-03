@@ -13,12 +13,22 @@ var config: { [buildingType: number]: { [direction: number]: BuildingRenderingCo
     [Direction.South]: {
       xOffset: 136,
       yOffset: 6,
-      imagePath: "/images/city/basic-house/sw.png",
+      imagePath: "/images/city/basic-house/south.png",
+    },
+    [Direction.East]: {
+      xOffset: 157,
+      yOffset: 11,
+      imagePath: "/images/city/basic-house/east.png",
     }
   },
 
   [BuildingType.NiceHouse]: {
     [Direction.South]: {
+      xOffset: 0,
+      yOffset: -66,
+      imagePath: "/images/city/nice-house/sw.png",
+    },
+    [Direction.East]: {
       xOffset: 0,
       yOffset: -66,
       imagePath: "/images/city/nice-house/sw.png",

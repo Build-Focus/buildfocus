@@ -8,6 +8,7 @@ import Map = require('city/map');
 import Coord = require('city/coord');
 import Cell = require('city/cell');
 import CellType = require('city/cell-type');
+import Direction = require('city/direction');
 
 import Buildings = require('city/buildings/buildings');
 import Building = Buildings.Building;
@@ -42,7 +43,10 @@ class City {
   private getPossibleNewBuildings(): Building[] {
     var buildingCoords = _(this.getBuildings()).pluck('coords').flatten().value();
     var buildableCells = _.reject(this.getCells(), (cell) => !!_.findWhere(buildingCoords, cell.coord));
-    return buildableCells.map((cell) => new BasicHouse(cell.coord));
+
+    return _(buildableCells).map((cell) => [new BasicHouse(cell.coord, Direction.South),
+                                            new BasicHouse(cell.coord, Direction.East)])
+                            .flatten().value();
   }
 
   private getPossibleBuildingUpgrades(): Building[] {

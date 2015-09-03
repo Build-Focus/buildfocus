@@ -31,7 +31,7 @@ function getCoordFrequency(weightedList: WeightedList<Building>) {
 
 describe("Weighting upgrades", () => {
   it("should include all the original buildings", () => {
-    var buildings = [new BasicHouse(c(0, 1)),
+    var buildings = [new BasicHouse(c(0, 1), Direction.South),
                      new NiceHouse(c(0, 0), Direction.North),
                      new FancyHouse(c(1, 0), c(2, 0), Direction.South)];
 
@@ -41,9 +41,9 @@ describe("Weighting upgrades", () => {
   });
 
   it("should weight central buildings more heavily", () => {
-    var buildings = [new BasicHouse(c(2, 0)),
-                     new BasicHouse(c(1, 0)),
-                     new BasicHouse(c(0, 0))];
+    var buildings = [new BasicHouse(c(2, 0), Direction.South),
+                     new BasicHouse(c(1, 0), Direction.South),
+                     new BasicHouse(c(0, 0), Direction.South)];
 
     var weighted = weightUpgrades(buildings);
 

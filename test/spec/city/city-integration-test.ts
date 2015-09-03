@@ -30,7 +30,7 @@ describe('City Integration - City', () => {
     var city = new City();
     var onlyCoord = city.getCells()[0].coord;
 
-    var building = new BasicHouse(onlyCoord);
+    var building = new BasicHouse(onlyCoord, Direction.South);
     city.construct(building);
 
     expect(city.getBuildings()).to.deep.equal([building]);
@@ -39,7 +39,7 @@ describe('City Integration - City', () => {
   it('should fire a changed event when constructing buildings', () => {
     var city = new City();
     var onlyCoord = city.getCells()[0].coord;
-    var building = new BasicHouse(onlyCoord);
+    var building = new BasicHouse(onlyCoord, Direction.South);
     var listener = sinon.stub();
 
     city.onChanged(listener);
@@ -50,7 +50,7 @@ describe('City Integration - City', () => {
 
   it('should let you delete its buildings', () => {
     var city = new City();
-    var building = new BasicHouse(city.getCells()[0].coord);
+    var building = new BasicHouse(city.getCells()[0].coord, Direction.South);
     city.construct(building);
 
     city.remove(city.getBuildings()[0]);
@@ -60,7 +60,7 @@ describe('City Integration - City', () => {
 
   it('should fire a changed event when removing buildings', () => {
     var city = new City();
-    var building = new BasicHouse(city.getCells()[0].coord);
+    var building = new BasicHouse(city.getCells()[0].coord, Direction.South);
     city.construct(building);
 
     var listener = sinon.stub();
@@ -78,7 +78,7 @@ describe('City Integration - City', () => {
     var city = new City();
     var onlyCoord = city.getCells()[0].coord;
 
-    city.construct(new BasicHouse(onlyCoord));
+    city.construct(new BasicHouse(onlyCoord, Direction.South));
 
     expect(asCoords(city.getCells()).sort()).to.deep.equal([
       [-1, -1], [0, -1], [1, -1],
@@ -89,12 +89,12 @@ describe('City Integration - City', () => {
 
   it('should offer new basic houses on all empty cells', () => {
     var city = new City();
-    city.construct(new BasicHouse(c(0, 0)));
+    city.construct(new BasicHouse(c(0, 0), Direction.South));
 
     var potentialBuildings = <Array<any>> city.getPossibleUpgrades();
 
     var basicHouseUpgradeCoords = _(potentialBuildings)
-                                   .where({buildingType: BuildingType.BasicHouse})
+                                   .where({buildingType: BuildingType.BasicHouse, direction: Direction.South})
                                    .pluck('coords')
                                    .flatten()
                                    .value()
@@ -107,8 +107,8 @@ describe('City Integration - City', () => {
   });
 
   function buildTwoNiceHouses(city) {
-    city.construct(new BasicHouse(c(0, 0)));
-    city.construct(new BasicHouse(c(1, 0)));
+    city.construct(new BasicHouse(c(0, 0), Direction.South));
+    city.construct(new BasicHouse(c(1, 0), Direction.South));
     city.construct(new NiceHouse(c(0, 0), Direction.South));
     city.construct(new NiceHouse(c(1, 0), Direction.South));
   }
@@ -151,7 +151,7 @@ describe('City Integration - City', () => {
   });
 
   function getAllReachableBuildings() {
-    let unexpanded: Buildings.Building[] = [new BasicHouse(c(0, 0))];
+    let unexpanded: Buildings.Building[] = [new BasicHouse(c(0, 0), Direction.South)];
     let foundBuildings: Buildings.Building[] = [];
 
     while (unexpanded.length > 0) {
