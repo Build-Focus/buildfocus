@@ -24,38 +24,37 @@ var config: { [buildingType: number]: { [direction: number]: BuildingRenderingCo
 
   [BuildingType.NiceHouse]: {
     [Direction.South]: {
-      xOffset: 0,
-      yOffset: -66,
-      imagePath: "/images/city/nice-house/sw.png",
+      xOffset: -2,
+      yOffset: -92,
+      imagePath: "/images/city/nice-house/south.png",
     },
     [Direction.East]: {
-      xOffset: 0,
-      yOffset: -66,
-      imagePath: "/images/city/nice-house/sw.png",
+      xOffset: -2,
+      yOffset: -92,
+      imagePath: "/images/city/nice-house/east.png",
     }
   },
 
-  // TODO: Actually create a north + west images for this (and fix the East shadows too)
   [BuildingType.FancyHouse]: {
     [Direction.North]: {
-      xOffset: -284,
-      yOffset: -225,
-      imagePath: "images/city/fancy-house/South.png",
+      xOffset: -280,
+      yOffset: -224,
+      imagePath: "images/city/fancy-house/south.png",
     },
     [Direction.South]: {
-      xOffset: -284,
-      yOffset: -225,
-      imagePath: "images/city/fancy-house/South.png",
+      xOffset: -280,
+      yOffset: -224,
+      imagePath: "images/city/fancy-house/south.png",
     },
     [Direction.East]: {
-      xOffset: -37,
-      yOffset: -224,
-      imagePath: "images/city/fancy-house/East.png",
+      xOffset: 4,
+      yOffset: -201,
+      imagePath: "images/city/fancy-house/east.png",
     },
     [Direction.West]: {
-      xOffset: -37,
-      yOffset: -224,
-      imagePath: "images/city/fancy-house/East.png",
+      xOffset: 4,
+      yOffset: -201,
+      imagePath: "images/city/fancy-house/east.png",
     }
   }
 };
