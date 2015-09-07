@@ -6,7 +6,7 @@ const devConfig: ApplicationConfig = {
 
   rollbarConfig: {
     accessToken: "50f66d878cc84307a37ebfc6202a7836",
-    captureUncaught: true,
+    captureUncaught: false,
     payload: {
       environment: "development"
     },
