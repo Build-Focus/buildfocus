@@ -5,6 +5,7 @@ export interface CityData {
 export interface MapData {
   cells: CellData[];
   buildings: BuildingData[];
+  roads: RoadData[];
 }
 
 export interface CellData {
@@ -16,6 +17,11 @@ export interface BuildingData {
   coords: CoordData[];
   buildingType: number;
   direction: number
+}
+
+export interface RoadData {
+  start: CoordData;
+  end: CoordData;
 }
 
 export interface CoordData {

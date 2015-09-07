@@ -46,7 +46,7 @@ function build3x3Map(): Map {
                              buildCell(-1, -1), buildCell(0, -1), buildCell(1, -1),
                              buildCell(-1, 0),  buildCell(0, 0),  buildCell(1, 0),
                              buildCell(-1, 1),  buildCell(0, 1),  buildCell(1, 1),
-                           ], buildings: [] }, cellFactory);
+                           ], buildings: [], roads: [] }, cellFactory);
 }
 
 describe('Map', () => {
@@ -144,7 +144,7 @@ describe('Map', () => {
 
     it("should add new cells from the cell factory when a building is added at the edge of the map", () => {
       var initialCoords = [c(0, 0), c(1, 0), c(2, 0), c(1, 1)];
-      var map = Map.deserialize({ cells: toCells(initialCoords), buildings: [] }, cellFactory);
+      var map = Map.deserialize({ cells: toCells(initialCoords), buildings: [], roads: [] }, cellFactory);
 
       map.construct(new BasicHouse(c(1, 1), Direction.South));
 
@@ -185,8 +185,21 @@ describe('Map', () => {
       ]);
     });
 
+    it("should serialize all roads", () => {
+      var map = build3x3Map();
+
+      map.addRoad(new RoadEdge(c(0, 0), c(1, 0)));
+      map.addRoad(new RoadEdge(c(1, 1), c(1, 1)));
+      var serialized = map.serialize();
+
+      expect(serialized.roads).to.deep.equal([
+        { start: {x: 0, y: 0}, end: {x: 1, y: 0} },
+        { start: {x: 1, y: 1}, end: {x: 1, y: 1} }
+      ]);
+    });
+
     it('should deserialize successfully from map data', () => {
-      var map = Map.deserialize({ cells: [cellData(0, 0)], buildings: [] }, cellFactory);
+      var map = Map.deserialize({ cells: [cellData(0, 0)], buildings: [], roads: [] }, cellFactory);
 
       expect(map.getCells()).to.deep.equal([buildCell(0, 0)]);
     });
@@ -195,17 +208,19 @@ describe('Map', () => {
       var map = new Map(cellFactory);
       map.construct(new BasicHouse(c(0, 0), Direction.South));
       map.construct(new BasicHouse(c(1, 0), Direction.South));
+      map.addRoad(new RoadEdge(c(0, 1), c(1, 1)));
       var serialized = map.serialize();
 
       var newMap = Map.deserialize(serialized, cellFactory);
 
       expect(newMap.getCells()).to.deep.equal(map.getCells());
       expect(newMap.getBuildings()).to.deep.equal(map.getBuildings());
+      expect(newMap.getRoads()).to.deep.equal(map.getRoads());
     });
 
     it("should throw if the cells in the data to deserialize have duplicates", () => {
       expect(() => {
-        Map.deserialize({ cells: [buildCell(0, 0), buildCell(0, 0)], buildings: [] },
+        Map.deserialize({ cells: [buildCell(0, 0), buildCell(0, 0)], buildings: [], roads: [] },
                         cellFactory);
       }).to.throw();
     });

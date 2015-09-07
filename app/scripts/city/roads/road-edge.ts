@@ -4,6 +4,7 @@ import Direction = require('city/direction');
 import Coord = require('city/coord');
 import RoadPart = require('city/roads/road-part');
 import RoadPartType = require('city/roads/road-part-type');
+import serialization = require('city/city-serialization');
 
 class RoadEdge {
   constructor (private start: Coord, private end: Coord) {
@@ -45,6 +46,17 @@ class RoadEdge {
       let x = this.start.x;
       return _.range(this.end.y, this.start.y + 1).map((y) => new Coord(x, y));
     }
+  }
+
+  serialize(): serialization.RoadData {
+    return {
+      start: this.start.serialize(),
+      end: this.end.serialize()
+    }
+  }
+
+  static deserialize(data: serialization.RoadData): RoadEdge {
+    return new RoadEdge(Coord.deserialize(data.start), Coord.deserialize(data.end));
   }
 }
 

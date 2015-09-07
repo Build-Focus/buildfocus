@@ -24,12 +24,12 @@ class Map {
   private roads: RoadEdge[];
 
   constructor(private cellFactory: (Coord) => Cell) {
-    this.loadData([cellFactory(new Coord(0, 0))], []);
+    this.loadData([cellFactory(new Coord(0, 0))], [], []);
 
     ko.track(this);
   }
 
-  private loadData(cells: Cell[], buildings: Building[]) {
+  private loadData(cells: Cell[], buildings: Building[], roads: RoadEdge[]) {
     this.buildings = [];
     this.roads = [];
     this.cellLookup = {};
@@ -43,6 +43,7 @@ class Map {
     });
 
     _.forEach(buildings, this.construct.bind(this));
+    _.forEach(roads, this.addRoad.bind(this));
   }
 
   private setCell = (cell) => {
@@ -139,16 +140,18 @@ class Map {
   serialize(): serialization.MapData {
     return {
       cells: this.getCells().map((cell) => cell.serialize()),
-      buildings: this.getBuildings().map((building) => building.serialize())
+      buildings: this.getBuildings().map((building) => building.serialize()),
+      roads: this.getRoads().map((road) => road.serialize())
     };
   }
 
   static deserialize(data: serialization.MapData, cellFactory: CellFactory): Map {
     var cells = data.cells.map(Cell.deserialize);
     var buildings = data.buildings.map(Buildings.deserialize);
+    var roads = data.roads.map(RoadEdge.deserialize)
 
     var map = new Map(cellFactory);
-    map.loadData(cells, buildings);
+    map.loadData(cells, buildings, roads);
     return map;
   }
 }
