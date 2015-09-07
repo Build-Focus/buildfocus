@@ -8,9 +8,27 @@ interface Renderable {
   (): easeljs.DisplayObject[] | KnockoutObservableArray<easeljs.DisplayObject>
 }
 
+function updateStageToFit(stage: easeljs.Stage, canvas: HTMLCanvasElement) {
+  var bounds = stage.getBounds();
+  if (bounds && !bounds.isEmpty()) {
+    var scaleFactor = Math.min(canvas.width / bounds.width,
+                               canvas.height / bounds.height);
+    stage.scaleX = scaleFactor;
+    stage.scaleY = scaleFactor;
+
+    // Position the stage with the bounds at the top-left
+    stage.x = -bounds.x * scaleFactor;
+    stage.y = -bounds.y * scaleFactor;
+
+    // Offset position to center the rendering
+    stage.x += (canvas.width - (bounds.width * scaleFactor)) / 2;
+    stage.y += (canvas.height - (bounds.height * scaleFactor)) / 2;
+  }
+}
+
 ko.bindingHandlers['render'] = {
   init: function (element: HTMLElement, valueAccessor: () => Renderable) {
-    var canvas = <HTMLCanvasElement> document.createElement("canvas");
+    var canvas = document.createElement("canvas");
     canvas.width = element.clientWidth;
     canvas.height = element.clientHeight;
     $(element).append(canvas);
@@ -21,21 +39,7 @@ ko.bindingHandlers['render'] = {
     easeljs.Ticker.framerate = 24;
 
     var tickCallback = (event) => {
-      var bounds = stage.getBounds();
-      if (bounds && !bounds.isEmpty()) {
-        var scaleFactor = Math.min(canvas.width / bounds.width,
-                                   canvas.height / bounds.height);
-        stage.scaleX = scaleFactor;
-        stage.scaleY = scaleFactor;
-
-        // Position the stage with the bounds at the top-left
-        stage.x = -bounds.x * scaleFactor;
-        stage.y = -bounds.y * scaleFactor;
-
-        // Offset position to center the rendering
-        stage.x += (canvas.width - (bounds.width * scaleFactor)) / 2;
-        stage.y += (canvas.height - (bounds.height * scaleFactor)) / 2;
-      }
+      updateStageToFit(stage, canvas);
       stage.update();
     };
 
@@ -54,6 +58,9 @@ ko.bindingHandlers['render'] = {
     ko.unwrap(getRenderables()).forEach(function (renderable) {
       stage.addChild(renderable);
     });
+
+    var canvas = <HTMLCanvasElement> element.querySelector("canvas");
+    updateStageToFit(stage, canvas);
 
     stage.update();
   }
