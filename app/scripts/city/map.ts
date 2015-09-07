@@ -9,6 +9,8 @@ import Cell = require('city/cell');
 import Buildings = require('city/buildings/buildings');
 import Building = Buildings.Building;
 
+import RoadEdge = require('city/roads/road-edge');
+
 import serialization = require('city/city-serialization');
 
 interface CellFactory {
@@ -19,6 +21,7 @@ class Map {
   // TODO: String format for lookups is a bit hacky; make this a proper map
   private cellLookup: { [coord: string]: Cell };
   private buildings: Building[];
+  private roads: RoadEdge[];
 
   constructor(private cellFactory: (Coord) => Cell) {
     this.loadData([cellFactory(new Coord(0, 0))], []);
@@ -28,6 +31,7 @@ class Map {
 
   private loadData(cells: Cell[], buildings: Building[]) {
     this.buildings = [];
+    this.roads = [];
     this.cellLookup = {};
 
     _.forEach(cells, (cell) => {
@@ -59,8 +63,14 @@ class Map {
   }
 
   getBuildingAt(coord: Coord): Building {
-    return _.find(this.getBuildings(), (building) => {
+    return _.find(this.buildings, (building) => {
       return !!_.findWhere(building.coords, coord);
+    });
+  }
+
+  private getRoadAt(coord: Coord): RoadEdge {
+    return _.find(this.roads, (road) => {
+      return !!_.findWhere(road.coords, coord);
     });
   }
 
@@ -68,8 +78,8 @@ class Map {
     if (_.any(building.coords, (coord) => !this.isCellPresent(coord))) {
       throw new Error("Can't build building on cells that don't exist yet");
     }
-    if (_.any(building.coords, (coord) => !!this.getBuildingAt(coord))) {
-      throw new Error("Can't build buildings on non-empty cells");
+    if (_.any(building.coords, (coord) => !!this.getBuildingAt(coord) || !!this.getRoadAt(coord))) {
+      throw new Error("Can't build buildings on a non-empty cell");
     }
 
     this.buildings.push(building);
@@ -101,11 +111,29 @@ class Map {
     }, []);
 
     var newCells = allCoordsToExpand.map(this.cellFactory);
-    newCells.forEach(this.setCell)
+    newCells.forEach(this.setCell);
   }
 
+  addRoad(road: RoadEdge) {
+    for (let coord of road.coords) {
+      if (this.getBuildingAt(coord)) {
+        throw new Error(`Can't build road, as it conflicts with an existing building at ${coord}`);
+      }
+      if (!this.isCellPresent(coord)) {
+        throw new Error(`Can't build road, as it covers a cell that doesn't exist at ${coord}`);
+      }
+    }
+
+    this.roads.push(road);
+  }
+
+  // TODO: Make this (and getRoads) return an immutable view instead
   getBuildings(): Building[] {
     return _.clone(this.buildings);
+  }
+
+  getRoads(): RoadEdge[] {
+    return _.clone(this.roads);
   }
 
   serialize(): serialization.MapData {

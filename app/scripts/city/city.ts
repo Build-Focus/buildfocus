@@ -13,6 +13,8 @@ import Direction = require('city/direction');
 import Buildings = require('city/buildings/buildings');
 import Building = Buildings.Building;
 
+import RoadPart = require('city/roads/road-part');
+
 import BasicHouse = require('city/buildings/basic-house');
 
 function canonicalForm(building: Building) {
@@ -38,6 +40,10 @@ class City {
 
   getBuildings(): Building[] {
     return this.map.getBuildings();
+  }
+
+  getRoads(): RoadPart[] {
+    return _.flatten(this.map.getRoads().map((r) => r.parts));
   }
 
   private getPossibleNewBuildings(): Building[] {

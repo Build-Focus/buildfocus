@@ -1,46 +1,15 @@
 import easeljs = require('createjs');
-import ko = require('knockout');
 
 import City = require('city/city');
 import Coord = require('city/coord');
 
-import Cell = require('city/cell');
-import CellType = require('city/cell-type');
-
-import Buildings = require('city/buildings/buildings');
-import BuildingType = require('city/buildings/building-type');
-
-import getBuildingConfig = require('city/rendering/building-rendering-config');
+import Renderable = require('city/rendering/renderable');
+import RenderableRoad = require('city/rendering/renderable-road');
+import RenderableCell = require('city/rendering/renderable-cell');
+import RenderableBuilding = require('city/rendering/renderable-building');
 
 const CELL_WIDTH = 600;
-const CELL_HEIGHT = 345;
-
-function compareCellCoords(cellA, cellB) {
-  return compareCoords(cellA.coord, cellB.coord);
-}
-
-function compareBuildingCoords(buildingA, buildingB) {
-  var maxBuildingACoord = _.last(buildingA.coords.sort(compareCoords));
-  var maxBuildingBCoord = _.last(buildingB.coords.sort(compareCoords));
-  return compareCoords(maxBuildingACoord, maxBuildingBCoord);
-}
-
-function compareCoords(coordA, coordB) {
-  var coordATotal = coordA.x + coordA.y;
-  var coordBTotal = coordB.x + coordB.y;
-
-  if (coordATotal > coordBTotal) {
-    return 1;
-  } else if (coordATotal < coordBTotal) {
-    return -1;
-  } else if (coordA.x > coordB.x) {
-    return 1;
-  } else if (coordA.x < coordB.x) {
-    return -1;
-  } else {
-    return 0;
-  }
-}
+const CELL_HEIGHT = 346;
 
 function xOffset(coord: Coord) {
   return coord.x * (CELL_WIDTH / 2) - coord.y * (CELL_WIDTH / 2)
@@ -50,10 +19,12 @@ function yOffset(coord: Coord) {
   return coord.y * (CELL_HEIGHT / 2) + coord.x * (CELL_HEIGHT / 2)
 }
 
-const CELL_SHADES = ["light", "normal", "dark"];
+function compareLayerIndexes(a: Renderable, b: Renderable) {
+  return a.layerIndex - b.layerIndex;
+}
 
-function positiveModulus(x, n) {
-  return ((x % n) + n) % n;
+function compareZIndexes(a: Renderable, b: Renderable) {
+  return a.zIndex - b.zIndex;
 }
 
 class CityRenderer {
@@ -64,56 +35,24 @@ class CityRenderer {
   }
 
   render = (): Array<easeljs.DisplayObject> => {
-    var cellRenderings = this.city.getCells()
-                                  .sort(compareCellCoords)
-                                  .map((cell) => this.renderCell(cell));
-    var buildingRenderings = this.city.getBuildings()
-                                      .sort(compareBuildingCoords)
-                                      .map((building) => this.renderBuilding(building));
-
-    return cellRenderings.concat(buildingRenderings);
+    var renderables = this.getRenderablesFromCity(this.city);
+    return renderables.sort((r1, r2) => compareLayerIndexes(r1, r2) ||
+                                        Coord.diagonalCompare(r1.mainCoord, r2.mainCoord) ||
+                                        compareZIndexes(r1, r2) )
+                      .map((renderable) => {
+                        var result = renderable.render();
+                        result.x += xOffset(renderable.mainCoord);
+                        result.y += yOffset(renderable.mainCoord);
+                        return result;
+                      });
   };
 
-  private renderBuilding(building: Buildings.Building): easeljs.DisplayObject {
-    var buildingImage = this.getBuildingImage(building);
+  private getRenderablesFromCity(city: City): Renderable[] {
+    var renderableCells: Renderable[] = this.city.getCells().map((cell) => new RenderableCell(cell));
+    var renderableRoads: Renderable[] = this.city.getRoads().map((road) => new RenderableRoad(road));
+    var renderableBuildings: Renderable[] = this.city.getBuildings().map((building) => new RenderableBuilding(building));
 
-    var buildingCoord = _.last(<Coord[]> building.coords.sort(compareCoords));
-    buildingImage.x += xOffset(buildingCoord);
-    buildingImage.y += yOffset(buildingCoord);
-
-    return buildingImage;
-  }
-
-  private getBuildingImage(building: Buildings.Building): easeljs.Bitmap {
-    var config = getBuildingConfig(building);
-
-    if (!config) throw new Error("Failed to render building, no image for type: " + building.buildingType +
-                                 "and direction: " + building.direction);
-
-    var image = new easeljs.Bitmap(config.imagePath);
-    image.x = config.xOffset;
-    image.y = config.yOffset;
-    return image;
-  }
-
-  private renderCell(cell: Cell): easeljs.DisplayObject {
-    var cellImage = this.getCellImage(cell);
-    cellImage.x = xOffset(cell.coord);
-    cellImage.y = yOffset(cell.coord);
-
-    return cellImage;
-  }
-
-  private getCellImage(cell: Cell): easeljs.Bitmap {
-    var shadeIndex = positiveModulus((1061 * cell.coord.x + 859 * cell.coord.y + 733) ^ 6991, 3);
-    var shade = CELL_SHADES[shadeIndex];
-
-    switch (cell.cellType) {
-      case CellType.Grass:
-        return new easeljs.Bitmap("/images/city/grass/grass-" + shade + ".png");
-      default:
-        throw new Error("Failed to render cell, unknown cell type: " + cell.cellType);
-    }
+    return renderableCells.concat(renderableRoads).concat(renderableBuildings);
   }
 }
 
