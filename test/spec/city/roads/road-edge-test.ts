@@ -19,6 +19,10 @@ describe("An edge of road", () => {
     expect(() => new RoadEdge(c(0, 0), c(1, 5))).to.throw();
   });
 
+  it("refuses to be built with no length (start === end)", () => {
+    expect(() => new RoadEdge(c(0, 0), c(0, 0))).to.throw();
+  });
+
   it("can calculate the coords covered in a straight line vertically", () => {
     var edge = new RoadEdge(c(10, 0), c(10, 5));
 

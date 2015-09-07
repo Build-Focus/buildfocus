@@ -8,6 +8,7 @@ import serialization = require('city/city-serialization');
 
 class RoadEdge {
   constructor (private start: Coord, private end: Coord) {
+    if (start.x === end.x && start.y === end.y) throw new Error(`Road edges must have a length, not just cover one cell (here ${start})`);
     if (start.x !== end.x && start.y !== end.y) throw new Error(`Road edges may be straight lines only but coords were ${start}->${end}`);
   }
 

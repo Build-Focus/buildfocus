@@ -189,12 +189,12 @@ describe('Map', () => {
       var map = build3x3Map();
 
       map.addRoad(new RoadEdge(c(0, 0), c(1, 0)));
-      map.addRoad(new RoadEdge(c(1, 1), c(1, 1)));
+      map.addRoad(new RoadEdge(c(0, 1), c(1, 1)));
       var serialized = map.serialize();
 
       expect(serialized.roads).to.deep.equal([
         { start: {x: 0, y: 0}, end: {x: 1, y: 0} },
-        { start: {x: 1, y: 1}, end: {x: 1, y: 1} }
+        { start: {x: 0, y: 1}, end: {x: 1, y: 1} }
       ]);
     });
 
