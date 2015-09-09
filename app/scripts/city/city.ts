@@ -43,7 +43,15 @@ class City {
   }
 
   getRoads(): RoadPart[] {
-    return _.flatten(this.map.getRoads().map((r) => r.parts));
+    var allRoadParts = _.flatten(this.map.getRoads().map((r) => r.parts));
+
+    var roadPartsByCoord = _.groupBy(allRoadParts, (rp) => rp.coord);
+
+    var roadParts = _.map(roadPartsByCoord, (parts) => _.reduce(parts, (nextPart, combinedPart) => {
+      return combinedPart.combinedWith(nextPart);
+    }, parts[0]));
+
+    return roadParts;
   }
 
   private getPossibleNewBuildings(): Building[] {
