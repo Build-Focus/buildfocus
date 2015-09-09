@@ -30,7 +30,24 @@ class RoadEdge {
       [Direction.West]:  RoadPartType.StraightEastWest
     }[this.direction];
 
-    return this.coords.map((c) => new RoadPart(c, type));
+    var startType: RoadPartType = {
+      [Direction.North]: RoadPartType.EndFromNorth,
+      [Direction.East]:  RoadPartType.EndFromEast,
+      [Direction.South]: RoadPartType.EndFromSouth,
+      [Direction.West]:  RoadPartType.EndFromWest
+    }[this.direction];
+
+    var endType: RoadPartType = {
+      [Direction.North]: RoadPartType.EndFromSouth,
+      [Direction.East]:  RoadPartType.EndFromWest,
+      [Direction.South]: RoadPartType.EndFromNorth,
+      [Direction.West]:  RoadPartType.EndFromEast
+    }[this.direction];
+
+    var middleParts = this.coords.slice(1, this.coords.length - 1).map((c) => new RoadPart(c, type));
+    var start = new RoadPart(_.first(this.coords), startType);
+    var end = new RoadPart(_.last(this.coords), endType);
+    return [start, ...middleParts, end];
   }
 
   get coords(): Coord[] {
@@ -39,13 +56,13 @@ class RoadEdge {
       return _.range(this.start.x, this.end.x + 1).map((x) => new Coord(x, y));
     } else if (this.direction === Direction.West) {
       let y = this.start.y;
-      return _.range(this.end.x, this.start.x + 1).map((x) => new Coord(x, y));
+      return _.range(this.start.x, this.end.x - 1, -1).map((x) => new Coord(x, y));
     } else if (this.direction === Direction.South) {
       let x = this.start.x;
       return _.range(this.start.y, this.end.y + 1).map((y) => new Coord(x, y));
     } else {
       let x = this.start.x;
-      return _.range(this.end.y, this.start.y + 1).map((y) => new Coord(x, y));
+      return _.range(this.start.y, this.end.y - 1, -1).map((y) => new Coord(x, y));
     }
   }
 
