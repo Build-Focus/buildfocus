@@ -2,6 +2,8 @@ import Coord = require('app/scripts/city/coord');
 import RoadPart = require('app/scripts/city/roads/road-part');
 import RoadPartType = require('app/scripts/city/roads/road-part-type');
 
+import RenderableRoad = require('app/scripts/city/rendering/renderable-road');
+
 function c(x: number, y: number): Coord {
   return new Coord(x, y);
 }
@@ -75,5 +77,16 @@ describe("A road part", () => {
         }
       }
     });
+  });
+
+  it("should be renderable", () => {
+    var allRoadPartTypes = RoadPartType.allValues();
+    var allRoadParts: RoadPart[] = allRoadPartTypes.map((v) => new RoadPart(c(0, 0), v));
+
+    for (let part of allRoadParts) {
+      var renderResult = new RenderableRoad(part).render();
+
+      expect(renderResult).not.to.be.null;
+    }
   });
 });
