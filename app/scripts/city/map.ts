@@ -63,13 +63,14 @@ class Map {
     return _.values<Cell>(this.cellLookup);
   }
 
+  // TODO: This and getRoadAt should probably use some kind of index
   getBuildingAt(coord: Coord): Building {
     return _.find(this.buildings, (building) => {
       return !!_.findWhere(building.coords, coord);
     });
   }
 
-  private getRoadAt(coord: Coord): RoadEdge {
+  getRoadAt(coord: Coord): RoadEdge {
     return _.find(this.roads, (road) => {
       return !!_.findWhere(road.coords, coord);
     });

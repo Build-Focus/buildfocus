@@ -56,7 +56,8 @@ class City {
 
   private getPossibleNewBuildings(): Building[] {
     var buildingCoords = _(this.getBuildings()).pluck('coords').flatten().value();
-    var buildableCells = _.reject(this.getCells(), (cell) => !!_.findWhere(buildingCoords, cell.coord));
+    var buildableCells = _.reject(this.getCells(), (cell) => this.map.getBuildingAt(cell.coord) ||
+                                                             this.map.getRoadAt(cell.coord));
 
     return _(buildableCells).map((cell) => [new BasicHouse(cell.coord, Direction.South),
                                             new BasicHouse(cell.coord, Direction.East)])
