@@ -10,6 +10,8 @@ import Buildings = require('city/buildings/buildings');
 import Building = Buildings.Building;
 
 import RoadEdge = require('city/roads/road-edge');
+import EndlessRoadEdge = require('city/roads/endless-road-edge');
+import SpecificRoadEdge = require('city/roads/specific-road-edge');
 
 import serialization = require('city/city-serialization');
 
@@ -147,11 +149,19 @@ class Map {
   }
 
   static deserialize(data: serialization.MapData, cellFactory: CellFactory): Map {
+    var map = new Map(cellFactory);
+
     var cells = data.cells.map(Cell.deserialize);
     var buildings = data.buildings.map(Buildings.deserialize);
-    var roads = data.roads.map(RoadEdge.deserialize)
+    var roads = data.roads.map((roadData) => {
+      // TODO: Use TS1.6 'is' functions to clear this up?
+      if (!(<any>roadData).end) {
+        return EndlessRoadEdge.deserialize(<serialization.EndlessRoadData> roadData, map);
+      } else {
+        return SpecificRoadEdge.deserialize(<serialization.SpecificRoadData> roadData);
+      }
+    });
 
-    var map = new Map(cellFactory);
     map.loadData(cells, buildings, roads);
     return map;
   }

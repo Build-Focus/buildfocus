@@ -8,7 +8,7 @@ import Map = require("app/scripts/city/map");
 import Cell = require("app/scripts/city/cell");
 import CellType = require("app/scripts/city/cell-type");
 
-import RoadEdge = require('app/scripts/city/roads/road-edge');
+import SpecificRoadEdge = require('app/scripts/city/roads/specific-road-edge');
 
 import Coord = require("app/scripts/city/coord");
 import Direction = require("app/scripts/city/direction");
@@ -83,7 +83,7 @@ describe('Map', () => {
     it("should refuse to add a building that conflicts with a road", () => {
       var map = build3x3Map();
 
-      map.addRoad(new RoadEdge(c(0, 0), c(0, 1)));
+      map.addRoad(new SpecificRoadEdge(c(0, 0), c(0, 1)));
 
       expect(() => map.construct(new BasicHouse(c(0, 0), Direction.South))).to.throw();
     });
@@ -188,8 +188,8 @@ describe('Map', () => {
     it("should serialize all roads", () => {
       var map = build3x3Map();
 
-      map.addRoad(new RoadEdge(c(0, 0), c(1, 0)));
-      map.addRoad(new RoadEdge(c(0, 1), c(1, 1)));
+      map.addRoad(new SpecificRoadEdge(c(0, 0), c(1, 0)));
+      map.addRoad(new SpecificRoadEdge(c(0, 1), c(1, 1)));
       var serialized = map.serialize();
 
       expect(serialized.roads).to.deep.equal([
@@ -208,7 +208,7 @@ describe('Map', () => {
       var map = new Map(cellFactory);
       map.construct(new BasicHouse(c(0, 0), Direction.South));
       map.construct(new BasicHouse(c(1, 0), Direction.South));
-      map.addRoad(new RoadEdge(c(0, 1), c(1, 1)));
+      map.addRoad(new SpecificRoadEdge(c(0, 1), c(1, 1)));
       var serialized = map.serialize();
 
       var newMap = Map.deserialize(serialized, cellFactory);
@@ -252,7 +252,7 @@ describe('Map', () => {
     it("should add a road", () => {
       var map = build3x3Map();
 
-      var road = new RoadEdge(c(0, 0), c(0, 1));
+      var road = new SpecificRoadEdge(c(0, 0), c(0, 1));
       map.addRoad(road);
 
       expect(map.getRoads()).to.deep.equal([road]);
@@ -262,7 +262,7 @@ describe('Map', () => {
       var map = build3x3Map();
 
       map.construct(new BasicHouse(c(0, 0), Direction.South));
-      var road = new RoadEdge(c(0, 0), c(0, 1));
+      var road = new SpecificRoadEdge(c(0, 0), c(0, 1));
 
       expect(() => map.addRoad(road)).to.throw();
     });
@@ -270,7 +270,7 @@ describe('Map', () => {
     it("should refuse to add a road covering cells that don't exist", () => {
       var map = build3x3Map();
 
-      var road = new RoadEdge(c(0, 0), c(0, 10));
+      var road = new SpecificRoadEdge(c(0, 0), c(0, 10));
 
       expect(() => map.addRoad(road)).to.throw();
     });

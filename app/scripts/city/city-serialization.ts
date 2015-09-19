@@ -16,13 +16,20 @@ export interface CellData {
 export interface BuildingData {
   coords: CoordData[];
   buildingType: number;
-  direction: number
+  direction: number;
 }
 
-export interface RoadData {
+export interface SpecificRoadData {
   start: CoordData;
   end: CoordData;
 }
+
+export interface EndlessRoadData {
+  start: CoordData;
+  direction: number;
+}
+
+export type RoadData = SpecificRoadData | EndlessRoadData;
 
 export interface CoordData {
   x: number;
