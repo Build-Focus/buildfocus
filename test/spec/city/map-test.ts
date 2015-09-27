@@ -41,7 +41,7 @@ function cellSort(a: Cell, b: Cell) {
   return Coord.diagonalCompare(a.coord, b.coord);
 }
 
-function build3x3Map(): Map {
+function buildEmpty3x3Map(): Map {
   return Map.deserialize({ cells: [
                              buildCell(-1, -1), buildCell(0, -1), buildCell(1, -1),
                              buildCell(-1, 0),  buildCell(0, 0),  buildCell(1, 0),
@@ -50,15 +50,33 @@ function build3x3Map(): Map {
 }
 
 describe('Map', () => {
-  it('should default to a single empty cell', () => {
-    var map = new Map(cellFactory);
+  describe('initially', () => {
+    it('should start with 9 cells', () => {
+      var map = new Map(cellFactory);
 
-    expect(map.getCells()).to.deep.equal([buildCell(0, 0)]);
+      expect(map.getCells().sort(cellSort)).to.deep.equal([
+        buildCell(-1, -1), buildCell(0, -1), buildCell(1, -1),
+        buildCell(-1, 0), buildCell(0, 0), buildCell(1, 0),
+        buildCell(-1, 1), buildCell(0, 1), buildCell(1, 1)
+      ].sort(cellSort));
+    });
+
+    it('should start with a road down the middle', () => {
+      var map = new Map(cellFactory);
+
+      var roads = map.getRoads();
+      expect(roads.length).to.equal(1);
+      expect(roads[0].coords.sort(Coord.diagonalCompare)).to.deep.equal([
+        c(0, -1),
+        c(0, 0),
+        c(0, 1)
+      ])
+    });
   });
 
   describe("building addition", () => {
     it("should add the building", () => {
-      var building = new BasicHouse(c(0, 0), Direction.South);
+      var building = new BasicHouse(c(1, 0), Direction.South);
       var map = new Map(cellFactory);
 
       map.construct(building);
@@ -67,7 +85,7 @@ describe('Map', () => {
     });
 
     it("should refuse to add a building in a non-empty space", () => {
-      var building = new BasicHouse(c(0, 0), Direction.South);
+      var building = new BasicHouse(c(1, 0), Direction.South);
       var map = new Map(cellFactory);
 
       map.construct(building);
@@ -77,11 +95,11 @@ describe('Map', () => {
     it("should not work if you add a building on a cell that don't exist", () => {
       var map = new Map(cellFactory);
 
-      expect(() => map.construct(new BasicHouse(c(1, 0), Direction.South))).to.throw();
+      expect(() => map.construct(new BasicHouse(c(5, 0), Direction.South))).to.throw();
     });
 
     it("should refuse to add a building that conflicts with a road", () => {
-      var map = build3x3Map();
+      var map = buildEmpty3x3Map();
 
       map.addRoad(new SpecificRoadEdge(c(0, 0), c(0, 1)));
 
@@ -91,7 +109,7 @@ describe('Map', () => {
 
   describe("building removal", () => {
     it("should remove the building", () => {
-      var building = new BasicHouse(c(0, 0), Direction.South);
+      var building = new BasicHouse(c(1, 0), Direction.South);
       var map = new Map(cellFactory);
 
       map.construct(building);
@@ -101,7 +119,7 @@ describe('Map', () => {
     });
 
     it("should refuse to remove buildings that don't exist", () => {
-      var building = new BasicHouse(c(0, 0), Direction.South);
+      var building = new BasicHouse(c(1, 0), Direction.South);
       var map = new Map(cellFactory);
 
       map.construct(building);
@@ -113,8 +131,8 @@ describe('Map', () => {
     it("should remove buildings based on equality, not identity", () => {
       var map = new Map(cellFactory);
 
-      map.construct(new BasicHouse(c(0, 0), Direction.South));
-      map.remove(new BasicHouse(c(0, 0), Direction.South));
+      map.construct(new BasicHouse(c(1, 0), Direction.South));
+      map.remove(new BasicHouse(c(1, 0), Direction.South));
 
       expect(map.getBuildings()).to.deep.equal([]);
     });
@@ -122,15 +140,15 @@ describe('Map', () => {
     it("should not remove buildings that don't quite match", () => {
       var map = new Map(cellFactory);
 
-      map.construct(new BasicHouse(c(0, 0), Direction.South));
+      map.construct(new BasicHouse(c(1, 0), Direction.South));
 
-      expect(() => map.remove(new BasicHouse(c(1, 0), Direction.South))).to.throw();
+      expect(() => map.remove(new BasicHouse(c(3, 0), Direction.South))).to.throw();
     });
   });
 
   describe("autoexpansion", () => {
     it("should add new cells from the cell factory when a building is added surrounded by spaces", () => {
-      var map = new Map(cellFactory);
+      var map = Map.deserialize({ cells: toCells([c(0, 0)]), buildings: [], roads: [] }, cellFactory);
 
       map.construct(new BasicHouse(c(0, 0), Direction.South));
 
@@ -159,7 +177,6 @@ describe('Map', () => {
   describe("serialization", () => {
     it("should serialize all cells", () => {
       var map = new Map(cellFactory);
-      map.construct(new BasicHouse(c(0, 0), Direction.South));
 
       var serialized = map.serialize();
 
@@ -172,28 +189,27 @@ describe('Map', () => {
 
     it("should serialize all buildings", () => {
       var map = new Map(cellFactory);
-      var building1 = new BasicHouse(c(0, 0), Direction.South);
-      var building2 = new BasicHouse(c(0, 1), Direction.South);
+      var building1 = new BasicHouse(c(1, 0), Direction.South);
+      var building2 = new BasicHouse(c(1, 1), Direction.South);
 
       map.construct(building1);
       map.construct(building2);
       var serialized = map.serialize();
 
       expect(serialized.buildings).to.deep.equal([
-        { coords: [{x: 0, y: 0}], buildingType: 0, direction: 2 },
-        { coords: [{x: 0, y: 1}], buildingType: 0, direction: 2 },
+        { coords: [{x: 1, y: 0}], buildingType: 0, direction: 2 },
+        { coords: [{x: 1, y: 1}], buildingType: 0, direction: 2 },
       ]);
     });
 
     it("should serialize all roads", () => {
-      var map = build3x3Map();
+      var map = new Map(cellFactory);
 
-      map.addRoad(new SpecificRoadEdge(c(0, 0), c(1, 0)));
       map.addRoad(new SpecificRoadEdge(c(0, 1), c(1, 1)));
       var serialized = map.serialize();
 
       expect(serialized.roads).to.deep.equal([
-        { start: {x: 0, y: 0}, end: {x: 1, y: 0} },
+        { start: {x: 0, y: 0}, direction: 0 },
         { start: {x: 0, y: 1}, end: {x: 1, y: 1} }
       ]);
     });
@@ -206,16 +222,16 @@ describe('Map', () => {
 
     it("should leave the map unchanged after serialization and deserialization", () => {
       var map = new Map(cellFactory);
-      map.construct(new BasicHouse(c(0, 0), Direction.South));
       map.construct(new BasicHouse(c(1, 0), Direction.South));
-      map.addRoad(new SpecificRoadEdge(c(0, 1), c(1, 1)));
+      map.construct(new BasicHouse(c(1, 1), Direction.South));
+      map.addRoad(new SpecificRoadEdge(c(2, 1), c(2, 2)));
       var serialized = map.serialize();
 
       var newMap = Map.deserialize(serialized, cellFactory);
 
       expect(newMap.getCells()).to.deep.equal(map.getCells());
       expect(newMap.getBuildings()).to.deep.equal(map.getBuildings());
-      expect(newMap.getRoads()).to.deep.equal(map.getRoads());
+      expect(newMap.getRoads().map(r => r.parts)).to.deep.equal(map.getRoads().map(r => r.parts));
     });
 
     it("should throw if the cells in the data to deserialize have duplicates", () => {
@@ -229,20 +245,20 @@ describe('Map', () => {
   describe("building lookup", () => {
     it("should successfully find buildings by position", () => {
       var map = new Map(cellFactory);
-      var building = new BasicHouse(c(0, 0), Direction.South);
+      var building = new BasicHouse(c(1, 0), Direction.South);
       map.construct(building);
 
-      var lookedUpBuilding = map.getBuildingAt(c(0, 0));
+      var lookedUpBuilding = map.getBuildingAt(c(1, 0));
 
       expect(lookedUpBuilding).to.deep.equal(building);
     });
 
     it("should return undefined when looking up buildings in empty cells", () => {
       var map = new Map(cellFactory);
-      var building = new BasicHouse(c(0, 0), Direction.South);
+      var building = new BasicHouse(c(1, 0), Direction.South);
       map.construct(building);
 
-      var lookedUpBuilding = map.getBuildingAt(c(1, 0));
+      var lookedUpBuilding = map.getBuildingAt(c(0, 1));
 
       expect(lookedUpBuilding).to.be.undefined;
     });
@@ -250,7 +266,7 @@ describe('Map', () => {
 
   describe("road addition", () => {
     it("should add a road", () => {
-      var map = build3x3Map();
+      var map = buildEmpty3x3Map();
 
       var road = new SpecificRoadEdge(c(0, 0), c(0, 1));
       map.addRoad(road);
@@ -259,7 +275,7 @@ describe('Map', () => {
     });
 
     it("should refuse to add a road that conflicts with a building", () => {
-      var map = build3x3Map();
+      var map = buildEmpty3x3Map();
 
       map.construct(new BasicHouse(c(0, 0), Direction.South));
       var road = new SpecificRoadEdge(c(0, 0), c(0, 1));
@@ -268,7 +284,7 @@ describe('Map', () => {
     });
 
     it("should refuse to add a road covering cells that don't exist", () => {
-      var map = build3x3Map();
+      var map = buildEmpty3x3Map();
 
       var road = new SpecificRoadEdge(c(0, 0), c(0, 10));
 

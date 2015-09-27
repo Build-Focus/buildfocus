@@ -19,19 +19,19 @@ function c(x, y) {
 }
 
 describe('City Integration - City', () => {
-  it('should start with one empty cell', () => {
+  it('should start with nine cells, and a road through the middle', () => {
     var city = new City();
 
-    expect(city.getCells().length).to.equal(1);
+    expect(city.getCells().length).to.equal(9);
+    expect(city.getRoads().length).to.equal(3);
     expect(city.getBuildings().length).to.equal(0);
   });
 
   describe("buildings", () => {
     it('should be constructable', () => {
       var city = new City();
-      var onlyCoord = city.getCells()[0].coord;
 
-      var building = new BasicHouse(onlyCoord, Direction.South);
+      var building = new BasicHouse(c(1, 0), Direction.South);
       city.construct(building);
 
       expect(city.getBuildings()).to.deep.equal([building]);
@@ -39,8 +39,7 @@ describe('City Integration - City', () => {
 
     it('should fire a changed event when constructed', () => {
       var city = new City();
-      var onlyCoord = city.getCells()[0].coord;
-      var building = new BasicHouse(onlyCoord, Direction.South);
+      var building = new BasicHouse(c(1, 0), Direction.South);
       var listener = sinon.stub();
 
       city.onChanged(listener);
@@ -51,7 +50,7 @@ describe('City Integration - City', () => {
 
     it('should be deletable', () => {
       var city = new City();
-      var building = new BasicHouse(city.getCells()[0].coord, Direction.South);
+      var building = new BasicHouse(c(1, 0), Direction.South);
       city.construct(building);
 
       city.remove(city.getBuildings()[0]);
@@ -61,7 +60,7 @@ describe('City Integration - City', () => {
 
     it('should fire a changed event when removed', () => {
       var city = new City();
-      var building = new BasicHouse(city.getCells()[0].coord, Direction.South);
+      var building = new BasicHouse(c(1, 0), Direction.South);
       city.construct(building);
 
       var listener = sinon.stub();
@@ -73,29 +72,28 @@ describe('City Integration - City', () => {
 
     it('should add new surrounding cells after construction', () => {
       var city = new City();
-      var onlyCoord = city.getCells()[0].coord;
 
-      city.construct(new BasicHouse(onlyCoord, Direction.South));
+      city.construct(new BasicHouse(c(1, 0), Direction.South));
 
       expect(_.pluck(city.getCells(), 'coord').sort()).to.deep.equal([
-        c(-1, -1), c(0, -1), c(1, -1),
-        c(-1, 0),  c(0, 0),  c(1, 0),
-        c(-1, 1),  c(0, 1),  c(1, 1)
+        c(-1, -1), c(0, -1), c(1, -1), c(2, -1),
+        c(-1, 0),  c(0, 0),  c(1, 0),  c(2, 0),
+        c(-1, 1),  c(0, 1),  c(1, 1),  c(2, 1)
       ].sort());
     });
   });
 
   function buildTwoNiceHouses(city) {
-    city.construct(new BasicHouse(c(0, 0), Direction.South));
     city.construct(new BasicHouse(c(1, 0), Direction.South));
-    city.construct(new NiceHouse(c(0, 0), Direction.South));
+    city.construct(new BasicHouse(c(2, 0), Direction.South));
     city.construct(new NiceHouse(c(1, 0), Direction.South));
+    city.construct(new NiceHouse(c(2, 0), Direction.South));
   }
 
   describe("upgrade offers", () => {
     it('should offer new basic houses on all empty cells', () => {
       var city = new City();
-      city.construct(new BasicHouse(c(0, 0), Direction.South));
+      city.construct(new BasicHouse(c(1, 0), Direction.South));
 
       var potentialBuildings = <Array<any>> city.getPossibleUpgrades();
 
@@ -106,9 +104,9 @@ describe('City Integration - City', () => {
         .value()
         .sort();
       expect(basicHouseUpgradeCoords).to.deep.equal([
-        c(-1, -1), c(0, -1), c(1, -1),
-        c(-1, 0), c(1, 0),
-        c(-1, 1), c(0, 1), c(1, 1)
+        c(-1, -1),           c(1, -1), c(2, -1),
+        c(-1, 0),                      c(2, 0),
+        c(-1, 1),            c(1, 1),  c(2, 1)
       ].sort());
     });
 
@@ -119,8 +117,8 @@ describe('City Integration - City', () => {
       var fancyHouseUpgrades = _.where(city.getPossibleUpgrades(), {buildingType: BuildingType.FancyHouse});
 
       expect(fancyHouseUpgrades.length).to.equal(2);
-      expect(fancyHouseUpgrades[0]).to.deep.equal(new FancyHouse(c(0, 0), c(1, 0), Direction.North));
-      expect(fancyHouseUpgrades[1]).to.deep.equal(new FancyHouse(c(0, 0), c(1, 0), Direction.South));
+      expect(fancyHouseUpgrades[0]).to.deep.equal(new FancyHouse(c(1, 0), c(2, 0), Direction.North));
+      expect(fancyHouseUpgrades[1]).to.deep.equal(new FancyHouse(c(1, 0), c(2, 0), Direction.South));
     });
   });
 
@@ -129,7 +127,7 @@ describe('City Integration - City', () => {
       var city = new City();
       buildTwoNiceHouses(city);
 
-      var fancyBuilding = new FancyHouse(c(0, 0), c(1, 0), Direction.South);
+      var fancyBuilding = new FancyHouse(c(1, 0), c(2, 0), Direction.South);
       city.construct(fancyBuilding);
 
       expect(city.getBuildings()).to.deep.equal([fancyBuilding]);
@@ -138,7 +136,7 @@ describe('City Integration - City', () => {
     it("should not allow building a fancy building without two basic houses to upgrade", () => {
       var city = new City();
 
-      var fancyBuilding = new FancyHouse(c(0, 0), c(1, 0), Direction.North);
+      var fancyBuilding = new FancyHouse(c(1, 0), c(2, 0), Direction.North);
 
       expect(() => city.construct(fancyBuilding)).to.throw();
     });
@@ -153,7 +151,7 @@ describe('City Integration - City', () => {
   });
 
   function getAllReachableBuildings() {
-    let unexpanded: Buildings.Building[] = [new BasicHouse(c(0, 0), Direction.South)];
+    let unexpanded: Buildings.Building[] = [new BasicHouse(c(1, 0), Direction.South)];
     let foundBuildings: Buildings.Building[] = [];
 
     while (unexpanded.length > 0) {

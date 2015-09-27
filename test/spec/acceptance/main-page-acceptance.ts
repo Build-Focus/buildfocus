@@ -29,8 +29,8 @@ describe('Acceptance: Main page', function () {
 
       var renderedOutput = viewModel.renderCity();
 
-      // Just one empty cell
-      expect(renderedOutput.length).to.equal(1);
+      // Nine cells, three road parts
+      expect(renderedOutput.length).to.equal(12);
     });
 
     it("should load from persisted data", function () {
@@ -41,8 +41,8 @@ describe('Acceptance: Main page', function () {
       chromeStub.storage.local.get.yield({ "city-data": city.toJSON() });
       var renderedOutput = viewModel.renderCity();
 
-      // Nine cells + one building
-      expect(renderedOutput.length).to.equal(10);
+      // Fourteen cells, one building, four road parts
+      expect(renderedOutput.length).to.equal(19);
     });
 
     it("should update the city when it's updated remotely", function () {
@@ -55,8 +55,8 @@ describe('Acceptance: Main page', function () {
       );
       var renderedOutput = viewModel.renderCity();
 
-      // Nine cells + one building
-      expect(renderedOutput.length).to.equal(10);
+      // Fourteen cells, one building, four road parts
+      expect(renderedOutput.length).to.equal(19);
     });
   });
 

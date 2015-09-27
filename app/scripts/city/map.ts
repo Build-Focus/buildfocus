@@ -3,6 +3,7 @@
 import ko = require('knockout');
 import _ = require('lodash');
 
+import Direction = require('city/direction');
 import Coord = require('city/coord');
 import Cell = require('city/cell');
 
@@ -26,9 +27,19 @@ class Map {
   private roads: RoadEdge[];
 
   constructor(private cellFactory: (Coord) => Cell) {
-    this.loadData([cellFactory(new Coord(0, 0))], [], []);
+    this.loadInitialData();
 
     ko.track(this);
+  }
+
+  private loadInitialData() {
+    var initialCoords = _.flatten(_.range(-1, 2).map((x) => _.range(-1, 2).map((y) => new Coord(x, y))));
+    var initialCells = initialCoords.map(this.cellFactory);
+
+    var initialRoads = [new EndlessRoadEdge(new Coord(0, 0), Direction.North, this)];
+    var initialBuildings = [];
+
+    this.loadData(initialCells, initialBuildings, initialRoads);
   }
 
   private loadData(cells: Cell[], buildings: Building[], roads: RoadEdge[]) {
