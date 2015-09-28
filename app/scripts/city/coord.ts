@@ -22,6 +22,21 @@ class Coord {
     });
   }
 
+  getNeighbour(direction: Direction): Coord {
+    switch (direction) {
+      case Direction.North:
+        return this.north();
+      case Direction.East:
+        return this.east();
+      case Direction.South:
+        return this.south();
+      case Direction.West:
+        return this.west();
+      default:
+        throw new Error(`Invalid value passed to coord.getNeighbour: ${direction}`);
+    }
+  }
+
   getDirectNeighbours() {
     return [
       this.north(),

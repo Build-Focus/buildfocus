@@ -67,6 +67,15 @@ describe('Coord', () => {
     expect(coord.west()).to.deep.equal(new Coord(-1, 0));
   });
 
+  it('should let you get a neighbour by passed direction', () => {
+    var coord = new Coord(-10, 20);
+
+    expect(coord.getNeighbour(Direction.North)).to.deep.equal(coord.north());
+    expect(coord.getNeighbour(Direction.East)).to.deep.equal(coord.east());
+    expect(coord.getNeighbour(Direction.South)).to.deep.equal(coord.south());
+    expect(coord.getNeighbour(Direction.West)).to.deep.equal(coord.west());
+  });
+
   it('should tell you if another coord is a neighbour', () => {
     var coord = new Coord(0, 0);
 
