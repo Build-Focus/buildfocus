@@ -112,6 +112,10 @@ class Coord {
       return 0;
     }
   }
+
+  distanceTo(coordB: Coord): number {
+    return Math.sqrt(Math.pow(this.x - coordB.x, 2) + Math.pow(this.y - coordB.y, 2));
+  }
 }
 
 export = Coord;

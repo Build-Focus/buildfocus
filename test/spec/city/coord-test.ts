@@ -124,4 +124,27 @@ describe('Coord', () => {
       expect(Coord.diagonalCompare(new Coord(3, 3), new Coord(3, 3))).to.equal(0);
     });
   });
+
+  describe("distance measurement", () => {
+    it('should return the simple length for a straight line between coords', () => {
+      var coordA = new Coord(0, 0);
+      var coordB = new Coord(0, 10);
+
+      expect(coordA.distanceTo(coordB)).to.equal(10);
+    });
+
+    it('should return the straight line distance between two given coords', () => {
+      var coordA = new Coord(0, 0);
+      var coordB = new Coord(3, 4);
+
+      expect(coordA.distanceTo(coordB)).to.equal(5);
+    });
+
+    it('should return the straight line distance between two given coords backwards', () => {
+      var coordA = new Coord(3, 4);
+      var coordB = new Coord(0, 0);
+
+      expect(coordA.distanceTo(coordB)).to.equal(5);
+    });
+  });
 });
