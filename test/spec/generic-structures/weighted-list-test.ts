@@ -1,4 +1,4 @@
-import WeightedList = require('app/scripts/weighted-list');
+import WeightedList = require('app/scripts/generic-structures/weighted-list');
 
 describe("A weighted list", () => {
   it("should be empty initially", () => {

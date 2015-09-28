@@ -1,6 +1,6 @@
 'use strict';
 
-import WeightedList = require('weighted-list');
+import WeightedList = require('generic-structures/weighted-list');
 
 import Coord = require('city/coord');
 import Buildings = require('city/buildings/buildings');

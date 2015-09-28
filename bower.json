@@ -11,7 +11,8 @@
     "easeljs": "~0.8.1",
     "jquery": "~2.1.4",
     "bluebird": "~2.9.34",
-    "knockout-es5": "~0.2.1"
+    "knockout-es5": "~0.2.1",
+    "heap": "~0.2.6"
   },
   "devDependencies": {
     "chai": "~1.8.0",

@@ -1,6 +1,6 @@
 import _ = require('lodash');
 
-import WeightedList = require('app/scripts/weighted-list');
+import WeightedList = require('app/scripts/generic-structures/weighted-list');
 
 import Coord = require('app/scripts/city/coord');
 import Direction = require('app/scripts/city/direction');
