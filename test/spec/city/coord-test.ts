@@ -147,4 +147,34 @@ describe('Coord', () => {
       expect(coordA.distanceTo(coordB)).to.equal(5);
     });
   });
+
+  describe("equality", () => {
+    it("should match values with the same x and y", () => {
+      expect(new Coord(5, 10).equals(new Coord(5, 10))).to.equal(true);
+    });
+
+    it("should not match values with differing y's", () => {
+      expect(new Coord(5, 10).equals(new Coord(5, 11))).to.equal(false);
+    });
+
+    it("should not match values with differing x's", () => {
+      expect(new Coord(5, 10).equals(new Coord(4, 0))).to.equal(false);
+    });
+
+    it("should not match objects without an x", () => {
+      expect(new Coord(5, 10).equals(<any>{ y: 10 })).to.equal(false);
+    });
+
+    it("should not match objects without a y", () => {
+      expect(new Coord(5, 10).equals(<any>{ x: 5 })).to.equal(false);
+    });
+
+    it("should not match null", () => {
+      expect(new Coord(5, 10).equals(null)).to.equal(false);
+    });
+
+    it("should not match undefined", () => {
+      expect(new Coord(5, 10).equals(undefined)).to.equal(false);
+    });
+  })
 });

@@ -79,13 +79,13 @@ class Map {
   // TODO: This and getRoadAt should probably use some kind of index
   getBuildingAt(coord: Coord): Building {
     return _.find(this.buildings, (building) => {
-      return !!_.findWhere(building.coords, coord);
+      return _.containsEqual(building.coords, coord);
     });
   }
 
   getRoadAt(coord: Coord): RoadEdge {
     return _.find(this.roads, (road) => {
-      return !!_.findWhere(road.coords, coord);
+      return _.containsEqual(road.coords, coord);
     });
   }
 
@@ -117,7 +117,7 @@ class Map {
       var neighbouringCoords = buildingCoord.getNeighbours();
       var nextCoordsToExpand = neighbouringCoords.filter((coord) => {
         var alreadyPresent = this.getCell(coord) !== undefined;
-        var alreadyExpanding = !!_.findWhere(coordsSoFar, coord);
+        var alreadyExpanding = _.containsEqual(coordsSoFar, coord);
 
         return !alreadyPresent && !alreadyExpanding;
       });

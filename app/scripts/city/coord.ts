@@ -85,6 +85,10 @@ class Coord {
     return "(" + this.x + ", " + this.y + ")";
   }
 
+  equals(otherCoord: Coord) {
+    return otherCoord != null && this.x === otherCoord.x && this.y === otherCoord.y;
+  }
+
   serialize(): serialize.CoordData {
     return {
       x: this.x,

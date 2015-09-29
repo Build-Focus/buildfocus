@@ -2,7 +2,7 @@
 
 declare module "raw-knockout" {
   import knockout = require("knockout");
-  export = knockout
+  export = knockout;
 }
 
 define(["raw-knockout", "knockout-es5", "ko-bindings/render-binding"], function (ko) {

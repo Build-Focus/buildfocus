@@ -15,7 +15,6 @@ requirejs.config({
   "paths": {
     "jquery": "../bower_components/jquery/dist/jquery",
     "URIjs": "../bower_components/uri.js/src",
-    "lodash": "../bower_components/lodash/lodash",
     "createjs": "../bower_components/easeljs/lib/easeljs-0.8.1.combined",
     "bluebird": "../bower_components/bluebird/js/browser/bluebird",
     "heap": "../bower_components/heap/lib/heap",
@@ -26,6 +25,9 @@ requirejs.config({
 
     "raw-rollbar": "../bower_components/rollbar/dist/rollbar.amd",
     "rollbar": "lib-wrappers/rollbar",
+
+    "raw-lodash": "../bower_components/lodash/lodash",
+    "lodash": "lib-wrappers/lodash",
 
     "config": "config/" + configPrefix + "-config"
   },
