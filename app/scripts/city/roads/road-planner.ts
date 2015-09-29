@@ -8,7 +8,7 @@ import Map = require('city/map');
 import RoadEdge = require('city/roads/road-edge');
 import SpecificRoadEdge = require('city/roads/specific-road-edge');
 
-class CityPlanner {
+class RoadPlanner {
   constructor(private map: Map) { }
 
   getCost(building: Building): number {
@@ -57,4 +57,4 @@ class CityPlanner {
   }
 }
 
-export = CityPlanner;
+export = RoadPlanner;

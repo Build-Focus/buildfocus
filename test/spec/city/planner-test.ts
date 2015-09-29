@@ -10,7 +10,7 @@ import Map = require('app/scripts/city/map');
 import BasicHouse = require('app/scripts/city/buildings/basic-house');
 import FancyHouse = require('app/scripts/city/buildings/fancy-house');
 
-import CityPlanner = require('app/scripts/city/planner');
+import RoadPlanner = require('app/scripts/city/roads/road-planner');
 
 function c(x: number, y: number): Coord {
   return new Coord(x, y);
@@ -33,11 +33,11 @@ function roadStub(...coords): RoadEdge {
   };
 }
 
-describe("City planner", () => {
+describe("Road planner", () => {
   describe("cost calculations", () => {
     it("should reject buildings where the exit is blocked", () => {
       var map = mapStub();
-      var planner = new CityPlanner(map);
+      var planner = new RoadPlanner(map);
 
       map.getBuildingAt.withArgs(c(0, -1)).returns(buildingStub());
       var cost = planner.getCost(new BasicHouse(c(0, 0), Direction.North));
@@ -47,7 +47,7 @@ describe("City planner", () => {
 
     it("should reject multi-coord buildings where either cell's exit is blocked", () => {
       var map = mapStub();
-      var planner = new CityPlanner(map);
+      var planner = new RoadPlanner(map);
 
       map.getBuildingAt.withArgs(c(1, 1)).returns(buildingStub());
       var cost = planner.getCost(new FancyHouse(c(0, 0), c(0, 1), Direction.East));
@@ -57,7 +57,7 @@ describe("City planner", () => {
 
     it("should return 0 for buildings already connected to roads", () => {
       var map = mapStub();
-      var planner = new CityPlanner(map);
+      var planner = new RoadPlanner(map);
 
       map.getRoadAt.withArgs(c(0, -1)).returns(roadStub(c(0, -1)));
       var cost = planner.getCost(new BasicHouse(c(0, 0), Direction.North));
@@ -67,7 +67,7 @@ describe("City planner", () => {
 
     it("should return 1 for a building one step from being connected", () => {
       var map = mapStub();
-      var planner = new CityPlanner(map);
+      var planner = new RoadPlanner(map);
 
       map.getRoadAt.withArgs(c(0, 0)).returns(roadStub(c(0, 0)));
       var cost = planner.getCost(new BasicHouse(c(2, 0), Direction.West));
@@ -77,7 +77,7 @@ describe("City planner", () => {
 
     it("should track distances routing around obstacles for buildings that are clearly not connected", () => {
       var map = mapStub();
-      var planner = new CityPlanner(map);
+      var planner = new RoadPlanner(map);
 
       map.getBuildingAt.withArgs(c(0, 1)).returns(buildingStub());
       map.getBuildingAt.withArgs(c(1, 1)).returns(buildingStub());
@@ -95,7 +95,7 @@ describe("City planner", () => {
   describe("route planning", () => {
     it("should return null for immediately blocked buildings", () => {
       var map = mapStub();
-      var planner = new CityPlanner(map);
+      var planner = new RoadPlanner(map);
 
       map.getBuildingAt.withArgs(c(0, -1)).returns(buildingStub());
       var roads = planner.getRoadsRequired(new BasicHouse(c(0, 0), Direction.North));
@@ -105,7 +105,7 @@ describe("City planner", () => {
 
     it("should return null for impossible to connect buildings", () => {
       var map = mapStub();
-      var planner = new CityPlanner(map);
+      var planner = new RoadPlanner(map);
 
       map.getBuildingAt.withArgs(c(0, 2)).returns(buildingStub());
       map.getBuildingAt.withArgs(c(1, 1)).returns(buildingStub());
@@ -120,7 +120,7 @@ describe("City planner", () => {
 
     it("should return an empty route for already connected buildings", () => {
       var map = mapStub();
-      var planner = new CityPlanner(map);
+      var planner = new RoadPlanner(map);
 
       map.getRoadAt.withArgs(c(0, -1)).returns(roadStub(c(0, -1)));
       var roads = planner.getRoadsRequired(new BasicHouse(c(0, 0), Direction.North));
@@ -130,7 +130,7 @@ describe("City planner", () => {
 
     it("should return a valid road edge to connect to the nearest road", () => {
       var map = mapStub();
-      var planner = new CityPlanner(map);
+      var planner = new RoadPlanner(map);
 
       map.getRoadAt.withArgs(c(0, 0)).returns(roadStub(c(0, 0)));
       var roads = planner.getRoadsRequired(new BasicHouse(c(0, 2), Direction.North));
@@ -140,7 +140,7 @@ describe("City planner", () => {
 
     it("should return multiple road edges if corners are required", () => {
       var map = mapStub();
-      var planner = new CityPlanner(map);
+      var planner = new RoadPlanner(map);
 
       map.getRoadAt.withArgs(c(0, 0)).returns(roadStub(c(0, 0)));
       var roads = planner.getRoadsRequired(new BasicHouse(c(2, 1), Direction.West));
@@ -151,7 +151,7 @@ describe("City planner", () => {
 
     it("should handle complicated route cases with a series of corners", () => {
       var map = mapStub();
-      var planner = new CityPlanner(map);
+      var planner = new RoadPlanner(map);
 
       map.getRoadAt.withArgs(c(0, 0)).returns(roadStub(c(0, 0)));
       map.getBuildingAt.withArgs(c(11, 0)).returns(buildingStub());
@@ -165,7 +165,7 @@ describe("City planner", () => {
 
     it("should run routes around the hypothetical building proposed", () => {
       var map = mapStub();
-      var planner = new CityPlanner(map);
+      var planner = new RoadPlanner(map);
 
       map.getRoadAt.withArgs(c(0, 0)).returns(roadStub(c(0, 0)));
       var roads = planner.getRoadsRequired(new BasicHouse(c(0, 2), Direction.South));
