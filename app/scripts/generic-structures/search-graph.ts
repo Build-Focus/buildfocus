@@ -35,7 +35,6 @@ function searchGraph(goalTest: (c: Coord) => boolean,
   startCoords.forEach((c) => explorableCoords.push({ coord: c, cost: heuristic(c) }));
 
   while (!explorableCoords.empty()) {
-
     let currentCoord = explorableCoords.pop().coord;
 
     if (goalTest(currentCoord)) {

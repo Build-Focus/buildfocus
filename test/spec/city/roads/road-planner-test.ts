@@ -16,21 +16,21 @@ function c(x: number, y: number): Coord {
   return new Coord(x, y);
 }
 
+const twentyByTwentyCells: { coord: Coord }[] = _.combinations(_.range(0, 20), _.range(0, 20)).map((xy) => {
+  var [x, y] = xy;
+  return { coord: new Coord(x, y) };
+});
+
 function mapStub() {
-  return <any> {
-    getBuildingAt: sinon.stub(),
-    getRoadAt: sinon.stub()
+  var stub = {
+    buildingCoords: <Coord[]> [],
+    roadCoord: c(0, 0),
+    getBuildingAt: (c: Coord) => _.containsEqual(stub.buildingCoords, c) ? {} : null,
+    getRoadAt: (c: Coord) => stub.roadCoord.equals(c) ? {} : null,
+    getCells: () => twentyByTwentyCells
   };
-}
 
-function buildingStub(): Building {
-  return <any> { };
-}
-
-function roadStub(...coords): RoadEdge {
-  return <any> {
-    coords: coords
-  };
+  return <any> stub;
 }
 
 describe("Road planner", () => {
@@ -39,7 +39,7 @@ describe("Road planner", () => {
       var map = mapStub();
       var planner = new RoadPlanner(map);
 
-      map.getBuildingAt.withArgs(c(0, -1)).returns(buildingStub());
+      map.buildingCoords.push(c(0, -1));
       var cost = planner.getCost(new BasicHouse(c(0, 0), Direction.North));
 
       expect(cost).to.equal(Number.POSITIVE_INFINITY);
@@ -49,7 +49,7 @@ describe("Road planner", () => {
       var map = mapStub();
       var planner = new RoadPlanner(map);
 
-      map.getBuildingAt.withArgs(c(1, 1)).returns(buildingStub());
+      map.buildingCoords.push(c(1, 1));
       var cost = planner.getCost(new FancyHouse(c(0, 0), c(0, 1), Direction.East));
 
       expect(cost).to.equal(Number.POSITIVE_INFINITY);
@@ -59,7 +59,7 @@ describe("Road planner", () => {
       var map = mapStub();
       var planner = new RoadPlanner(map);
 
-      map.getRoadAt.withArgs(c(0, -1)).returns(roadStub(c(0, -1)));
+      map.roadCoord = c(0, -1);
       var cost = planner.getCost(new BasicHouse(c(0, 0), Direction.North));
 
       expect(cost).to.equal(0);
@@ -69,7 +69,6 @@ describe("Road planner", () => {
       var map = mapStub();
       var planner = new RoadPlanner(map);
 
-      map.getRoadAt.withArgs(c(0, 0)).returns(roadStub(c(0, 0)));
       var cost = planner.getCost(new BasicHouse(c(2, 0), Direction.West));
 
       expect(cost).to.equal(1);
@@ -79,11 +78,10 @@ describe("Road planner", () => {
       var map = mapStub();
       var planner = new RoadPlanner(map);
 
-      map.getBuildingAt.withArgs(c(0, 1)).returns(buildingStub());
-      map.getBuildingAt.withArgs(c(1, 1)).returns(buildingStub());
-      map.getBuildingAt.withArgs(c(2, 1)).returns(buildingStub());
-      map.getRoadAt.withArgs(c(1, 0)).returns(roadStub(c(1, 0)));
-      var cost = planner.getCost(new BasicHouse(c(1, 3), Direction.South));
+      map.buildingCoords.push(c(-1, 1));
+      map.buildingCoords.push(c(0, 1));
+      map.buildingCoords.push(c(1, 1));
+      var cost = planner.getCost(new BasicHouse(c(0, 3), Direction.South));
 
       expect(cost).to.equal(8);
     });
@@ -97,7 +95,7 @@ describe("Road planner", () => {
       var map = mapStub();
       var planner = new RoadPlanner(map);
 
-      map.getBuildingAt.withArgs(c(0, -1)).returns(buildingStub());
+      map.buildingCoords.push(c(0, -1));
       var roads = planner.getRoadsRequired(new BasicHouse(c(0, 0), Direction.North));
 
       expect(roads).to.deep.equal(null);
@@ -107,12 +105,12 @@ describe("Road planner", () => {
       var map = mapStub();
       var planner = new RoadPlanner(map);
 
-      map.getBuildingAt.withArgs(c(0, 2)).returns(buildingStub());
-      map.getBuildingAt.withArgs(c(1, 1)).returns(buildingStub());
-      map.getBuildingAt.withArgs(c(-1, 1)).returns(buildingStub());
-      map.getBuildingAt.withArgs(c(1, 0)).returns(buildingStub());
-      map.getBuildingAt.withArgs(c(-1, 0)).returns(buildingStub());
-      map.getBuildingAt.withArgs(c(0, -1)).returns(buildingStub());
+      map.buildingCoords.push(c(0, -1));
+      map.buildingCoords.push(c(-1, 0));
+      map.buildingCoords.push(c(1, 0));
+      map.buildingCoords.push(c(-1, 1));
+      map.buildingCoords.push(c(1, 1));
+      map.buildingCoords.push(c(0, 2));
       var roads = planner.getRoadsRequired(new BasicHouse(c(0, 0), Direction.South));
 
       expect(roads).to.deep.equal(null);
@@ -122,7 +120,7 @@ describe("Road planner", () => {
       var map = mapStub();
       var planner = new RoadPlanner(map);
 
-      map.getRoadAt.withArgs(c(0, -1)).returns(roadStub(c(0, -1)));
+      map.roadCoord = c(0, -1);
       var roads = planner.getRoadsRequired(new BasicHouse(c(0, 0), Direction.North));
 
       expect(roads).to.deep.equal([]);
@@ -132,7 +130,6 @@ describe("Road planner", () => {
       var map = mapStub();
       var planner = new RoadPlanner(map);
 
-      map.getRoadAt.withArgs(c(0, 0)).returns(roadStub(c(0, 0)));
       var roads = planner.getRoadsRequired(new BasicHouse(c(0, 2), Direction.North));
 
       expect(roads).to.deep.equal([new SpecificRoadEdge(c(0, 1), c(0, 0))]);
@@ -142,7 +139,6 @@ describe("Road planner", () => {
       var map = mapStub();
       var planner = new RoadPlanner(map);
 
-      map.getRoadAt.withArgs(c(0, 0)).returns(roadStub(c(0, 0)));
       var roads = planner.getRoadsRequired(new BasicHouse(c(2, 1), Direction.West));
 
       expect(roads).to.deep.equal([new SpecificRoadEdge(c(1, 1), c(1, 0)),
@@ -153,8 +149,7 @@ describe("Road planner", () => {
       var map = mapStub();
       var planner = new RoadPlanner(map);
 
-      map.getRoadAt.withArgs(c(0, 0)).returns(roadStub(c(0, 0)));
-      map.getBuildingAt.withArgs(c(11, 0)).returns(buildingStub());
+      map.buildingCoords.push(c(11, 0));
       var roads = planner.getRoadsRequired(new BasicHouse(c(10, 5), Direction.East));
 
       expect(roads).to.deep.equal([new SpecificRoadEdge(c(11, 5), c(11, 1)),
@@ -167,11 +162,27 @@ describe("Road planner", () => {
       var map = mapStub();
       var planner = new RoadPlanner(map);
 
-      map.getRoadAt.withArgs(c(0, 0)).returns(roadStub(c(0, 0)));
       var roads = planner.getRoadsRequired(new BasicHouse(c(0, 2), Direction.South));
 
       expect(roads).to.deep.equal([new SpecificRoadEdge(c(0, 3), c(1, 3)),
                                    new SpecificRoadEdge(c(1, 3), c(1, 0)),
+                                   new SpecificRoadEdge(c(1, 0), c(0, 0))]);
+    });
+
+    it("should not create routes outside the map's coords", () => {
+      var map = mapStub();
+      var cellsWithHole = _.compact(_.combinations(_.range(0, 10), _.range(0, 10)).map((xy) => {
+        var [x, y] = xy;
+        if (x === 0 && y === 1) return null;
+        else return { coord: new Coord(xy[0], xy[1]) };
+      }));
+      map.getCells = () => cellsWithHole;
+      var planner = new RoadPlanner(map);
+
+      var roads = planner.getRoadsRequired(new BasicHouse(c(0, 3), Direction.North));
+
+      expect(roads).to.deep.equal([new SpecificRoadEdge(c(0, 2), c(1, 2)),
+                                   new SpecificRoadEdge(c(1, 2), c(1, 0)),
                                    new SpecificRoadEdge(c(1, 0), c(0, 0))]);
     });
   })

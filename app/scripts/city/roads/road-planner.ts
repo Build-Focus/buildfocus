@@ -26,8 +26,12 @@ class RoadPlanner {
       if (!!this.map.getBuildingAt(exitCoord)) return null;
     }
 
+    var mapCellCoords = this.map.getCells().map((c) => c.coord);
+
     var goal = (c: Coord) => !!this.map.getRoadAt(c);
-    var obstacles = (c: Coord) => !!this.map.getBuildingAt(c) || _.containsEqual(building.coords, c);
+    var obstacles = (c: Coord) => !!this.map.getBuildingAt(c) ||
+                                  _.containsEqual(building.coords, c) ||
+                                  !_.containsEqual(mapCellCoords, c);
     var coordCost = () => 1;
     var heuristic = () => 0;
 
