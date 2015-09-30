@@ -98,7 +98,7 @@ class Map {
     }
 
     this.buildings.push(building);
-    this.expandCellsAroundBuilding(building);
+    building.coords.forEach((coord) => this.expandCellsAroundCoord(coord));
   }
 
   remove(buildingToDelete: Building) {
@@ -112,20 +112,14 @@ class Map {
     this.buildings.remove(savedBuilding);
   }
 
-  private expandCellsAroundBuilding(building: Building) {
-    var allCoordsToExpand = _.reduce(building.coords, (coordsSoFar, buildingCoord) => {
-      var neighbouringCoords = buildingCoord.getNeighbours();
-      var nextCoordsToExpand = neighbouringCoords.filter((coord) => {
-        var alreadyPresent = this.getCell(coord) !== undefined;
-        var alreadyExpanding = _.containsEqual(coordsSoFar, coord);
+  private expandCellsAroundCoord(coord: Coord) {
+    var neighbouringCoords = coord.getNeighbours();
 
-        return !alreadyPresent && !alreadyExpanding;
-      });
+    var coordsToExpand = neighbouringCoords.filter((coord) => {
+      return this.getCell(coord) === undefined;
+    });
 
-      return coordsSoFar.concat(nextCoordsToExpand);
-    }, []);
-
-    var newCells = allCoordsToExpand.map(this.cellFactory);
+    var newCells = coordsToExpand.map(this.cellFactory);
     newCells.forEach(this.setCell);
   }
 
@@ -140,6 +134,10 @@ class Map {
     }
 
     this.roads.push(road);
+
+    if (!(road instanceof EndlessRoadEdge)) {
+      road.coords.forEach((coord) => this.expandCellsAroundCoord(coord));
+    }
   }
 
   // TODO: Make this (and getRoads) return an immutable view instead

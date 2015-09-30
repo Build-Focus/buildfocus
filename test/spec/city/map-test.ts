@@ -9,6 +9,7 @@ import Cell = require("app/scripts/city/cell");
 import CellType = require("app/scripts/city/cell-type");
 
 import SpecificRoadEdge = require('app/scripts/city/roads/specific-road-edge');
+import EndlessRoadEdge = require('app/scripts/city/roads/endless-road-edge');
 
 import Coord = require("app/scripts/city/coord");
 import Direction = require("app/scripts/city/direction");
@@ -171,6 +172,30 @@ describe('Map', () => {
         c(0, 1),          c(2, 1),
         c(0, 2), c(1, 2), c(2, 2)
       ]).sort(Coord.diagonalCompare));
+    });
+
+    it("should add new cells from the cell factory when a specific road edge is added", () => {
+      var map = Map.deserialize({ cells: toCells([c(0, 0), c(1, 0)]), buildings: [], roads: [] }, cellFactory);
+
+      map.addRoad(new SpecificRoadEdge(c(0, 0), c(1, 0)));
+
+      var coords = _.pluck(map.getCells(), 'coord');
+      expect(coords.sort(Coord.diagonalCompare)).to.deep.equal([
+        c(-1, -1), c(0, -1), c(1, -1), c(2, -1),
+        c(-1, 0),  c(0, 0),  c(1, 0),  c(2, 0),
+        c(-1, 1),  c(0, 1),  c(1, 1),  c(2, 1)
+      ].sort(Coord.diagonalCompare));
+    });
+
+    it("should not add new cells when an endless road edge is added", () => {
+      var map = Map.deserialize({ cells: toCells([c(0, 0), c(1, 0)]), buildings: [], roads: [] }, cellFactory);
+
+      map.addRoad(new EndlessRoadEdge(c(0, 0), Direction.East, map));
+
+      var coords = _.pluck(map.getCells(), 'coord');
+      expect(coords.sort(Coord.diagonalCompare)).to.deep.equal([
+        c(0, 0), c(1, 0)
+      ].sort(Coord.diagonalCompare));
     });
   });
 
