@@ -73,7 +73,7 @@ describe('City Integration - City', () => {
     it('should add new surrounding cells after construction', () => {
       var city = new City();
 
-      city.construct(new BasicHouse(c(1, 0), Direction.South));
+      city.construct(new BasicHouse(c(1, 0), Direction.West));
 
       expect(_.pluck(city.getCells(), 'coord').sort()).to.deep.equal([
         c(-1, -1), c(0, -1), c(1, -1), c(2, -1),
@@ -91,18 +91,20 @@ describe('City Integration - City', () => {
   }
 
   describe("upgrade offers", () => {
-    it('should offer new basic houses on all empty cells', () => {
+    it('should offer new basic houses on all empty cells where roads can be built', () => {
       var city = new City();
-      city.construct(new BasicHouse(c(1, 0), Direction.South));
+      city.construct(new BasicHouse(c(1, 0), Direction.West));
 
-      var potentialBuildings = <Array<any>> city.getPossibleUpgrades();
+      var potentialBuildings = city.getPossibleUpgrades();
 
       var basicHouseUpgradeCoords = _(potentialBuildings)
-        .where({buildingType: BuildingType.BasicHouse, direction: Direction.South})
+        .where({buildingType: BuildingType.BasicHouse})
         .pluck('coords')
+        .unique((coord) => coord.toString())
         .flatten()
         .value()
         .sort();
+
       expect(basicHouseUpgradeCoords).to.deep.equal([
         c(-1, -1),           c(1, -1), c(2, -1),
         c(-1, 0),                      c(2, 0),

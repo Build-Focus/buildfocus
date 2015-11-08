@@ -9,37 +9,36 @@ import RoadEdge = require('city/roads/road-edge');
 import SpecificRoadEdge = require('city/roads/specific-road-edge');
 
 class RoadPlanner {
-  constructor(private map: Map) { }
+  constructor(private costFunction: (c: Coord) => number = () => 1,
+              private heuristic: (c: Coord) => number = () => 0) { }
 
-  getCost(building: Building): number {
-    var route = this.getRoute(building);
+  getCost(map: Map, building: Building): number {
+    var route = this.getRoute(map, building);
 
     if (route !== null) return route.length - 1;
     else return Number.POSITIVE_INFINITY;
   }
 
-  private getRoute(building: Building): Coord[] {
+  private getRoute(map: Map, building: Building): Coord[] {
     let exitCoords = building.coords.map((c) => c.getNeighbour(building.direction));
 
     // If either exit is totally blocked, we immediately fail outright
     for (let exitCoord of exitCoords) {
-      if (!!this.map.getBuildingAt(exitCoord)) return null;
+      if (!!map.getBuildingAt(exitCoord)) return null;
     }
 
-    var mapCellCoords = this.map.getCells().map((c) => c.coord);
+    var mapCellCoords = map.getCells().map((c) => c.coord);
 
-    var goal = (c: Coord) => !!this.map.getRoadAt(c);
-    var obstacles = (c: Coord) => !!this.map.getBuildingAt(c) ||
+    var goal = (c: Coord) => !!map.getRoadAt(c);
+    var obstacles = (c: Coord) => !!map.getBuildingAt(c) ||
                                   _.containsEqual(building.coords, c) ||
                                   !_.containsEqual(mapCellCoords, c);
-    var coordCost = () => 1;
-    var heuristic = () => 0;
 
-    return searchGraph(goal, obstacles, coordCost, heuristic, exitCoords);
+    return searchGraph(goal, obstacles, this.costFunction, this.heuristic, exitCoords);
   }
 
-  getRoadsRequired(building: Building): RoadEdge[] {
-    var route = this.getRoute(building);
+  getRoadsRequired(map: Map, building: Building): RoadEdge[] {
+    var route = this.getRoute(map, building);
     if (!route) return null;
     if (route.length === 0 || route.length === 1) return [];
 
@@ -59,6 +58,18 @@ class RoadPlanner {
 
     return roads;
   }
+
+  static SimpleRoadPlanner = new RoadPlanner();
+
+  static GridRoadPlanner = new RoadPlanner((coord: Coord) => {
+    var onXGrid = coord.x % 3 === 0;
+    var onYGrid = coord.y % 3 === 0;
+
+    var score = 1 + (!onXGrid ? 2 : 0) + (!onYGrid ? 2 : 0) + (!onXGrid && !onYGrid ? 5 : 0);
+    return score;
+  });
+
+  static
 }
 
 export = RoadPlanner;

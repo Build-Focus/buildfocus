@@ -15,6 +15,8 @@ import Building = Buildings.Building;
 
 import RoadPart = require('city/roads/road-part');
 
+import RoadPlanner = require('city/roads/road-planner');
+
 import BasicHouse = require('city/buildings/basic-house');
 
 function canonicalForm(building: Building) {
@@ -23,14 +25,19 @@ function canonicalForm(building: Building) {
   return JSON.stringify(data);
 }
 
+const GridRoadPlanner = new RoadPlanner();
+
 // Handles setup and defines the external API of the city model
 class City {
   private cellFactory: (Coord) => Cell;
   private map: Map;
+  private roadPlanner: RoadPlanner;
 
   constructor() {
     this.cellFactory = (coord: Coord) => new Cell(coord, CellType.Grass);
     this.map = new Map(this.cellFactory);
+    this.roadPlanner = GridRoadPlanner;
+
     ko.track(this);
   }
 
@@ -59,8 +66,10 @@ class City {
     var buildableCells = _.reject(this.getCells(), (cell) => this.map.getBuildingAt(cell.coord) ||
                                                              this.map.getRoadAt(cell.coord));
 
-    return _(buildableCells).map((cell) => [new BasicHouse(cell.coord, Direction.South),
-                                            new BasicHouse(cell.coord, Direction.East)])
+    return _(buildableCells).map((cell) => [new BasicHouse(cell.coord, Direction.North),
+                                            new BasicHouse(cell.coord, Direction.South),
+                                            new BasicHouse(cell.coord, Direction.East),
+                                            new BasicHouse(cell.coord, Direction.West)])
                             .flatten().value();
   }
 
@@ -73,7 +82,9 @@ class City {
   }
 
   getPossibleUpgrades(): Building[] {
-    return this.getPossibleNewBuildings().concat(this.getPossibleBuildingUpgrades());
+    return this.getPossibleNewBuildings()
+               .concat(this.getPossibleBuildingUpgrades())
+               .filter((building) => this.roadPlanner.getCost(this.map, building) < Number.POSITIVE_INFINITY);
   }
 
   onChanged = subscribableEvent();
@@ -88,6 +99,10 @@ class City {
                    .forEach((existingBuilding) => this.map.remove(existingBuilding));
 
     this.map.construct(building);
+
+    var requiredRoads = this.roadPlanner.getRoadsRequired(this.map, building);
+    requiredRoads.forEach((road) => this.map.addRoad(road));
+
     this.onChanged.trigger();
   }
 

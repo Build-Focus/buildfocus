@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg413334"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="New document 54">
+  <defs
+     id="defs413336">
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413272-0">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.2155068"
+         id="feGaussianBlur413274-4" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413272">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.2155068"
+         id="feGaussianBlur413274" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413312"
+       x="-0.25241256"
+       width="1.5048251"
+       y="-0.62743628"
+       height="2.2548726">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="62.366933"
+         id="feGaussianBlur413314" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413047-2-1">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235415"
+         id="feGaussianBlur413049-4-2" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413047-2">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235415"
+         id="feGaussianBlur413049-4" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413051-6">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235415"
+         id="feGaussianBlur413053-4" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413051-9">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235415"
+         id="feGaussianBlur413053-2" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413055-8-4">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235414"
+         id="feGaussianBlur413057-8-0" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413055-8">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235414"
+         id="feGaussianBlur413057-8" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413063-2-0">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235415"
+         id="feGaussianBlur413065-9-1" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413063-2">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235415"
+         id="feGaussianBlur413065-9" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413055">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235414"
+         id="feGaussianBlur413057" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413063">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235415"
+         id="feGaussianBlur413065" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413051">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235415"
+         id="feGaussianBlur413053" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413047">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235415"
+         id="feGaussianBlur413049" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       inkscape:collect="always"
+       id="filter413059">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.3235414"
+         id="feGaussianBlur413061" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="375"
+     inkscape:cy="520"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="670"
+     inkscape:window-height="1056"
+     inkscape:window-x="1248"
+     inkscape:window-y="22"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata413339">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       transform="translate(142.21681,377.1037)"
+       id="g413316">
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="0.44491812"
+         inkscape:transform-center-x="2.7820409"
+         transform="matrix(0.12647923,-0.06347832,0.06347832,0.12647923,-14.813889,153.74784)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-89-9-9"
+         style="opacity:0.5;fill:#fff296;fill-opacity:1;stroke:none;filter:url(#filter413272-0)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="0.51899018"
+         inkscape:transform-center-x="3.2451904"
+         transform="matrix(0.14753531,-0.0740461,0.0740461,0.14753531,-32.197546,142.69127)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-89-9"
+         style="opacity:0.7;fill:#ffeb5e;fill-opacity:1;stroke:none;filter:url(#filter413272)"
+         sodipodi:type="star" />
+      <path
+         sodipodi:open="true"
+         sodipodi:end="3.1418405"
+         sodipodi:start="0"
+         transform="matrix(0.74155049,0,0,-0.74155049,50.23638,302.14523)"
+         d="m 534,198.30099 c 0,131.71992 -132.74757,238.5 -296.5,238.5 -163.752428,0 -296.5,-106.78008 -296.5,-238.5 0,-0.0197 3e-6,-0.0394 9e-6,-0.0591"
+         sodipodi:ry="238.5"
+         sodipodi:rx="296.5"
+         sodipodi:cy="198.30099"
+         sodipodi:cx="237.5"
+         id="path413302"
+         style="opacity:0.3;fill:#ffe424;fill-opacity:1;stroke:#ffc60a;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter413312)"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="-1.8484597"
+         inkscape:transform-center-x="-0.97508261"
+         transform="matrix(0.12316415,0,0,0.12316415,471.40007,139.23211)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-8-8-6"
+         style="opacity:0.5;fill:#fff4a4;fill-opacity:1;stroke:none;filter:url(#filter413047-2-1)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="-2.5008657"
+         inkscape:transform-center-x="-1.319237"
+         transform="matrix(0.16663462,0,0,0.16663462,491.93031,120.21556)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-8-8"
+         style="opacity:0.7;fill:#ffee73;fill-opacity:1;stroke:none;filter:url(#filter413047-2)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="-2.3570633"
+         inkscape:transform-center-x="-1.2433824"
+         transform="matrix(0.15705272,0,0,0.15705272,393.23197,28.624357)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-1-1"
+         style="opacity:0.5;fill:#fff6b2;fill-opacity:1;stroke:none;filter:url(#filter413051-6)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="-2.5987295"
+         inkscape:transform-center-x="-1.3708635"
+         transform="matrix(0.1731552,0,0,0.1731552,404.40369,10.132991)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-1-8"
+         style="opacity:0.7;fill:#ffee73;fill-opacity:1;stroke:none;filter:url(#filter413051-9)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="-2.9755958"
+         inkscape:transform-center-x="-0.7861451"
+         transform="matrix(0.04408896,-0.15857246,0.15857246,0.04408896,214.60621,-17.789215)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-3-9-9"
+         style="opacity:0.5;fill:#fff399;fill-opacity:1;stroke:none;filter:url(#filter413055-8-4)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="-2.9755958"
+         inkscape:transform-center-x="-0.7861451"
+         transform="matrix(0.04408896,-0.15857246,0.15857246,0.04408896,215.60621,-33.564531)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-3-9"
+         style="opacity:0.7;fill:#ffed6a;fill-opacity:1;stroke:none;filter:url(#filter413055-8)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="0.95674347"
+         inkscape:transform-center-x="2.4883315"
+         transform="matrix(0.13138796,-0.07333251,0.07333251,0.13138796,88.1307,29.584421)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-7-3"
+         style="opacity:0.5;fill:#fff18b;fill-opacity:1;stroke:none;filter:url(#filter413063-2-0)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="0.95674347"
+         inkscape:transform-center-x="2.4883315"
+         transform="matrix(0.13138796,-0.07333251,0.07333251,0.13138796,76.130698,19.342436)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-7"
+         style="opacity:0.7;fill:#ffeb5e;fill-opacity:1;stroke:none;filter:url(#filter413063-2)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="-3.6020348"
+         inkscape:transform-center-x="-0.95165508"
+         transform="matrix(0.05337083,-0.19195606,0.19195606,0.05337083,214.92498,-56.213698)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-3"
+         style="fill:#ffe424;fill-opacity:1;stroke:#ffc60a;stroke-width:5.01913595;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter413055)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="1.2668466"
+         inkscape:transform-center-x="3.2948581"
+         transform="matrix(0.17397388,-0.0971013,0.0971013,0.17397388,64.521911,-7.0562296)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906"
+         style="fill:#ffe424;fill-opacity:1;stroke:#ffc60a;stroke-width:5.01913595;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter413063)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="-2.9901752"
+         inkscape:transform-center-x="-1.5773523"
+         transform="matrix(0.19923748,0,0,0.19923748,416.57382,-7.9310283)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-1"
+         style="fill:#ffe424;fill-opacity:1;stroke:#ffc60a;stroke-width:5.01913595;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter413051)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="-2.9901752"
+         inkscape:transform-center-x="-1.5773523"
+         transform="matrix(0.19923748,0,0,0.19923748,509.1718,104.38774)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-8"
+         style="fill:#ffe424;fill-opacity:1;stroke:#ffc60a;stroke-width:5.01913595;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter413047)"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="133.02112"
+         inkscape:export-xdpi="133.02112"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
+         inkscape:transform-center-y="0.62639837"
+         inkscape:transform-center-x="3.916805"
+         transform="matrix(0.17806879,-0.08937047,0.08937047,0.17806879,-51.107327,128.44055)"
+         d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.6789238"
+         sodipodi:arg1="1.0506053"
+         sodipodi:r2="118.70131"
+         sodipodi:r1="237.4026"
+         sodipodi:cy="85.800995"
+         sodipodi:cx="-68"
+         sodipodi:sides="5"
+         id="path412906-89"
+         style="fill:#ffe424;fill-opacity:1;stroke:#ffc60a;stroke-width:5.01913595;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter413059)"
+         sodipodi:type="star" />
+    </g>
+  </g>
+</svg>

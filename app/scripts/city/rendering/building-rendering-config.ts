@@ -10,6 +10,11 @@ interface BuildingRenderingConfig {
 
 var config: { [buildingType: number]: { [direction: number]: BuildingRenderingConfig } } = {
   [BuildingType.BasicHouse]: {
+    [Direction.North]: {
+      xOffset: 190,
+      yOffset: 20,
+      imagePath: "/images/city/basic-house/north.png"
+    },
     [Direction.South]: {
       xOffset: 136,
       yOffset: 6,
@@ -19,10 +24,20 @@ var config: { [buildingType: number]: { [direction: number]: BuildingRenderingCo
       xOffset: 157,
       yOffset: 11,
       imagePath: "/images/city/basic-house/east.png",
+    },
+    [Direction.West]: {
+      xOffset: 120,
+      yOffset: 9,
+      imagePath: "/images/city/basic-house/west.png"
     }
   },
 
   [BuildingType.NiceHouse]: {
+    [Direction.North]: {
+      xOffset: -2,
+      yOffset: -60,
+      imagePath: "/images/city/nice-house/north.png",
+    },
     [Direction.South]: {
       xOffset: -2,
       yOffset: -92,
@@ -30,8 +45,13 @@ var config: { [buildingType: number]: { [direction: number]: BuildingRenderingCo
     },
     [Direction.East]: {
       xOffset: -2,
-      yOffset: -92,
+      yOffset: -94,
       imagePath: "/images/city/nice-house/east.png",
+    },
+    [Direction.West]: {
+      xOffset: -2,
+      yOffset: -68,
+      imagePath: "/images/city/nice-house/west.png",
     }
   },
 
