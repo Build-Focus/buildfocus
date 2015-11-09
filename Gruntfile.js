@@ -340,7 +340,7 @@ module.exports = function (grunt) {
         tagName: 'v%VERSION%',
         tagMessage: 'Version %VERSION%',
         push: true,
-        pushTo: (process.env.GIT_REMOTE || 'origin')
+        pushTo: (process.env.GIT_REMOTE || 'origin') + ' HEAD:master'
       }
     },
 
