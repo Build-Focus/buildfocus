@@ -1,7 +1,7 @@
 'use strict';
 
 const prodConfig: ApplicationConfig = {
-  pomodoroDuration: 1000 * 60 * 20,
+  pomodoroDuration: 1000 * 60 * 25,
   breakDuration: 1000 * 60 * 5,
 
   rollbarConfig: {
