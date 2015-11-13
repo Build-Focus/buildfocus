@@ -50,7 +50,7 @@ class NotificationService {
 
     var notification = this.buildNotification(
       "Success! Go again?",
-      "Click to start a new Pomodoro",
+      "Click here to focus for 25 more minutes",
       [{"title": "Take a break"}, {"title": "More..."}],
       buildingConfig ? buildingConfig.imagePath : undefined
     );
