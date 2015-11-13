@@ -50,7 +50,7 @@ class NotificationService {
 
     var notification = this.buildNotification(
       "Success! Go again?",
-      "Click here to focus for 25 more minutes",
+      "Click here to focus for another\n25 minutes",
       [{"title": "Take a break"}, {"title": "More..."}],
       buildingConfig ? buildingConfig.imagePath : undefined
     );
@@ -63,7 +63,7 @@ class NotificationService {
   public showBreakNotification = () => {
     var notification = this.buildNotification(
       "Break time's over",
-      "Click to start a new Pomodoro",
+      "Click here to get some focus for\n25 minutes",
       [{"title": "Just one more break"}, {"title": "More..."}]
     );
 
