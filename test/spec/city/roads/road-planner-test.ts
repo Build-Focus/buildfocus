@@ -83,6 +83,15 @@ describe("Road planner", () => {
       map.buildingCoords.push(c(1, 1));
       var cost = planner.getCost(map, new BasicHouse(c(0, 3), Direction.South));
 
+      /*******************
+       4    # #
+       3    s #
+       2      # #
+       1  b b b #
+       0    r # #
+
+         -1 0 1 2 3
+       *******************/
       expect(cost).to.equal(8);
     });
 
@@ -185,5 +194,8 @@ describe("Road planner", () => {
                                    new SpecificRoadEdge(c(1, 2), c(1, 0)),
                                    new SpecificRoadEdge(c(1, 0), c(0, 0))]);
     });
+
+    // TODO: Deal with generating multiple exit-coord routes in the happy case
+    it("should return a route that reaches both cells for multi-cell buildings only half connected to roads");
   })
 });

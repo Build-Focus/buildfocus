@@ -8,6 +8,10 @@ interface CostedCoord {
   cost: number;
 }
 
+interface CostedRoute extends Array<Coord> {
+  cost: number;
+}
+
 function findCostedCoord(costedCoordArray: CostedCoord[], coordWanted: Coord): CostedCoord {
   for (let costedCoord of costedCoordArray) {
     if (costedCoord.coord.equals(coordWanted)) return costedCoord;
@@ -26,7 +30,7 @@ function searchGraph(goalTest: (c: Coord) => boolean,
                      obstacleTest: (c: Coord) => boolean,
                      coordCost: (c: Coord) => number,
                      heuristic: (c: Coord) => number,
-                     startCoords: Coord[]): Coord[] {
+                     startCoords: Coord[]): CostedRoute {
   // Coords already explored, thus having a known cost from a start point
   var exploredCoords: CostedCoord[] = [];
 
@@ -37,12 +41,18 @@ function searchGraph(goalTest: (c: Coord) => boolean,
   while (!explorableCoords.empty()) {
     let currentCoord = explorableCoords.pop().coord;
 
-    if (goalTest(currentCoord)) {
-      return backtrackToGetRoute(currentCoord, exploredCoords, startCoords);
-    }
-
     let finalCost = _.containsEqual(startCoords, currentCoord) ?
                     0 : (getCheapestNeighbourCost(currentCoord, exploredCoords) + coordCost(currentCoord));
+
+    if (goalTest(currentCoord)) {
+      var route = backtrackToGetRoute(currentCoord, exploredCoords, startCoords);
+
+      var nonStartCoords = route.filter((c) => !_.containsEqual(startCoords, c));
+      var cost = _.sum(nonStartCoords, coordCost);
+
+      // TODO: Use new intersection types to improve Lodash types here
+      return <CostedRoute> _.merge(route, { cost: cost });
+    }
 
     let unexploredNeighbours = currentCoord.getDirectNeighbours()
                                            .filter((c) => !containsCostedCoord(exploredCoords, c));

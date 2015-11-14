@@ -15,11 +15,11 @@ class RoadPlanner {
   getCost(map: Map, building: Building): number {
     var route = this.getRoute(map, building);
 
-    if (route !== null) return route.length - 1;
+    if (route !== null) return route.cost;
     else return Number.POSITIVE_INFINITY;
   }
 
-  private getRoute(map: Map, building: Building): Coord[] {
+  private getRoute(map: Map, building: Building) {
     let exitCoords = building.coords.map((c) => c.getNeighbour(building.direction));
 
     // If either exit is totally blocked, we immediately fail outright
