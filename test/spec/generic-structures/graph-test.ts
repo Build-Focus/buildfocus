@@ -13,23 +13,28 @@ function matchOnly(goalCoord: Coord): (c: Coord) => boolean {
   return ((c) => goalCoord.x === c.x && goalCoord.y === c.y);
 }
 
+function costedRoute(steps, cost = null) {
+  steps.cost = cost || steps.length-1;
+  return steps;
+}
+
 describe("Graph", () => {
   it("can find a one step route", () => {
     var route = searchGraph(matchOnly(c(1, 0)), always(false), always(1), always(0), [c(0, 0)]);
 
-    expect(route).to.deep.equal([c(0, 0), c(1, 0)]);
+    expect(route).to.deep.equal(costedRoute([c(0, 0), c(1, 0)]));
   });
 
   it("can find a two step route", () => {
     var route = searchGraph(matchOnly(c(0, -2)), always(false), always(1), always(0), [c(0, 0)]);
 
-    expect(route).to.deep.equal([c(0, 0), c(0, -1), c(0, -2)]);
+    expect(route).to.deep.equal(costedRoute([c(0, 0), c(0, -1), c(0, -2)]));
   });
 
   it("can route around obstacles", () => {
     var route = searchGraph(matchOnly(c(0, -2)), matchOnly(c(0, -1)), always(1), always(0), [c(0, 0)]);
 
-    expect(route).to.deep.equal([c(0, 0), c(1, 0), c(1, -1), c(1, -2), c(0, -2)]);
+    expect(route).to.deep.equal(costedRoute([c(0, 0), c(1, 0), c(1, -1), c(1, -2), c(0, -2)]));
   });
 
   it("returns null if there's no route available", () => {
@@ -43,7 +48,7 @@ describe("Graph", () => {
     var oneExpensiveSquare = (coord: Coord) => coord.x === 0 && coord.y === -1 ? 4 : 1;
     var route = searchGraph(matchOnly(c(0, -2)), always(false), oneExpensiveSquare, always(0), [c(0, 0)]);
 
-    expect(route).to.deep.equal([c(0, 0), c(1, 0), c(1, -1), c(1, -2), c(0, -2)]);
+    expect(route).to.deep.equal(costedRoute([c(0, 0), c(1, 0), c(1, -1), c(1, -2), c(0, -2)]));
   });
 
   it("never explores the wrong cells, if given a good heuristic", () => {

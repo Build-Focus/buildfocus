@@ -62,14 +62,13 @@ class RoadPlanner {
   static SimpleRoadPlanner = new RoadPlanner();
 
   static GridRoadPlanner = new RoadPlanner((coord: Coord) => {
-    var onXGrid = coord.x % 3 === 0;
-    var onYGrid = coord.y % 3 === 0;
+    var onXGrid = (coord.x % 3) === 0;
+    var onYGrid = (coord.y % 2) === 0;
 
-    var score = 1 + (!onXGrid ? 2 : 0) + (!onYGrid ? 2 : 0) + (!onXGrid && !onYGrid ? 5 : 0);
-    return score;
+    if (!onXGrid && !onYGrid) return 100;
+    if (!onXGrid || !onYGrid) return 10;
+    else return 0.5;
   });
-
-  static
 }
 
 export = RoadPlanner;

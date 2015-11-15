@@ -124,7 +124,7 @@ module.exports = function (grunt) {
       options: {
         module: 'amd',
         target: 'es5',
-        inlinesources: true,
+        inlineSources: true,
         fast: 'never'
       },
 

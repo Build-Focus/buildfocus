@@ -32,6 +32,11 @@ export interface Building {
   serialize(): serialization.BuildingData;
 }
 
+export interface CostedBuilding {
+  building: Building;
+  cost: number;
+}
+
 export class AbstractBuilding {
   constructor(private _buildingType: BuildingType, private _coords: Coord[], private _direction: Direction) {
     if (this.constructor === AbstractBuilding) {

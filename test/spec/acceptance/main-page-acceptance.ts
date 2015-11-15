@@ -35,7 +35,7 @@ describe('Acceptance: Main page', function () {
 
     it("should load from persisted data", function () {
       var city = new City();
-      city.construct(city.getPossibleUpgrades()[0]);
+      city.construct(city.getPossibleUpgrades()[0].building);
 
       var viewModel = new MainPageViewModel();
       chromeStub.storage.local.get.yield({ "city-data": city.toJSON() });
@@ -47,7 +47,7 @@ describe('Acceptance: Main page', function () {
 
     it("should update the city when it's updated remotely", function () {
       var cityWithNewBuilding = new City();
-      cityWithNewBuilding.construct(cityWithNewBuilding.getPossibleUpgrades()[0]);
+      cityWithNewBuilding.construct(cityWithNewBuilding.getPossibleUpgrades()[0].building);
 
       var viewModel = new MainPageViewModel();
       chromeStub.storage.onChanged.trigger(

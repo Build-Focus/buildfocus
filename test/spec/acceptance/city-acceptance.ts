@@ -51,7 +51,7 @@ describe('Acceptance: City', function () {
   it("should render a building", function () {
     var city = new City();
 
-    city.construct(city.getPossibleUpgrades()[0]);
+    city.construct(city.getPossibleUpgrades()[0].building);
     var canvas = render(city);
 
     return expect(canvas).to.soon.be.image("expected-images/single-building.png");
@@ -61,7 +61,7 @@ describe('Acceptance: City', function () {
     var city = new City();
     var canvas = render(city);
 
-    city.construct(city.getPossibleUpgrades()[0]);
+    city.construct(city.getPossibleUpgrades()[0].building);
 
     return expect(canvas).to.soon.be.image("expected-images/single-building.png");
   });
@@ -69,7 +69,7 @@ describe('Acceptance: City', function () {
   it("should render a block correctly", function () {
     var city = new City();
 
-    _.times(10, () => city.construct(_.first(city.getPossibleUpgrades())));
+    _.times(10, () => city.construct(_.max(city.getPossibleUpgrades(), 'cost').building));
     var canvas = render(city);
 
     return expect(canvas).to.soon.be.image("expected-images/10x-0th-upgrade-city.png");
@@ -79,11 +79,11 @@ describe('Acceptance: City', function () {
     var city = new City();
 
     _.times(10, () => city.construct(_(city.getPossibleUpgrades())
-                                      .where({ buildingType: BuildingType.BasicHouse })
-                                      .first()));
+                                      .where({ building: { buildingType: BuildingType.BasicHouse } })
+                                      .max('cost').building));
     _.times(5, () => city.construct(_(city.getPossibleUpgrades())
-                                     .reject({ buildingType: BuildingType.BasicHouse })
-                                     .last()));
+                                     .reject({ building: { buildingType: BuildingType.BasicHouse } })
+                                     .min('cost').building));
     var canvas = render(city);
 
     return expect(canvas).to.soon.be.image("expected-images/10x-new-5x-upgrade-city.png");

@@ -95,7 +95,7 @@ describe('City Integration - City', () => {
       var city = new City();
       city.construct(new BasicHouse(c(1, 0), Direction.West));
 
-      var potentialBuildings = city.getPossibleUpgrades();
+      var potentialBuildings = city.getPossibleUpgrades().map((upgrade) => upgrade.building);
 
       var basicHouseUpgradeCoords = _(potentialBuildings)
         .where({buildingType: BuildingType.BasicHouse})
@@ -116,7 +116,8 @@ describe('City Integration - City', () => {
       var city = new City();
       buildTwoNiceHouses(city);
 
-      var fancyHouseUpgrades = _.where(city.getPossibleUpgrades(), {buildingType: BuildingType.FancyHouse});
+      var fancyHouseUpgrades = _.where(city.getPossibleUpgrades().map((upgrade) => upgrade.building),
+                                       { buildingType: BuildingType.FancyHouse });
 
       expect(fancyHouseUpgrades.length).to.equal(2);
       expect(fancyHouseUpgrades[0]).to.deep.equal(new FancyHouse(c(1, 0), c(2, 0), Direction.North));

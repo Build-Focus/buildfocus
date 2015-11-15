@@ -12,6 +12,7 @@ import Direction = require('city/direction');
 
 import Buildings = require('city/buildings/buildings');
 import Building = Buildings.Building;
+import CostedBuilding = Buildings.CostedBuilding;
 
 import RoadPart = require('city/roads/road-part');
 
@@ -25,8 +26,6 @@ function canonicalForm(building: Building) {
   return JSON.stringify(data);
 }
 
-const GridRoadPlanner = new RoadPlanner();
-
 // Handles setup and defines the external API of the city model
 class City {
   private cellFactory: (Coord) => Cell;
@@ -36,7 +35,7 @@ class City {
   constructor() {
     this.cellFactory = (coord: Coord) => new Cell(coord, CellType.Grass);
     this.map = new Map(this.cellFactory);
-    this.roadPlanner = GridRoadPlanner;
+    this.roadPlanner = RoadPlanner.GridRoadPlanner;
 
     ko.track(this);
   }
@@ -76,15 +75,19 @@ class City {
   private getPossibleBuildingUpgrades(): Building[] {
     return _(this.getBuildings()).map((building) => building.getPotentialUpgrades())
                                  .flatten()
-                                 .unique((building: Building) => JSON.stringify(canonicalForm(building)))
+                                 .unique(canonicalForm)
                                  .filter((building) => building.canBeBuiltOn(this.map))
                                  .value();
   }
 
-  getPossibleUpgrades(): Building[] {
+  getPossibleUpgrades(): Buildings.CostedBuilding[] {
     return this.getPossibleNewBuildings()
                .concat(this.getPossibleBuildingUpgrades())
-               .filter((building) => this.roadPlanner.getCost(this.map, building) < Number.POSITIVE_INFINITY);
+               .map((building) => { return {
+                 building: building,
+                 cost: this.roadPlanner.getCost(this.map, building)
+               } })
+               .filter((upgrade) => upgrade.cost < Number.POSITIVE_INFINITY);
   }
 
   onChanged = subscribableEvent();

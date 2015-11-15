@@ -6,18 +6,19 @@ import Coord = require('city/coord');
 import Buildings = require('city/buildings/buildings');
 import Building = Buildings.Building;
 
-function distance(c: Coord): number {
+function distanceFrom0(c: Coord): number {
   return Math.sqrt(Math.pow(c.x, 2) + Math.pow(c.y, 2));
 }
 
-export = function weightUpgrades(buildings: Building[]): WeightedList<Building> {
+export = function weightUpgrades(upgrades: Buildings.CostedBuilding[]): WeightedList<Building> {
   var weightedList = new WeightedList<Building>();
 
-  var maxDistance = _.max(buildings.map((building) => _.max(building.coords.map(distance))));
+  upgrades.forEach((u) => u.cost += _.max(u.building.coords.map(distanceFrom0)));
+  var maxCost = _.max(upgrades.map((u) => u.cost));
 
-  buildings.forEach((building) => {
-    var buildingWeight = Math.pow((maxDistance + 1) - _.max(building.coords.map(distance)), 3);
-    weightedList.push(building, buildingWeight);
+  upgrades.forEach((upgrade) => {
+    var buildingWeight = maxCost / (upgrade.cost || 0.1);
+    weightedList.push(upgrade.building, buildingWeight);
   });
 
   return weightedList;
