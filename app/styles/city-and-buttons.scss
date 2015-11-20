@@ -12,13 +12,16 @@
     flex-grow: 1;
 
     box-sizing: border-box;
-    margin: 40px;
+    margin: 40px 0;
 
-    min-height: 600px;
     width: 100%;
 
     animation: fadeInLoad 0.3s;
     -webkit-animation: fadeInLoad 0.3s;
+
+    canvas {
+      display: block;
+    }
   }
 
   @keyframes fadeInLoad {
@@ -99,13 +102,14 @@
 
   .failed-tag {
     position: absolute;
-    left: 0;
-    right: 0;
-    top: 2%;
-    transform: rotate(-30deg);
+    top: 14%;
+    left: 50%;
+    transform: translateX(-50%);
 
-    font-size: 18em;
-    color: rgba(255,0,0,0.8);
-    text-align: center;
+    margin: 0;
+
+    font-size: 18vw;
+    color: rgba(255,0,0,0.6);
+    text-shadow: 0 0 5px rgba(150, 0, 0, 0.3);
   }
 }
