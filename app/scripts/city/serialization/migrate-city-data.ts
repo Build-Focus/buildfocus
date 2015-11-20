@@ -11,19 +11,26 @@ import _ = require('lodash');
  * whether migration was necessary (and thus whether to propagate an update immediately).
  */
 function migrateCityData(data: any): serialization.CityData {
-  switch (data.version) {
-    case 1:
-      return data;
-    case undefined:
-      return migratePreversionToV1(data);
-    default:
-      throw new Error("Could not parse loaded city data (only unversioned and v1 supported): " + JSON.stringify(data));
+  if (_.isString(data)) {
+    return migratePreversionToV1(<string> data);
+  } else {
+    switch (data.version) {
+      case 1:
+        return data;
+      default:
+        throw new Error("Could not parse loaded city data (only unversioned and v1 supported): " + JSON.stringify(data));
+    }
   }
 }
 
-function migratePreversionToV1(data: preversionSerialization.CityData): serialization.CityData {
+function migratePreversionToV1(data: string): serialization.CityData {
+  var parsedData: preversionSerialization.CityData = JSON.parse(data);
+  if ((<any>parsedData).version !== undefined) {
+    throw new Error("Found preversion string-based city data, but with a version number!\n" + data);
+  }
+
   // TODO: Update lodash type definitions so it can work out this without the explicit type
-  return <serialization.CityData> _.merge(_.cloneDeep(data), { version: 1 });
+  return <serialization.CityData> _.merge(_.cloneDeep(parsedData), { version: 1 });
 }
 
 export = migrateCityData;
