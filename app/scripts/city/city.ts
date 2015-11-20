@@ -20,6 +20,8 @@ import RoadPlanner = require('city/roads/road-planner');
 
 import BasicHouse = require('city/buildings/basic-house');
 
+import serialization = require('city/serialization/serialization-format');
+
 function canonicalForm(building: Building) {
   var data = building.serialize();
   data.coords = _.sortBy(data.coords, (coord) => JSON.stringify(coord));
@@ -113,15 +115,15 @@ class City {
     this.onChanged.trigger();
   }
 
-  updateFromJSON(json: string): void {
-    var data = JSON.parse(json);
+  updateFromJSON(data: serialization.CityData): void {
     this.map = Map.deserialize(data.map, this.cellFactory);
   }
 
-  toJSON(): string {
-    return JSON.stringify({
-      map: this.map.serialize()
-    });
+  toJSON(): serialization.CityData {
+    return {
+      map: this.map.serialize(),
+      version: 1
+    };
   }
 }
 

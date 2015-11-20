@@ -14,7 +14,7 @@ import EndlessRoadEdge = require('app/scripts/city/roads/endless-road-edge');
 import Coord = require("app/scripts/city/coord");
 import Direction = require("app/scripts/city/direction");
 import BasicHouse = require("app/scripts/city/buildings/basic-house");
-import serialization = require("app/scripts/city/city-serialization");
+import serialization = require("app/scripts/city/serialization/serialization-format");
 
 function buildCell(x, y) {
   return new Cell(new Coord(x, y), CellType.Grass);

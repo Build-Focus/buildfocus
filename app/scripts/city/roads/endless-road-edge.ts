@@ -5,7 +5,7 @@ import Direction = require('city/direction');
 import Coord = require('city/coord');
 import RoadPart = require('city/roads/road-part');
 import RoadPartType = require('city/roads/road-part-type');
-import serialization = require('city/city-serialization');
+import serialization = require('city/serialization/serialization-format');
 
 import RoadEdge = require('city/roads/road-edge');
 

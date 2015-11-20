@@ -9,12 +9,17 @@ import synchronizedObservable = require('observables/synchronized-observable');
 import Buildings = require('city/buildings/buildings');
 import City = require('city/city');
 
+import migrateCityData = require('city/serialization/migrate-city-data');
+
 class Score {
   city = new City();
   private cityData = synchronizedObservable("city-data", this.city.toJSON(), "local");
 
   constructor() {
-    this.cityData.subscribe((newCityData) => this.city.updateFromJSON(newCityData));
+    this.cityData.subscribe((newCityData) => {
+      var dataInCurrentFormat = migrateCityData(newCityData);
+      this.city.updateFromJSON(dataInCurrentFormat);
+    });
     this.city.onChanged(() => this.cityData(this.city.toJSON()));
   }
 

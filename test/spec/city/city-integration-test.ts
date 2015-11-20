@@ -145,6 +145,29 @@ describe('City Integration - City', () => {
     });
   });
 
+  describe("serialization then deserialization", () => {
+    it("should have no effect when with a blank city", () => {
+      var city = new City();
+
+      var serializedInitially = city.toJSON();
+      city.updateFromJSON(serializedInitially);
+      var serializedAfterDeserialization = city.toJSON();
+
+      expect(serializedAfterDeserialization).to.deep.equal(serializedInitially)
+    });
+
+    it("should have no effect when with a city after a few constructions", () => {
+      var city = new City();
+      buildTwoNiceHouses(city);
+
+      var serializedInitially = city.toJSON();
+      city.updateFromJSON(serializedInitially);
+      var serializedAfterDeserialization = city.toJSON();
+
+      expect(serializedAfterDeserialization).to.deep.equal(serializedInitially)
+    });
+  });
+
   it("should successfully serialize every reachable form of building", () => {
     var possibleBuildings = getAllReachableBuildings();
 

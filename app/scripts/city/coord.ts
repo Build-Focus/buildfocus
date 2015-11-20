@@ -1,5 +1,5 @@
 import Direction = require('city/direction');
-import serialize = require('city/city-serialization');
+import serialize = require('city/serialization/serialization-format');
 
 const NEIGHBOUR_OFFSETS = [
   [0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]

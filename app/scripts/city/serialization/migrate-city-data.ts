@@ -3,7 +3,7 @@ import preversionSerialization = require('city/serialization/preversion-serializ
 
 import _ = require('lodash');
 
-export function migrateCityData(data: any): serialization.CityData {
+function migrateCityData(data: any): serialization.CityData {
   switch (data.version) {
     case 1:
       return data;
@@ -18,3 +18,5 @@ function migratePreversionToV1(data: preversionSerialization.CityData): serializ
   // TODO: Update lodash type definitions so it can work out this without the explicit type
   return <serialization.CityData> _.merge(_.cloneDeep(data), { version: 1 });
 }
+
+export = migrateCityData;

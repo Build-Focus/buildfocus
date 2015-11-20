@@ -2,7 +2,7 @@
 
 import CellType = require('city/cell-type');
 import Coord = require('city/coord');
-import serialization = require('city/city-serialization');
+import serialization = require('city/serialization/serialization-format');
 
 class Cell {
   constructor(public coord: Coord, public cellType: CellType) { }

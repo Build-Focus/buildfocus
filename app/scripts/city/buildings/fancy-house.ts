@@ -1,5 +1,5 @@
 import Buildings = require('city/buildings/buildings');
-import serialization = require('city/city-serialization');
+import serialization = require('city/serialization/serialization-format');
 
 import Direction = require('city/direction');
 import Map = require('city/map');

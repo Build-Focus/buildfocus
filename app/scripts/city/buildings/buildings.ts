@@ -4,7 +4,7 @@ import Direction = require('city/direction');
 import Map = require('city/map');
 import Coord = require('city/coord');
 import BuildingType = require('city/buildings/building-type');
-import serialization = require('city/city-serialization');
+import serialization = require('city/serialization/serialization-format');
 import FancyHouse = require('city/buildings/fancy-house');
 
 interface BuildingFactory {

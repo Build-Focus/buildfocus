@@ -1,6 +1,6 @@
 'use strict';
 
-import serialization = require('app/scripts/city/city-serialization');
+import serialization = require('app/scripts/city/serialization/serialization-format');
 import Buildings = require('app/scripts/city/buildings/buildings');
 import BuildingType = require('app/scripts/city/buildings/building-type');
 
@@ -33,7 +33,7 @@ function startPomodoro() {
   chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
 }
 
-function getCityData(): string {
+function getCityData(): serialization.CityData {
   return _(chromeStub.storage.local.set.args).map(function (args) {
     return args[0]["city-data"];
   }).reject(_.isUndefined).last();
@@ -49,7 +49,7 @@ function getCityValue() {
   };
 
   if (lastStoredCityData) {
-    return _.sum(JSON.parse(lastStoredCityData).map.buildings, (building: Buildings.Building) => {
+    return _.sum(lastStoredCityData.map.buildings, (building: Buildings.Building) => {
       return buildingPointsValue[building.buildingType]
     });
   } else {
@@ -60,7 +60,7 @@ function getCityValue() {
 function getCitySize() {
   var lastStoredCityData = getCityData();
   if (lastStoredCityData) {
-    return JSON.parse(lastStoredCityData).map.buildings.length;
+    return lastStoredCityData.map.buildings.length;
   } else {
     return 0;
   }

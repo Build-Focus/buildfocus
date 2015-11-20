@@ -14,7 +14,7 @@ import RoadEdge = require('city/roads/road-edge');
 import EndlessRoadEdge = require('city/roads/endless-road-edge');
 import SpecificRoadEdge = require('city/roads/specific-road-edge');
 
-import serialization = require('city/city-serialization');
+import serialization = require('city/serialization/serialization-format');
 
 interface CellFactory {
   (coord): Cell;
