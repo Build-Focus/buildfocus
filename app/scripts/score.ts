@@ -13,16 +13,26 @@ import migrateCityData = require('city/serialization/migrate-city-data');
 
 class Score {
   city = new City();
-  private cityData = synchronizedObservable("city-data", this.city.toJSON(), "local");
 
-  constructor() {
-    this.cityData.subscribe((newCityData) => {
-      var dataInCurrentFormat = migrateCityData(newCityData);
-      this.city.updateFromJSON(dataInCurrentFormat);
+  private rawCityData = synchronizedObservable("city-data", this.city.toJSON(), "local");
+
+  private cityData = ko.computed({
+    read: () => {
+      var rawData = this.rawCityData();
+      var dataInCurrentFormat = migrateCityData(rawData);
 
       // If we had to do any migration, update the saved city data
-      if (newCityData !== dataInCurrentFormat) this.cityData(dataInCurrentFormat);
-    });
+      if (rawData !== dataInCurrentFormat) {
+        this.rawCityData(dataInCurrentFormat);
+      }
+
+      return dataInCurrentFormat;
+    },
+    write: this.rawCityData
+  });
+
+  constructor() {
+    this.cityData.subscribe((cityData) => this.city.updateFromJSON(cityData));
     this.city.onChanged(() => this.cityData(this.city.toJSON()));
   }
 

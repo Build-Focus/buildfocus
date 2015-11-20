@@ -11,21 +11,36 @@ export = function synchronizedObservable<T>(valueName: string, initialValue: T =
   // We don't want to send changes back to Chrome if we just got them from Chrome, or
   // we get some painful races and potential ABA cycles
   var currentlyUpdatingFromSync = false;
+  var currentSyncUpdateValue = null;
+
+  function currentlyUpdatingTo(value: T) {
+    return currentlyUpdatingFromSync && currentSyncUpdateValue === value;
+  }
+
+  function startUpdatingTo(value: T) {
+    currentlyUpdatingFromSync = true;
+    currentSyncUpdateValue = value;
+  }
+
+  function updateFinished() {
+    currentlyUpdatingFromSync = false;
+  }
 
   chrome.storage[storageArea].get(valueName, function (loadedData) {
     reportChromeErrors("Failed to read from chrome storage");
 
     _.forEach(loadedData, function (value, key) {
       if (key === valueName) {
-        currentlyUpdatingFromSync = true;
+        startUpdatingTo(<T> value);
         observable(<T> value);
-        currentlyUpdatingFromSync = false;
+        updateFinished();
       }
     });
   });
 
   observable.subscribe(function (newValue) {
-    if (!currentlyUpdatingFromSync) {
+    // Ignore updates that we're in the process or propagating ourselves, or we end up with update cycles
+    if (!currentlyUpdatingTo(newValue)) {
       var changes = {};
       changes[valueName] = newValue;
       chrome.storage[storageArea].set(changes, () => reportChromeErrors("Failed to store sync'd observable data"));
@@ -37,9 +52,9 @@ export = function synchronizedObservable<T>(valueName: string, initialValue: T =
 
     _.forEach(changes, function (change: chrome.storage.StorageChange, key) {
       if (key === valueName) {
-        currentlyUpdatingFromSync = true;
+        startUpdatingTo(change.newValue);
         observable(change.newValue);
-        currentlyUpdatingFromSync = false;
+        updateFinished();
       }
     });
   });

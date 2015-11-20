@@ -63,4 +63,15 @@ describe('Synchronized Observable', function () {
     expect(chromeStub.storage.sync.set.calledOnce).to.equal(true);
     expect(chromeStub.storage.sync.set.args[0][0]["sync-value-name"]).to.equal("new-value");
   });
+
+  it('should propagate updates of new values by subscribers', function () {
+    var observable = synchronizedObservable("value-name", "initial-value");
+    observable.subscribe((newValue) => newValue !== "updated-value" ? observable("updated-value") : null);
+
+    observable("new-value");
+
+    expect(chromeStub.storage.local.set.calledTwice).to.equal(true);
+    expect(chromeStub.storage.local.set.args[0][0]["value-name"]).to.equal("new-value");
+    expect(chromeStub.storage.local.set.args[1][0]["value-name"]).to.equal("updated-value");
+  });
 });
