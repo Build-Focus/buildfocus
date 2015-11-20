@@ -25,6 +25,8 @@ function render(city) {
 var testDiv;
 
 describe('Acceptance: City', function () {
+  this.timeout(5000);
+
   beforeEach(function () {
     testDiv = document.createElement("div");
     testDiv.style.display = "block";
