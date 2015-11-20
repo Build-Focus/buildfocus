@@ -19,6 +19,9 @@ class Score {
     this.cityData.subscribe((newCityData) => {
       var dataInCurrentFormat = migrateCityData(newCityData);
       this.city.updateFromJSON(dataInCurrentFormat);
+
+      // If we had to do any migration, update the saved city data
+      if (newCityData !== dataInCurrentFormat) this.cityData(dataInCurrentFormat);
     });
     this.city.onChanged(() => this.cityData(this.city.toJSON()));
   }

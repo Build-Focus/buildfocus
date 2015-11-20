@@ -3,6 +3,13 @@ import preversionSerialization = require('city/serialization/preversion-serializ
 
 import _ = require('lodash');
 
+/**
+ * Migrates the given city data to the most up to date form, if possible.
+ *
+ * Note that it's important this returns the exact same referrentially equal object
+ * that it's given if there are no changes required; we use that in Score to detect
+ * whether migration was necessary (and thus whether to propagate an update immediately).
+ */
 function migrateCityData(data: any): serialization.CityData {
   switch (data.version) {
     case 1:
