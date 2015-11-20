@@ -1,38 +1,14 @@
+import preversionSerialization = require('preversion-serialization-format');
+
 export interface CityData {
-  map: MapData,
+  map: preversionSerialization.MapData,
   version: number
 }
 
-export interface MapData {
-  cells: CellData[];
-  buildings: BuildingData[];
-  roads: RoadData[];
-}
-
-export interface CellData {
-  coord: CoordData;
-  cellType: number;
-}
-
-export interface BuildingData {
-  coords: CoordData[];
-  buildingType: number;
-  direction: number;
-}
-
-export interface SpecificRoadData {
-  start: CoordData;
-  end: CoordData;
-}
-
-export interface EndlessRoadData {
-  start: CoordData;
-  direction: number;
-}
-
-export type RoadData = SpecificRoadData | EndlessRoadData;
-
-export interface CoordData {
-  x: number;
-  y: number;
-}
+export type MapData = preversionSerialization.MapData;
+export type CellData = preversionSerialization.CellData;
+export type BuildingData = preversionSerialization.BuildingData;
+export type SpecificRoadData = preversionSerialization.SpecificRoadData;
+export type EndlessRoadData = preversionSerialization.EndlessRoadData;
+export type RoadData = preversionSerialization.RoadData;
+export type CoordData = preversionSerialization.CoordData;
