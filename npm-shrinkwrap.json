@@ -2905,7 +2905,7 @@
       "resolved": "https://registry.npmjs.org/sax/-/sax-0.6.1.tgz"
     },
     "selenium-webdriver": {
-      "version": "2.48.2",
+      "version": "2.47.0",
       "from": "selenium-webdriver@>=2.45.1 <3.0.0",
       "resolved": "https://registry.npmjs.org/selenium-webdriver/-/selenium-webdriver-2.48.2.tgz",
       "dependencies": {
