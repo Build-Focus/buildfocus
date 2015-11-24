@@ -11,6 +11,9 @@ build:
         - script:
             name: Install packages from Bower
             code: bower install --allow-root
+        - script:
+            name: print env
+            code: env
         - grunt:
             tasks: ci-test
             fail-on-warnings: true
