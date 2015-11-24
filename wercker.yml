@@ -14,6 +14,7 @@ build:
         - grunt:
             tasks: ci-test
             fail-on-warnings: true
+        - internal/store
 
     services:
         - pimterry/selenium-chrome-ftp
