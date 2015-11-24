@@ -15,7 +15,7 @@ build:
             tasks: ci-test
             fail-on-warnings: true
     after-steps:
-        - internal/store
+        - internal/store-container
 
     services:
         - pimterry/selenium-chrome-ftp
