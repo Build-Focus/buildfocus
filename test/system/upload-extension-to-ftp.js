@@ -14,6 +14,18 @@ var config = {
   exclude: ['.git', '.idea', 'tmp/*']
 };
 
+ftpDeploy.on('uploading', function(data) {
+  console.log("Uploading: ", JSON.stringify(data));
+});
+
+ftpDeploy.on('uploaded', function(data) {
+  console.log("Upload completed: ", JSON.stringify(data));
+});
+
+ftpDeploy.on('upload-error', function (data) {
+  console.log("Upload error: ", data.err);
+});
+
 ftpDeploy.deploy(config, function(err) {
   if (err) console.log(err)
   else console.log('Upload completed');
