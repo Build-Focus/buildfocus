@@ -100,6 +100,21 @@ describe('Pomodoro Integration - Pomodoro service', function () {
       expect(pomodoroService.isActive()).to.equal(false);
     });
 
+    it("should stop the pomodoro completely if a bad URL is open initially", function () {
+      var successCallback = sinon.stub(), errorCallback = sinon.stub();
+      badBehaviourMonitorFake.currentBadTabs([{url: "google.com", id: 1}]);
+
+      pomodoroService.onPomodoroSuccess(successCallback);
+      pomodoroService.onPomodoroFailure(errorCallback);
+      pomodoroService.start();
+
+      badBehaviourMonitorFake.currentBadTabs([{url: "twitter.com", id: 1}]);
+
+      // Despite the second bad URL, no new updates should happen
+      expect(successCallback.called).to.equal(false);
+      expect(errorCallback.callCount).to.equal(1);
+    });
+
     it("should never call success after an error occurred, even after full duration", function () {
       var successCallback = sinon.stub(), errorCallback = sinon.stub();
 
@@ -110,7 +125,7 @@ describe('Pomodoro Integration - Pomodoro service', function () {
       clockStub.tick(POMODORO_DURATION);
 
       expect(successCallback.called).to.equal(false);
-      expect(errorCallback.calledOnce).to.equal(true);
+      expect(errorCallback.callCount).to.equal(1);
     });
 
     it("should ignore requests to start a pomodoro while one is in progress", function () {

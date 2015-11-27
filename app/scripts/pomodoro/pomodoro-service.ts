@@ -43,7 +43,7 @@ class PomodoroService {
     });
   }
 
-  private badTabSubscription: KnockoutSubscription;
+  private badTabSubscription: TriggerableKnockoutSubscription;
 
   start = () => {
     if (this.isActive()) {
@@ -59,12 +59,15 @@ class PomodoroService {
       this.onPomodoroSuccess.trigger();
     });
 
-    this.badTabSubscription = this.badBehaviourMonitor.currentBadTabs.subscribeAndUpdate((tabs) => {
+    // Currently, if this triggers *immediately*, it can't unsubscribe (because the subscription is only available
+    // after the return). Async is nasty; really we want: subscribe -> trigger now explicitly -> return;
+    this.badTabSubscription = this.badBehaviourMonitor.currentBadTabs.triggerableSubscribe((tabs) => {
       if (tabs.length > 0) {
         var firstBadTab = this.badBehaviourMonitor.currentBadTabs()[0];
         this.failPomodoro(firstBadTab.id, firstBadTab.url);
       }
     });
+    this.badTabSubscription.trigger();
   };
 
   private clearBehaviourSubscription() {
