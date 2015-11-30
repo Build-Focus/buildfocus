@@ -7,6 +7,7 @@ import ko = require('knockout');
 import Score = require('score');
 import easeljs = require('createjs');
 
+import tracking = require('tracking');
 import ProxyPomodoroService = require('pomodoro/proxy-pomodoro-service');
 import CityRenderer = require('city/rendering/city-renderer');
 
@@ -51,6 +52,7 @@ class MainPageViewModel {
 
   startPomodoro() {
     this.pomodoroService.start();
+    tracking.trackEvent("start-from-main-page");
     closeThisTab();
   }
 

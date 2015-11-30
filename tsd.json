@@ -43,6 +43,9 @@
     },
     "heap/heap.d.ts": {
       "commit": "d0adccc436197cc7c3559322721e9df86b892bd6"
+    },
+    "calq/calq.d.ts": {
+      "commit": "fb2b3b1e068c9ff7d8f9b0851c08d37d96c95c38"
     }
   }
 }

@@ -261,7 +261,8 @@ module.exports = function (grunt) {
             '*.html',
             'styles/libs/**/*.*',
             'styles/fonts/**/*.*',
-            '_locales/**/*.json'
+            '_locales/**/*.json',
+            'scripts/dependencies/**/*.js'
           ].concat(bowerDependencies).concat(bowerDevDependencies)
         }]
       },
