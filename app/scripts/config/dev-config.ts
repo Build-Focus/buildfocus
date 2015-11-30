@@ -15,7 +15,8 @@ const devConfig: ApplicationConfig = {
   },
 
   trackingConfig: {
-    enabled: true
+    enabled: true,
+    extraProfileInfo: { dev: true }
   }
 };
 

@@ -49,7 +49,7 @@ interface ApplicationConfig {
   pomodoroDuration: number;
   breakDuration: number;
   rollbarConfig: Object;
-  trackingConfig: { enabled: boolean };
+  trackingConfig: { enabled: boolean, extraProfileInfo: {} };
 }
 
 declare var config: ApplicationConfig;

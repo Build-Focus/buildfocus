@@ -1,4 +1,6 @@
+import _ = require('lodash');
 import config = require('config');
+import synchronizedObservable = require('observables/synchronized-observable');
 
 function setUpCalc() {
   (function(e, t) {
@@ -46,7 +48,15 @@ function setUpCalc() {
 }
 
 function identifyCurrentUser() {
-  // TODO: Track a unique id for this user, tie it to chrome login data maybe if possible?
+  chrome.identity.getProfileUserInfo((userInfo) => {
+    calq.user.identify(userInfo.id);
+
+    var userProfile: any = _.merge({
+      "$email": userInfo.email
+    }, config.trackingConfig.extraProfileInfo);
+
+    calq.user.profile(userProfile);
+  });
 }
 
 interface Tracking {

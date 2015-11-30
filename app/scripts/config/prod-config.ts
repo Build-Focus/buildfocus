@@ -15,7 +15,8 @@ const prodConfig: ApplicationConfig = {
   },
 
   trackingConfig: {
-    enabled: false
+    enabled: false,
+    extraProfileInfo: { prod: true }
   }
 };
 

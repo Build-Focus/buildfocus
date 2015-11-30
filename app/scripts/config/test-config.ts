@@ -9,7 +9,8 @@ const testConfig: ApplicationConfig = {
   },
 
   trackingConfig: {
-    enabled: false
+    enabled: false,
+    extraProfileInfo: { }
   }
 };
 

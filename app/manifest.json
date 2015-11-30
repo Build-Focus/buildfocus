@@ -25,6 +25,8 @@
     "tabs",
     "storage",
     "notifications",
+    "identity",
+    "identity.email",
     "http://*/*",
     "https://*/*"
   ],
