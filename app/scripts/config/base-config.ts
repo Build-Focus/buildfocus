@@ -49,6 +49,7 @@ interface ApplicationConfig {
   pomodoroDuration: number;
   breakDuration: number;
   rollbarConfig: Object;
+  trackingConfig: { enabled: boolean };
 }
 
 declare var config: ApplicationConfig;

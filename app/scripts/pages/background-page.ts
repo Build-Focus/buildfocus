@@ -6,6 +6,8 @@ Rollbar.enable();
 import ko = require("knockout");
 import _ = require("lodash");
 
+import tracking = require('tracking');
+
 import Score = require("score");
 import SettingsRepository = require("repositories/settings-repository");
 import currentTabs = require("url-monitoring/current-tabs");
@@ -45,6 +47,9 @@ export = function setupBackgroundPage() {
     chrome.tabs.create({url: chrome.extension.getURL("main.html")});
   }
 
-  focusButton.onClick(showMainPage);
   notificationService.onMore(showMainPage);
+  focusButton.onClick(() => {
+    tracking.trackEvent("open-page-from-focus-button");
+    showMainPage();
+  });
 }

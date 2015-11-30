@@ -12,6 +12,10 @@ const prodConfig: ApplicationConfig = {
     },
     verbose: true,
     reportLevel: "warning"
+  },
+
+  trackingConfig: {
+    enabled: false
   }
 };
 

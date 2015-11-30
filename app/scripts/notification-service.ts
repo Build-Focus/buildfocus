@@ -2,7 +2,9 @@
 
 import _ = require('lodash');
 import SubscribableEvent = require('subscribable-event');
+
 import reportChromeErrors = require('report-chrome-errors');
+import tracking = require('tracking');
 
 import Buildings = require('city/buildings/buildings');
 
@@ -23,6 +25,7 @@ class NotificationService {
     chrome.notifications.onClicked.addListener((clickedNotificationId) => {
       if (clickedNotificationId === NOTIFICATION_ID) {
         this.clearNotifications();
+        tracking.trackEvent("start-from-notification");
         this.onClick.trigger();
       }
     });
@@ -31,8 +34,10 @@ class NotificationService {
       if (clickedNotificationId === NOTIFICATION_ID) {
         this.clearNotifications();
         if (buttonIndex === 0) {
+          tracking.trackEvent("start-break-from-notification");
           this.onBreak.trigger();
         } else if (buttonIndex === 1) {
+          tracking.trackEvent("open-page-from-notification");
           this.onMore.trigger();
         }
       }
@@ -41,6 +46,7 @@ class NotificationService {
     chrome.notifications.onClosed.addListener((closedNotificationid, byUser) => {
       if (closedNotificationid === NOTIFICATION_ID && byUser) {
         this.clearNotifications();
+        tracking.trackEvent("close-notification");
       }
     });
   }

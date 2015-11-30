@@ -1,3 +1,5 @@
+import config = require('config');
+
 function setUpCalc() {
   (function(e, t) {
     if (!t.__SV) {
@@ -47,11 +49,23 @@ function identifyCurrentUser() {
   // TODO: Track a unique id for this user, tie it to chrome login data maybe if possible?
 }
 
-setUpCalc();
-identifyCurrentUser();
+interface Tracking {
+  trackEvent(eventName: string, eventData?: { [key: string]: any }): void;
+}
 
-export = {
-  trackEvent: function(eventName: string, eventData?: { [key: string]: any }): void {
-    calq.action.track(eventName, eventData);
-  }
-};
+var tracking: Tracking;
+
+if (config.trackingConfig.enabled) {
+  setUpCalc();
+  identifyCurrentUser();
+
+  tracking = {
+    trackEvent: function (eventName:string, eventData?:{ [key: string]: any }):void {
+      calq.action.track(eventName, eventData);
+    }
+  };
+} else {
+  tracking = { trackEvent: () => {} };
+}
+
+export = tracking;

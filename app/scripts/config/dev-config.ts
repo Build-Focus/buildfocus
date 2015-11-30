@@ -12,6 +12,10 @@ const devConfig: ApplicationConfig = {
     },
     verbose: true,
     enabled: false
+  },
+
+  trackingConfig: {
+    enabled: true
   }
 };
 

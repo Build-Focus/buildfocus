@@ -6,6 +6,10 @@ const testConfig: ApplicationConfig = {
 
   rollbarConfig: {
     enabled: false
+  },
+
+  trackingConfig: {
+    enabled: false
   }
 };
 

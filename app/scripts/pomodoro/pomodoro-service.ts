@@ -7,6 +7,8 @@ import Timer = require("pomodoro/timer");
 import config = require("config");
 import BadBehaviourMonitor = require('url-monitoring/bad-behaviour-monitor');
 
+import tracking = require('tracking');
+
 class PomodoroService {
   private badBehaviourMonitor: BadBehaviourMonitor;
   private pomodoroTimer = new Timer();
@@ -57,6 +59,7 @@ class PomodoroService {
     this.pomodoroTimer.start(config.pomodoroDuration, () => {
       this.clearBehaviourSubscription();
       this.onPomodoroSuccess.trigger();
+      tracking.trackEvent("success");
     });
 
     // Currently, if this triggers *immediately*, it can't unsubscribe (because the subscription is only available
@@ -80,6 +83,7 @@ class PomodoroService {
     this.clearBehaviourSubscription();
     this.pomodoroTimer.reset();
     this.onPomodoroFailure.trigger(tabId, url);
+    tracking.trackEvent("failure", { failureUrl: url });
   }
 
   takeABreak = () => {
@@ -87,7 +91,10 @@ class PomodoroService {
       return;
     }
 
-    this.breakTimer.start(config.breakDuration, this.onBreakEnd.trigger);
+    this.breakTimer.start(config.breakDuration, () => {
+      this.onBreakEnd.trigger();
+      tracking.trackEvent("break-finished");
+    });
     this.onBreakStart.trigger();
   }
 }

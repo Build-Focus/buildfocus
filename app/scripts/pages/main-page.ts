@@ -58,6 +58,7 @@ class MainPageViewModel {
 
   startBreak() {
     this.pomodoroService.takeABreak();
+    tracking.trackEvent("start-break-from-main-page");
 
     if (this.failingUrl) {
       window.location.href = this.failingUrl;
