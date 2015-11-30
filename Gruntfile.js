@@ -392,9 +392,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('ci-test', [
     'test',
-    // TODO: Renable these: disabled for now because FTP upload has mysteriously broken
-    // 'prepare-system-tests',
-    // 'run-system-tests'
+    'prepare-system-tests',
+    'run-system-tests'
   ]);
 
   grunt.registerTask('run-quick-tests', [
