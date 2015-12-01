@@ -392,8 +392,10 @@ module.exports = function (grunt) {
 
   grunt.registerTask('ci-test', [
     'test',
-    'prepare-system-tests',
-    'run-system-tests'
+    'dist',
+    // TODO: Re-enable once Wercker is all sorted out
+    // 'prepare-system-tests',
+    // 'run-system-tests'
   ]);
 
   grunt.registerTask('run-quick-tests', [
