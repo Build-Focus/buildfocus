@@ -13,7 +13,7 @@ import BuildingType = require("app/scripts/city/buildings/building-type");
 function render(city) {
   var element = document.createElement("div");
   testDiv.appendChild(element);
-  element.setAttribute("data-bind", "render: render");
+  element.setAttribute("data-bind", "render: { source: render }");
   element.style.width = "500px";
   element.style.height = "400px";
 

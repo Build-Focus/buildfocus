@@ -11,6 +11,8 @@ import tracking = require('tracking');
 import ProxyPomodoroService = require('pomodoro/proxy-pomodoro-service');
 import CityRenderer = require('city/rendering/city-renderer');
 
+import runTourIfRequired = require('pages/tour');
+
 function getQueryParameter(name: string) {
   var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
   return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
@@ -32,10 +34,6 @@ function closeThisTab() {
     }
   });
 }
-
-// TODO: Put this somewhere sensible. ...Maybe in a binding?
-import runTourIfRequired = require('pages/tour');
-runTourIfRequired();
 
 class MainPageViewModel {
   private pomodoroService = new ProxyPomodoroService();
@@ -73,6 +71,10 @@ class MainPageViewModel {
 
   notNow() {
     closeThisTab();
+  }
+
+  pageLoaded() {
+    runTourIfRequired();
   }
 
   renderCity = () => this.cityRenderer.render();

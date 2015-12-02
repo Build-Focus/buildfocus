@@ -28,7 +28,7 @@
     <section class="city-and-buttons">
       <h2 class="failed-tag" data-bind="if: failed">FAILED</h2>
 
-      <div class="city" data-bind="render: renderCity"></div>
+      <div class="city" data-bind="render: { source: renderCity, afterRender: pageLoaded }"></div>
 
       <div class="buttons">
         <button class="startPomodoro pure-button"

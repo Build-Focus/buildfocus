@@ -103,6 +103,7 @@ var tourDefinition = {
   onEnd: tourCompleted
 };
 
+// TODO: Actually test this (with Selenium, realistically)
 export = function runTourIfRequired() {
-  ifTourRequired(() => setTimeout(() => hopscotch.startTour(tourDefinition), 500));
+  ifTourRequired(() => hopscotch.startTour(tourDefinition));
 };

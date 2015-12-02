@@ -53,7 +53,7 @@ describe('Render binding', function () {
   });
 
   it('should render nothing if the observable is empty', function () {
-    var element = elementWithBinding("render: renderables");
+    var element = elementWithBinding("render: { source: renderables }");
 
     var viewModel = { renderables: ko.observableArray( [] ) };
     ko.applyBindings(viewModel, element);
@@ -65,7 +65,7 @@ describe('Render binding', function () {
   });
 
   it('should render everything from the given observable to the stage', function () {
-    var element = elementWithBinding("render: renderables");
+    var element = elementWithBinding("render: { source: renderables }");
 
     var viewModel = {
       renderables: ko.observableArray([
@@ -87,7 +87,7 @@ describe('Render binding', function () {
   });
 
   it('should update the canvas if renderables are added later', function () {
-    var element = elementWithBinding("render: renderables");
+    var element = elementWithBinding("render: { source: renderables }");
 
     var viewModel = { renderables: ko.observableArray( [] ) };
     ko.applyBindings(viewModel, element);
@@ -107,7 +107,7 @@ describe('Render binding', function () {
   });
 
   it('should update the canvas if renderables are removed later', function () {
-    var element = elementWithBinding("render: renderables");
+    var element = elementWithBinding("render: { source: renderables }");
 
     var viewModel = {renderables: ko.observableArray([blackDot(8, 8)])};
     ko.applyBindings(viewModel, element);
@@ -119,5 +119,15 @@ describe('Render binding', function () {
       var y = index % 100;
       expect(pixel, x + ", " + y).to.deep.equal([0, 0, 0, 0]);
     });
+  });
+
+  it('should call a provided callback after first rendering', function () {
+    var element = elementWithBinding("render: { source: renderables, afterRender: callback }");
+    var callbackStub = sinon.stub();
+
+    var viewModel = { renderables: ko.observableArray( [] ), callback: callbackStub };
+    ko.applyBindings(viewModel, element);
+
+    expect(callbackStub.callCount).to.equal(1);
   });
 });

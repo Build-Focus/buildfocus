@@ -4,6 +4,11 @@ import easeljs = require('createjs');
 
 const STAGE_DATA_KEY = "easeljs-stage";
 
+interface RenderBindingOptions {
+  source: Renderable;
+  afterRender?: () => void
+}
+
 interface Renderable {
   (): easeljs.DisplayObject[] | KnockoutObservableArray<easeljs.DisplayObject>
 }
@@ -27,7 +32,7 @@ function updateStageToFit(stage: easeljs.Stage, canvas: HTMLCanvasElement) {
 }
 
 ko.bindingHandlers['render'] = {
-  init: function (element: HTMLElement, valueAccessor: () => Renderable) {
+  init: function (element: HTMLElement, valueAccessor: () => RenderBindingOptions) {
     var canvas = document.createElement("canvas");
     canvas.width = element.clientWidth;
     canvas.height = element.clientHeight;
@@ -49,8 +54,9 @@ ko.bindingHandlers['render'] = {
       stage.enableDOMEvents(false);
     });
   },
-  update: function (element: HTMLElement, valueAccessor: () => Renderable) {
-    var getRenderables = valueAccessor();
+  update: function (element: HTMLElement, valueAccessor: () => RenderBindingOptions) {
+    var options = valueAccessor();
+    var getRenderables = options.source;
     var stage = ko.utils.domData.get(element, STAGE_DATA_KEY);
 
     // One day we might want this to be more nuanced, but for now wipe and redraw is fine.
@@ -63,5 +69,7 @@ ko.bindingHandlers['render'] = {
     updateStageToFit(stage, canvas);
 
     stage.update();
+
+    if (options.afterRender) options.afterRender();
   }
 };
