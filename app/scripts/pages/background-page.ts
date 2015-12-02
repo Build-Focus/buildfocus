@@ -18,6 +18,8 @@ import NotificationService = require("notification-service");
 import indicateFailure = require("failure-notification/failure-indicator");
 import getBuildingConfig = require('city/rendering/building-rendering-config');
 
+const firstInstallTimeKey = "first-install-time";
+
 export = function setupBackgroundPage() {
   var score = new Score();
   var settings = new SettingsRepository();
@@ -51,5 +53,12 @@ export = function setupBackgroundPage() {
   focusButton.onClick(() => {
     tracking.trackEvent("open-page-from-focus-button");
     showMainPage();
+  });
+
+  chrome.storage.local.get(firstInstallTimeKey, function (data) {
+    if (!data[firstInstallTimeKey]) {
+      showMainPage();
+      chrome.storage.local.set({[firstInstallTimeKey]: Date.now()})
+    }
   });
 }
