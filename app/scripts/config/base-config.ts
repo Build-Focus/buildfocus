@@ -18,6 +18,7 @@ requirejs.config({
     "createjs": "../bower_components/easeljs/lib/easeljs-0.8.1.combined",
     "bluebird": "../bower_components/bluebird/js/browser/bluebird",
     "heap": "../bower_components/heap/lib/heap",
+    "hopscotch": "../bower_components/hopscotch/dist/js/hopscotch",
 
     "raw-knockout": "../bower_components/knockout/dist/knockout",
     "knockout-es5": "../bower_components/knockout-es5/dist/knockout-es5",

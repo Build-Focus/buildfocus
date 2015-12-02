@@ -1,5 +1,6 @@
 @import 'libs/pure-min.css';
 @import 'libs/font-awesome.min.css';
+@import '../bower_components/hopscotch/dist/css/hopscotch.min.css';
 
 @font-face {
   font-family: 'tertreextra_bold';
@@ -43,6 +44,7 @@ html {
 
   main {
     height: 100%;
+    position: relative;
   }
 }
 
@@ -95,4 +97,8 @@ nav {
       background: linear-gradient(rgba(200, 200, 200, 0.3), rgba(180, 180, 180, 0.3));
     }
   }
+}
+
+.tour-intro-tour li {
+  padding: 5px 0;
 }

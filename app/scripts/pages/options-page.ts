@@ -9,6 +9,10 @@ import score = require('score');
 import SettingsRepository = require('repositories/settings-repository');
 import Domain = require("url-monitoring/domain");
 
+// TODO: Put this somewhere sensible. ...Maybe in a binding?
+import runTourIfRequired = require('pages/tour');
+runTourIfRequired();
+
 export = function OptionsPageViewModel() {
   var self = this;
 

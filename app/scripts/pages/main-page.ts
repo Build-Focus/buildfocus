@@ -33,6 +33,10 @@ function closeThisTab() {
   });
 }
 
+// TODO: Put this somewhere sensible. ...Maybe in a binding?
+import runTourIfRequired = require('pages/tour');
+runTourIfRequired();
+
 class MainPageViewModel {
   private pomodoroService = new ProxyPomodoroService();
   private score = new Score();

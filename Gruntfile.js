@@ -17,7 +17,7 @@ module.exports = function (grunt) {
   };
 
   var bowerDependencies = Object.keys(grunt.file.readJSON('bower.json').dependencies).map(function (dep) {
-    return "bower_components/" + dep + "/**/*.js";
+    return "bower_components/" + dep + "/{**/*.js,**/dist/**/*.*}";
   });
 
   var bowerDevDependencies = Object.keys(grunt.file.readJSON('bower.json').devDependencies).map(function (dep) {
