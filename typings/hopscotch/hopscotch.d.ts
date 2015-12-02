@@ -35,10 +35,11 @@ interface StepDefinition {
 }
 
 interface HopscotchStatic {
-  startTour(tour: TourDefinition, stepNum?: number);
+  startTour(tour: TourDefinition, stepNum?: number): void;
 }
 
+declare var hopscotch: HopscotchStatic;
+
 declare module "hopscotch" {
-  var hopscotch: HopscotchStatic;
   export = hopscotch;
 }
