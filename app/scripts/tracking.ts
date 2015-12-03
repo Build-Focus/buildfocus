@@ -2,7 +2,7 @@ import _ = require('lodash');
 import config = require('config');
 import synchronizedObservable = require('observables/synchronized-observable');
 
-function setUpCalc() {
+function setUpCalq() {
   (function(e, t) {
     if (!t.__SV) {
       (<any>window).calq = t;
@@ -66,7 +66,7 @@ interface Tracking {
 var tracking: Tracking;
 
 if (config.trackingConfig.enabled) {
-  setUpCalc();
+  setUpCalq();
   identifyCurrentUser();
 
   tracking = {
