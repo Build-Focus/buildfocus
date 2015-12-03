@@ -1,3 +1,5 @@
+import rollbar = require('rollbar');
+
 import _ = require('lodash');
 import config = require('config');
 import synchronizedObservable = require('observables/synchronized-observable');
@@ -49,13 +51,17 @@ function setUpCalq() {
 
 function identifyCurrentUser() {
   chrome.identity.getProfileUserInfo((userInfo) => {
-    calq.user.identify(userInfo.id);
+    if (userInfo.id) {
+      calq.user.identify(userInfo.id);
 
-    var userProfile: any = _.merge({
-      "$email": userInfo.email
-    }, config.trackingConfig.extraProfileInfo);
+      var userProfile:any = _.merge({
+        "$email": userInfo.email
+      }, config.trackingConfig.extraProfileInfo);
 
-    calq.user.profile(userProfile);
+      calq.user.profile(userProfile);
+    } else {
+      rollbar.info("No user profile info available", { infoResult: userInfo });
+    }
   });
 }
 
