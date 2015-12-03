@@ -8,28 +8,29 @@ import score = require('score');
 
 import SettingsRepository = require('repositories/settings-repository');
 import Domain = require("url-monitoring/domain");
-
-// TODO: Put this somewhere sensible. ...Maybe in a binding?
 import runTourIfRequired = require('pages/tour');
-runTourIfRequired();
 
-export = function OptionsPageViewModel() {
-  var self = this;
+class OptionsPageViewModel {
+  private settings = new SettingsRepository();
 
-  var settings = new SettingsRepository();
-  self.badDomains = settings.badDomains;
+  badDomains = this.settings.badDomains;
+  enteredBadDomainPattern = ko.observable("");
 
-  self.enteredBadDomainPattern = ko.observable("");
-  self.enteredBadDomain = ko.computed(function () {
-    return new Domain(self.enteredBadDomainPattern());
-  });
+  private enteredBadDomain = ko.computed(() => new Domain(this.enteredBadDomainPattern()));
+  canSaveEnteredBadDomain = ko.computed(() => this.enteredBadDomain().isValid);
 
-  self.saveEnteredBadDomain = function () {
-    self.badDomains(self.badDomains().concat(self.enteredBadDomain()));
-    self.enteredBadDomainPattern("");
-  };
+  saveEnteredBadDomain() {
+    this.badDomains(this.badDomains().concat(this.enteredBadDomain()));
+    this.enteredBadDomainPattern("");
+  }
 
-  self.deleteBadDomain = function (badDomain) {
-    self.badDomains(_.reject(self.badDomains(), badDomain));
-  };
+  deleteBadDomain(badDomain) {
+    this.badDomains(_.reject(this.badDomains(), badDomain));
+  }
+
+  pageLoaded() {
+    runTourIfRequired();
+  }
 }
+
+export = OptionsPageViewModel;

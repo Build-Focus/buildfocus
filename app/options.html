@@ -5,7 +5,7 @@
     <link href="styles/main.css" rel="stylesheet">
     <link rel="icon" href="/images/icon-32.png">
   </head>
-  <body>
+  <body data-bind="template: { afterRender: pageLoaded }">
     <main style="display: none" data-bind="visible: true">
       <a href="/main.html">
         <div class="logo">
@@ -30,7 +30,7 @@
                  data-bind="textInput: enteredBadDomainPattern"
                  placeholder="Distracting site, e.g. facebook.com"/>
           <button type="submit" class="pure-button "
-                  data-bind="enable: enteredBadDomain().isValid">
+                  data-bind="enable: canSaveEnteredBadDomain()">
             Add Site
           </button>
         </form>
