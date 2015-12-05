@@ -15,7 +15,7 @@ requirejs.config({
   "paths": {
     "jquery": "../bower_components/jquery/dist/jquery",
     "URIjs": "../bower_components/uri.js/src",
-    "createjs": "../bower_components/easeljs/lib/easeljs-0.8.1.combined",
+    "createjs": "../bower_components/easeljs/lib/easeljs-0.8.2.combined",
     "bluebird": "../bower_components/bluebird/js/browser/bluebird",
     "heap": "../bower_components/heap/lib/heap",
     "hopscotch": "../bower_components/hopscotch/dist/js/hopscotch",

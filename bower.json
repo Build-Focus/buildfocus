@@ -8,7 +8,7 @@
     "uri.js": "~1.15.0",
     "requirejs": "~2.1.17",
     "rollbar": "~1.2.2",
-    "easeljs": "~0.8.1",
+    "easeljs": "0.8.2",
     "jquery": "~2.1.4",
     "bluebird": "~2.9.34",
     "knockout-es5": "~0.2.1",
