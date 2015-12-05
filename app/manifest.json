@@ -27,6 +27,7 @@
     "notifications",
     "identity",
     "identity.email",
+    "topSites",
     "http://*/*",
     "https://*/*"
   ],
