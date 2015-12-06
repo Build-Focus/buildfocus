@@ -33,7 +33,7 @@
     "grunt-notify": "^0.4.1",
     "grunt-sass": "^1.0.0",
     "grunt-svgmin": "~0.4.0",
-    "grunt-ts": "^4.2.0",
+    "grunt-ts": "^5.2.0",
     "grunt-usemin": "~2.1.0",
     "grunt-webstore-upload": "^0.8.3",
     "jshint-stylish": "~0.1.5",
@@ -48,7 +48,8 @@
     "selenium-webdriver": "^2.45.1",
     "sinon": "^1.14.1",
     "sinon-chai": "^2.7.0",
-    "time-grunt": "~0.3.1"
+    "time-grunt": "~0.3.1",
+    "typescript": "^1.7.3"
   },
   "engines": {
     "node": ">=0.8.0"

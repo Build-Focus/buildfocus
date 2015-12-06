@@ -4,7 +4,7 @@ import ko = require('knockout');
 import _ = require('lodash');
 import reportChromeErrors = require('report-chrome-errors');
 
-export = function synchronizedObservable<T>(valueName: string, initialValue: T = undefined, storageArea = "local"): KnockoutObservable<T> {
+export = function synchronizedObservable<T>(valueName: string, initialValue: T = undefined, storageAreaName = "local"): KnockoutObservable<T> {
   var observable: KnockoutObservable<T> = ko.observable(initialValue)
                                             .extend({notify: 'always'}); // Required to stop some races
 
@@ -26,7 +26,9 @@ export = function synchronizedObservable<T>(valueName: string, initialValue: T =
     currentlyUpdatingFromSync = false;
   }
 
-  chrome.storage[storageArea].get(valueName, function (loadedData) {
+  var storageArea: chrome.storage.StorageArea = chrome.storage[storageAreaName];
+
+  storageArea.get(valueName, function (loadedData) {
     reportChromeErrors("Failed to read from chrome storage");
 
     _.forEach(loadedData, function (value, key) {
@@ -43,14 +45,14 @@ export = function synchronizedObservable<T>(valueName: string, initialValue: T =
     if (!currentlyUpdatingTo(newValue)) {
       var changes = {};
       changes[valueName] = newValue;
-      chrome.storage[storageArea].set(changes, () => reportChromeErrors("Failed to store sync'd observable data"));
+      storageArea.set(changes, () => reportChromeErrors("Failed to store sync'd observable data"));
     }
   });
 
-  chrome.storage.onChanged.addListener(function (changes: any) {
+  chrome.storage.onChanged.addListener(function (changes) {
     reportChromeErrors("Failed to get chrome storage changes");
 
-    _.forEach(changes, function (change: chrome.storage.StorageChange, key) {
+    _.forEach(changes, function (change, key) {
       if (key === valueName) {
         startUpdatingTo(change.newValue);
         observable(change.newValue);

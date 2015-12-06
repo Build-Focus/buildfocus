@@ -3,10 +3,12 @@
 import ko = require("knockout");
 import _ = require("lodash");
 
-export = function subscribedObservable<T>(valueName: string, initialValue: T = undefined, storageArea = "local"): KnockoutComputed<T> {
+export = function subscribedObservable<T>(valueName: string, initialValue: T = undefined, storageAreaName = "local"): KnockoutComputed<T> {
   var observable: KnockoutObservable<T> = ko.observable(initialValue);
 
-  chrome.storage[storageArea].get(valueName, function (loadedData) {
+  var storageArea: chrome.storage.StorageArea = chrome.storage[storageAreaName];
+
+  storageArea.get(valueName, function (loadedData) {
     _.forEach(loadedData, function (value, key) {
       if (key === valueName) {
         observable(<T> value);
