@@ -14,12 +14,12 @@ import Buildings = require('city/buildings/buildings');
 import Building = Buildings.Building;
 import CostedBuilding = Buildings.CostedBuilding;
 
-import RoadPart = require('city/roads/road-part');
-
-import RoadPlanner = require('city/roads/road-planner');
-
 import BasicHouse = require('city/buildings/basic-house');
 
+import RoadPart = require('city/roads/road-part');
+import RoadPlanner = require('city/roads/road-planner');
+
+import change = require('city/change');
 import serialization = require('city/serialization/serialization-format');
 
 function canonicalForm(building: Building) {
@@ -92,6 +92,12 @@ class City {
   }
 
   onChanged = subscribableEvent();
+  lastChange: change.Change = change.nullChange;
+
+  private announceChange(type: change.Type, building: Building) {
+    this.lastChange = new change.Change(type, building);
+    this.onChanged.trigger();
+  }
 
   construct(building: Building): void {
     if (!building.canBeBuiltOn(this.map)) {
@@ -107,22 +113,25 @@ class City {
     var requiredRoads = this.roadPlanner.getRoadsRequired(this.map, building);
     requiredRoads.forEach((road) => this.map.addRoad(road));
 
-    this.onChanged.trigger();
+    this.announceChange(change.Type.Created, building);
   }
 
   remove(building: Building): void {
     this.map.remove(building);
-    this.onChanged.trigger();
+
+    this.announceChange(change.Type.Destroyed, building);
   }
 
   updateFromJSON(data: serialization.CityData): void {
     this.map = Map.deserialize(data.map, this.cellFactory);
+    this.lastChange = change.Change.deserialize(data.lastChange);
   }
 
   toJSON(): serialization.CityData {
     return {
       map: this.map.serialize(),
-      version: 1
+      version: serialization.version,
+      lastChange: this.lastChange.serialize()
     };
   }
 }

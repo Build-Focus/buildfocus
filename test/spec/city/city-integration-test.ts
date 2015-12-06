@@ -14,6 +14,8 @@ import BasicHouse = require("app/scripts/city/buildings/basic-house");
 import NiceHouse = require("app/scripts/city/buildings/nice-house");
 import FancyHouse = require("app/scripts/city/buildings/fancy-house");
 
+import change = require('app/scripts/city/change');
+
 function c(x, y) {
   return new Coord(x, y);
 }
@@ -174,6 +176,68 @@ describe('City Integration - City', () => {
     for (let building of possibleBuildings) {
       expect(Buildings.deserialize(building.serialize())).to.deep.equal(building);
     }
+  });
+
+  describe("last change", () => {
+    it("should be null initially", () => {
+      var city = new City();
+
+      expect(city.lastChange).to.equal(change.nullChange);
+    });
+
+    it("should be the new constructed building after a building is built", () => {
+      var city = new City();
+
+      var newBuilding = city.getPossibleUpgrades()[0].building;
+      city.construct(newBuilding);
+
+      expect(city.lastChange).to.deep.equal(new change.Change(change.Type.Created, newBuilding));
+    });
+
+    it("should be the destroyed building, if a building is destroyed", () => {
+      var city = new City();
+
+      var newBuilding = city.getPossibleUpgrades()[0].building;
+      city.construct(newBuilding);
+      city.remove(newBuilding);
+
+      expect(city.lastChange).to.deep.equal(new change.Change(change.Type.Destroyed, newBuilding));
+    });
+
+    it("should always be the latest construction", () => {
+      var city = new City();
+
+      city.construct(city.getPossibleUpgrades()[0].building);
+      city.remove(city.getBuildings()[0]);
+      city.construct(city.getPossibleUpgrades()[0].building);
+
+      var finalNewBuilding = city.getPossibleUpgrades()[0].building;
+      city.construct(finalNewBuilding);
+
+      expect(city.lastChange).to.deep.equal(new change.Change(change.Type.Created, finalNewBuilding));
+    });
+
+    it("should serialize and deserialize successfully", () => {
+      var city = new City();
+      city.construct(city.getPossibleUpgrades()[0].building);
+      city.remove(city.getBuildings()[0]);
+
+      var data = city.toJSON();
+      var newCity = new City();
+      newCity.updateFromJSON(data);
+
+      expect(city.lastChange).to.deep.equal(newCity.lastChange);
+    });
+
+    it("should serialize and deserialize successfully before any changes have happened", () => {
+      var city = new City();
+
+      var data = city.toJSON();
+      var newCity = new City();
+      newCity.updateFromJSON(data);
+
+      expect(city.lastChange).to.deep.equal(newCity.lastChange);
+    });
   });
 
   function getAllReachableBuildings() {

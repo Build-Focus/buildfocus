@@ -1,9 +1,14 @@
-import previousSerializationFormat = require('./preversion-serialization-format');
+import previousSerializationFormat = require('./v1-serialization-format');
+
+export var version = 2;
 
 export interface CityData {
   map: previousSerializationFormat.MapData,
-  version: number
+  version: number,
+  lastChange: ChangeData
 }
+
+export type ChangeData = { type: number, building: BuildingData };
 
 export type MapData = previousSerializationFormat.MapData;
 export type CellData = previousSerializationFormat.CellData;

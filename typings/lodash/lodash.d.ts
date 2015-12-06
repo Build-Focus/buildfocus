@@ -7993,7 +7993,7 @@ declare module _ {
         /**
          * @see _.flowRight
          */
-        compose<TResult extends Function>(...funcs: Function[]): TResult;
+        compose<C, B, A>(func2: (b: B) => C, func1: (a: A) => B): (a: A) => C;
     }
 
     interface LoDashImplicitObjectWrapper<T> {
