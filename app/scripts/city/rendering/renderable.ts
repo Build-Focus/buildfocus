@@ -21,6 +21,12 @@ interface Renderable {
    * Method to return the display object rendered for this item
    */
   render(): easeljs.DisplayObject;
+
+  /**
+   * Whether this renderable should be rendered
+   * If this returns false, render() may explode.
+   */
+  shouldRender: boolean;
 }
 
 export = Renderable;

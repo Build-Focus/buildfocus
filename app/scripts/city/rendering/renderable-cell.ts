@@ -32,6 +32,8 @@ class RenderableCell implements Renderable {
         throw new Error("Failed to render cell, unknown cell type: " + this.cell.cellType);
     }
   }
+
+  shouldRender = true;
 }
 
 export = RenderableCell;

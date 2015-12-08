@@ -27,6 +27,8 @@ class RenderableBuilding implements Renderable {
     image.y = config.yOffset;
     return image;
   }
+
+  shouldRender = true;
 }
 
 export = RenderableBuilding;

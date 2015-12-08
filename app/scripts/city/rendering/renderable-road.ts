@@ -46,6 +46,8 @@ class RenderableRoad implements Renderable {
       throw new Error("Failed to render road, unknown road type: " + this.road.type);
     }
   }
+
+  shouldRender = true;
 }
 
 export = RenderableRoad;

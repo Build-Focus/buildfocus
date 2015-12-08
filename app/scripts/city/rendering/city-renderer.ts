@@ -7,6 +7,7 @@ import Renderable = require('city/rendering/renderable');
 import RenderableRoad = require('city/rendering/renderable-road');
 import RenderableCell = require('city/rendering/renderable-cell');
 import RenderableBuilding = require('city/rendering/renderable-building');
+import RenderableChangeHighlight = require('city/rendering/renderable-change-highlight');
 
 const CELL_WIDTH = 600;
 const CELL_HEIGHT = 346;
@@ -36,9 +37,10 @@ class CityRenderer {
 
   render = (): Array<easeljs.DisplayObject> => {
     var renderables = this.getRenderablesFromCity(this.city);
-    return renderables.sort((r1, r2) => compareLayerIndexes(r1, r2) ||
+    return renderables.filter((renderable) => renderable.shouldRender)
+                      .sort((r1, r2) => compareLayerIndexes(r1, r2) ||
                                         Coord.diagonalCompare(r1.mainCoord, r2.mainCoord) ||
-                                        compareZIndexes(r1, r2) )
+                                        compareZIndexes(r1, r2))
                       .map((renderable) => {
                         var result = renderable.render();
                         result.x += xOffset(renderable.mainCoord);
@@ -51,8 +53,11 @@ class CityRenderer {
     var renderableCells: Renderable[] = this.city.getCells().map((cell) => new RenderableCell(cell));
     var renderableRoads: Renderable[] = this.city.getRoads().map((road) => new RenderableRoad(road));
     var renderableBuildings: Renderable[] = this.city.getBuildings().map((building) => new RenderableBuilding(building));
+    var buildingHighlight: Renderable = new RenderableChangeHighlight(this.city.lastChange);
 
-    return renderableCells.concat(renderableRoads).concat(renderableBuildings);
+    return renderableCells.concat(renderableRoads)
+                          .concat(renderableBuildings);
+                       // .concat(buildingHighlight); TODO: Renable once we have images
   }
 }
 
