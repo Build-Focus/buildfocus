@@ -19,14 +19,14 @@ class OptionsPageViewModel {
   private enteredBadDomain = ko.computed(() => new Domain(this.enteredBadDomainPattern()));
   canSaveEnteredBadDomain = ko.computed(() => this.enteredBadDomain().isValid);
 
-  saveEnteredBadDomain() {
+  saveEnteredBadDomain = () => {
     this.badDomains(this.badDomains().concat(this.enteredBadDomain()));
     this.enteredBadDomainPattern("");
-  }
+  };
 
-  deleteBadDomain(badDomain) {
+  deleteBadDomain = (badDomain: Domain) => {
     this.badDomains(_.reject(this.badDomains(), badDomain));
-  }
+  };
 
   pageLoaded() {
     runTourIfRequired();
