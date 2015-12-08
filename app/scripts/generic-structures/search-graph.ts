@@ -50,8 +50,7 @@ function searchGraph(goalTest: (c: Coord) => boolean,
       var nonStartCoords = route.filter((c) => !_.containsEqual(startCoords, c));
       var cost = _.sum(nonStartCoords, coordCost);
 
-      // TODO: Use new intersection types to improve Lodash types here
-      return <CostedRoute> _.merge(route, { cost: cost });
+      return _.merge(route, { cost: cost });
     }
 
     let unexploredNeighbours = currentCoord.getDirectNeighbours()
