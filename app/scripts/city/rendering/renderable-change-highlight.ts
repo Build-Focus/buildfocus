@@ -59,7 +59,7 @@ class RenderableChangeHighlight implements Renderable {
       return bitmap;
 
     } else if (this.change.type === change.Type.Destroyed) {
-      let bitmap = new easeljs.Bitmap("/images/city/change-destroyed.png");
+      let bitmap = new easeljs.Bitmap("/images/city/highlights/rubble.png");
       return bitmap;
 
     } else throw new Error("Failed to render change highlight, unknown change type: " + this.change.type);
