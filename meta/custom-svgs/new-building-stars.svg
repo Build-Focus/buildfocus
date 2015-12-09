@@ -14,7 +14,7 @@
    id="svg413334"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="New document 54">
+   sodipodi:docname="new-building-stars.svg">
   <defs
      id="defs413336">
     <filter
@@ -173,17 +173,19 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="375"
-     inkscape:cy="520"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="350.51662"
+     inkscape:cy="445.8116"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="670"
-     inkscape:window-height="1056"
-     inkscape:window-x="1248"
+     inkscape:window-width="1920"
+     inkscape:window-height="1058"
+     inkscape:window-x="0"
      inkscape:window-y="22"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="0"
+     showguides="true"
+     inkscape:guide-bbox="true" />
   <metadata
      id="metadata413339">
     <rdf:RDF>
@@ -192,7 +194,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -201,15 +203,14 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       transform="translate(142.21681,377.1037)"
-       id="g413316">
+       id="g3565">
       <path
          inkscape:export-ydpi="133.02112"
          inkscape:export-xdpi="133.02112"
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
          inkscape:transform-center-y="0.44491812"
          inkscape:transform-center-x="2.7820409"
-         transform="matrix(0.12647923,-0.06347832,0.06347832,0.12647923,-14.813889,153.74784)"
+         transform="matrix(0.13068687,-0.05661917,0.05661917,0.13068687,116.3688,521.36378)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -230,7 +231,7 @@
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
          inkscape:transform-center-y="0.51899018"
          inkscape:transform-center-x="3.2451904"
-         transform="matrix(0.14753531,-0.0740461,0.0740461,0.14753531,-32.197546,142.69127)"
+         transform="matrix(0.15244343,-0.06604505,0.06604505,0.15244343,99.52757,509.26889)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -249,8 +250,8 @@
          sodipodi:open="true"
          sodipodi:end="3.1418405"
          sodipodi:start="0"
-         transform="matrix(0.74155049,0,0,-0.74155049,50.23638,302.14523)"
-         d="m 534,198.30099 c 0,131.71992 -132.74757,238.5 -296.5,238.5 -163.752428,0 -296.5,-106.78008 -296.5,-238.5 0,-0.0197 3e-6,-0.0394 9e-6,-0.0591"
+         transform="matrix(0.74513381,0.04201377,0.04201377,-0.74513381,173.32571,674.16379)"
+         d="m 534,198.30099 a 296.5,238.5 0 1 1 -592.999991,-0.0591"
          sodipodi:ry="238.5"
          sodipodi:rx="296.5"
          sodipodi:cy="198.30099"
@@ -264,7 +265,7 @@
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
          inkscape:transform-center-y="-1.8484597"
          inkscape:transform-center-x="-0.97508261"
-         transform="matrix(0.12316415,0,0,0.12316415,471.40007,139.23211)"
+         transform="matrix(0.1237593,0.00697807,-0.00697807,0.1237593,605.75465,534.32517)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -285,7 +286,7 @@
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
          inkscape:transform-center-y="-2.5008657"
          inkscape:transform-center-x="-1.319237"
-         transform="matrix(0.16663462,0,0,0.16663462,491.93031,120.21556)"
+         transform="matrix(0.16743983,0.00944096,-0.00944096,0.16743983,627.46151,516.3799)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -306,7 +307,7 @@
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
          inkscape:transform-center-y="-2.3570633"
          inkscape:transform-center-x="-1.2433824"
-         transform="matrix(0.15705272,0,0,0.15705272,393.23197,28.624357)"
+         transform="matrix(0.15781163,0.00889808,-0.00889808,0.15781163,533.4755,418.75419)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -327,7 +328,7 @@
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
          inkscape:transform-center-y="-2.5987295"
          inkscape:transform-center-x="-1.3708635"
-         transform="matrix(0.1731552,0,0,0.1731552,404.40369,10.132991)"
+         transform="matrix(0.17399192,0.00981039,-0.00981039,0.17399192,545.74886,400.80642)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -346,9 +347,9 @@
          inkscape:export-ydpi="133.02112"
          inkscape:export-xdpi="133.02112"
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
-         inkscape:transform-center-y="-2.9755958"
-         inkscape:transform-center-x="-0.7861451"
-         transform="matrix(0.04408896,-0.15857246,0.15857246,0.04408896,214.60621,-17.789215)"
+         inkscape:transform-center-y="-4.2612051"
+         inkscape:transform-center-x="0.69573804"
+         transform="matrix(0.03470632,-0.16196889,0.16196889,0.03470632,360.90301,362.31544)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -367,9 +368,9 @@
          inkscape:export-ydpi="133.02112"
          inkscape:export-xdpi="133.02112"
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
-         inkscape:transform-center-y="-2.9755958"
-         inkscape:transform-center-x="-0.7861451"
-         transform="matrix(0.04408896,-0.15857246,0.15857246,0.04408896,215.60621,-33.564531)"
+         inkscape:transform-center-y="-4.2738209"
+         inkscape:transform-center-x="0.71056953"
+         transform="matrix(0.03451731,-0.16200927,0.16200927,0.03451731,359.24911,347.54506)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -390,7 +391,7 @@
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
          inkscape:transform-center-y="0.95674347"
          inkscape:transform-center-x="2.4883315"
-         transform="matrix(0.13138796,-0.07333251,0.07333251,0.13138796,88.1307,29.584421)"
+         transform="matrix(0.13617763,-0.06624287,0.06624287,0.13617763,226.84552,402.43288)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -411,7 +412,7 @@
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
          inkscape:transform-center-y="0.95674347"
          inkscape:transform-center-x="2.4883315"
-         transform="matrix(0.13138796,-0.07333251,0.07333251,0.13138796,76.130698,19.342436)"
+         transform="matrix(0.13617763,-0.06624287,0.06624287,0.13617763,215.36781,391.46152)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -430,9 +431,9 @@
          inkscape:export-ydpi="133.02112"
          inkscape:export-xdpi="133.02112"
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
-         inkscape:transform-center-y="-3.6020348"
-         inkscape:transform-center-x="-0.95165508"
-         transform="matrix(0.05337083,-0.19195606,0.19195606,0.05337083,214.92498,-56.213698)"
+         inkscape:transform-center-y="-4.9627793"
+         inkscape:transform-center-x="0.61296048"
+         transform="matrix(0.04492675,-0.19542044,0.19542044,0.04492675,356.47224,323.78369)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -453,7 +454,7 @@
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
          inkscape:transform-center-y="1.2668466"
          inkscape:transform-center-x="3.2948581"
-         transform="matrix(0.17397388,-0.0971013,0.0971013,0.17397388,64.521911,-7.0562296)"
+         transform="matrix(0.18031599,-0.08771374,0.08771374,0.18031599,205.19859,364.27758)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -474,7 +475,7 @@
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
          inkscape:transform-center-y="-2.9901752"
          inkscape:transform-center-x="-1.5773523"
-         transform="matrix(0.19923748,0,0,0.19923748,416.57382,-7.9310283)"
+         transform="matrix(0.20020024,0.01128813,-0.01128813,0.20020024,559.00124,383.34463)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -495,7 +496,7 @@
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
          inkscape:transform-center-y="-2.9901752"
          inkscape:transform-center-x="-1.5773523"
-         transform="matrix(0.19923748,0,0,0.19923748,509.1718,104.38774)"
+         transform="matrix(0.20020024,0.01128813,-0.01128813,0.20020024,645.68307,501.45244)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -516,7 +517,7 @@
          inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/city/basic-house/bowling-south.png"
          inkscape:transform-center-y="0.62639837"
          inkscape:transform-center-x="3.916805"
-         transform="matrix(0.17806879,-0.08937047,0.08937047,0.17806879,-51.107327,128.44055)"
+         transform="matrix(0.18399269,-0.07971354,0.07971354,0.18399269,81.333811,493.87794)"
          d="M 49.999992,291.80099 -80.809877,203.80908 -227.45363,261.68316 -184.19083,110.08458 -284.54776,-11.497847 -127,-17.199007 -42.38024,-150.21516 11.72682,-2.1400934 164.38164,37.233833 40.273887,134.45042 z"
          inkscape:randomized="0"
          inkscape:rounded="0"

@@ -56,8 +56,8 @@ class CityRenderer {
     var buildingHighlight: Renderable = new RenderableChangeHighlight(this.city.lastChange);
 
     return renderableCells.concat(renderableRoads)
-                          .concat(renderableBuildings);
-                       // .concat(buildingHighlight); TODO: Renable once we have images
+                          .concat(renderableBuildings)
+                          .concat(buildingHighlight);
   }
 }
 
