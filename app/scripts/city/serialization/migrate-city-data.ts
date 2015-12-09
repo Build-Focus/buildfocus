@@ -5,31 +5,23 @@ import v2Serialization = require('city/serialization/v2-serialization-format');
 
 import _ = require('lodash');
 
-function isPreversion(data: any): data is preversionSerialization.CityData {
-  return _.isString(data);
-}
-
-function isV1(data: any): data is v1Serialization.CityData {
-  return data.version === 1;
-}
-
-function isV2(data: any): data is v2Serialization.CityData {
-  return data.version === 2;
-}
-
 /**
  * Migrates the given city data to the most up to date form, if possible.
- *
- * Note that it's important this returns the exact same referrentially equal object
- * that it's given if there are no changes required; we use that in Score to detect
- * whether migration was necessary (and thus whether to propagate an update immediately).
  */
-function migrateCityData(data: any): serialization.CityData {
+function migrateCityData(data: {}): serialization.CityData {
   if (isPreversion(data)) return migrateFromPreversion(data);
   else if (isV1(data)) return migrateFromV1(data);
   else if (isV2(data)) return migrateFromV2(data);
   else throw new Error("City data is not most recent version, but could not find suitable migration: " + JSON.stringify(data));
 }
+
+// Type checks
+
+var isPreversion = (x: any): x is string                   => _.isString(x);
+var isV1         = (x: any): x is v1Serialization.CityData => x.version === 1;
+var isV2         = (x: any): x is v2Serialization.CityData => x.version === 2;
+
+// Per-source migration steps, for each possible source
 
 var migrateFromV2 = (data: v2Serialization.CityData) => data;
 
