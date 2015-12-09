@@ -90,4 +90,14 @@ describe('Acceptance: City', function () {
 
     return expect(canvas).to.soon.be.image("expected-images/10x-new-5x-upgrade-city.png");
   });
+
+  it("should render destruction correctly", function () {
+    var city = new City();
+
+    _.times(10, () => city.construct(_.max(city.getPossibleUpgrades(), 'cost').building));
+    _.times(5, () => city.remove(city.getBuildings()[0]));
+    var canvas = render(city);
+
+    return expect(canvas).to.soon.be.image("expected-images/10x-new-5x-destruction-city.png");
+  });
 });
