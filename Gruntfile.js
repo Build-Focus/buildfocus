@@ -392,6 +392,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('ci-test', [
     'test',
+    'bump-only:patch',
     'dist',
     // TODO: Re-enable once Wercker is all sorted out
     // 'prepare-system-tests',
@@ -418,8 +419,13 @@ module.exports = function (grunt) {
     'mochaTest:system'
   ]);
 
+  grunt.registerTask('build-minor-release', [
+    'test',
+    'bump-only:minor',
+    'dist'
+  ]);
+
   grunt.registerTask('dist', [
-    'bump-only',
     'build',
     'copy:dist',
     'json-replace',
