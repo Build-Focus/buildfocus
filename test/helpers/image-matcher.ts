@@ -64,7 +64,7 @@ define(function () {
         resemble(actualCanvas.toDataURL()).compareTo(expectedImageData).onComplete(function (result) {
           try {
             var difference = result.misMatchPercentage;
-            assertion.assert(difference < 1,
+            assertion.assert(difference < 0.5,
               "Expected canvas to match " + expectedImagePath + " but was " + difference + "% different",
               "Expected canvas not to match " + expectedImagePath + " but was only " + difference + "% different");
           } catch (e) {
