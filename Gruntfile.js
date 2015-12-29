@@ -203,9 +203,25 @@ module.exports = function (grunt) {
       }
     },
 
-    execute: {
-      uploadToSeleniumFtp: {
-        src: 'test/system/upload-extension-to-ftp.js'
+    ftpUploadTask: {
+      selenium: {
+        options: {
+          user: 'anonymous',
+          password: 'ignored',
+          port: process.env.SELENIUM_CHROME_FTP_PORT_21_TCP_PORT || 21,
+          host: process.env.SELENIUM_CHROME_FTP_PORT_21_TCP_ADDR || 'localhost'
+        },
+        files: [{
+          expand: true,
+          cwd: __dirname + '/dist',
+          dest: '/uploaded/',
+          src: [
+            '**/*',
+            '!.git',
+            '!.idea',
+            '!.tmp'
+          ]
+        }]
       }
     },
 
@@ -404,7 +420,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('prepare-system-tests', [
     'dist',
-    'execute:uploadToSeleniumFtp'
+    'ftpUploadTask:selenium'
   ]);
 
   grunt.registerTask('run-system-tests', [
