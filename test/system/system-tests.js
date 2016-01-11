@@ -44,7 +44,7 @@ describe("System tests - ", function () {
   it("Can open main page", () => {
     return client
       .url(extensionPage("main.html"))
-      .pause(500)
+      .pause(1000)
       .hasNonZerodPixels(".city > canvas").should.eventually.equal(true, "Canvas should have an image drawn on it");
   });
 
