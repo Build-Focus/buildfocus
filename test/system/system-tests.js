@@ -48,25 +48,27 @@ describe("System tests - ", function () {
       .hasNonZerodPixels(".city > canvas").should.eventually.equal(true, "Canvas should have an image drawn on it");
   });
 
-  it("Can open options page", () => {
-    return client
-      .url(extensionPage("options.html"))
-      .pause(500)
-      .isEnabled("button[type=submit]").should.eventually.equal(false,
-        "Submit button should be disabled initially (i.e. options JS should load and run)");
-  });
+  if (!process.env.WERCKER) {
+    it("Can open options page", () => {
+      return client
+        .url(extensionPage("options.html"))
+        .pause(500)
+        .isEnabled("button[type=submit]").should.eventually.equal(false,
+          "Submit button should be disabled initially (i.e. options JS should load and run)");
+    });
 
-  it("Can fail a pomodoro", () => {
-    return addBadDomain("example.com")
-     .then(startPomodoro)
-     .url("http://example.com")
-     .pause(1000)
-     .getUrl().should.eventually.contain(extensionPage("main.html?failed=true"));
-  });
+    it("Can fail a pomodoro", () => {
+      return addBadDomain("example.com")
+        .then(startPomodoro)
+        .url("http://example.com")
+        .pause(1000)
+        .getUrl().should.eventually.contain(extensionPage("main.html?failed=true"));
+    });
 
-  xit("Can complete a pomodoro", function () {
-    // TODO: Implement this once there's a nice way to detect that a pomodoro is in progress
-  });
+    xit("Can complete a pomodoro", function () {
+      // TODO: Implement this once there's a nice way to detect that a pomodoro is in progress
+    });
+  }
 
   function addCustomCommands(client) {
     client.addCommand("switchToLastTab", () => client.getTabIds().then((ids) => client.switchTab(ids[ids.length - 1])));
