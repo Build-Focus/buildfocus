@@ -1,4 +1,4 @@
-box: pimterry/node-karma
+box: pimterry/node-karma-selenium
 build:
     steps:
         - script:
@@ -12,16 +12,13 @@ build:
             name: Install packages from Bower
             code: bower install --allow-root
         - script:
-            name: print env
-            code: env
+            name: Start selenium
+            code: start-selenium
         - grunt:
             tasks: ci-test
             fail-on-warnings: true
     after-steps:
         - internal/store-container
-
-    services:
-        - pimterry/selenium-chrome-ftp
 
 deploy:
     steps:

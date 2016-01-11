@@ -24,7 +24,6 @@
     "grunt-contrib-uglify": "~0.4.0",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-env": "^0.4.4",
-    "grunt-ftpuploadtask": "^0.1.2",
     "grunt-json-replace": "^0.1.2",
     "grunt-karma": "^0.12.0",
     "grunt-mocha": "^0.4.12",

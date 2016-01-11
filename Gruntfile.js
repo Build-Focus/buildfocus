@@ -203,34 +203,7 @@ module.exports = function (grunt) {
       }
     },
 
-    ftpUploadTask: {
-      selenium: {
-        options: {
-          user: 'anonymous',
-          password: 'ignored',
-          port: process.env.SELENIUM_CHROME_FTP_PORT_21_TCP_PORT || 21,
-          host: process.env.SELENIUM_CHROME_FTP_PORT_21_TCP_ADDR || 'localhost'
-        },
-        files: [{
-          expand: true,
-          cwd: __dirname + '/dist',
-          dest: '/uploaded/',
-          src: [
-            '**/*',
-            '!.git',
-            '!.idea',
-            '!.tmp'
-          ]
-        }]
-      }
-    },
-
     env: {
-      dockerSeleniumEnv: {
-        SELENIUM_URL: "http://" + (process.env.SELENIUM_CHROME_FTP_PORT_4444_TCP_ADDR || 'localhost') +
-                      ':' + (process.env.SELENIUM_CHROME_FTP_PORT_4444_TCP_PORT || 4444) + '/wd/hub',
-        EXTENSION_PATH: "/var/ftp/uploaded"
-      },
       localSeleniumEnv: {
         SELENIUM_URL: "http://localhost:4444/wd/hub",
         EXTENSION_PATH: __dirname + "/dist"
@@ -409,7 +382,7 @@ module.exports = function (grunt) {
   grunt.registerTask('ci-test', [
     'test',
     'bump-only:patch',
-    'prepare-system-tests',
+    'dist',
     'run-system-tests'
   ]);
 
@@ -418,17 +391,7 @@ module.exports = function (grunt) {
     'karma:once'
   ]);
 
-  grunt.registerTask('prepare-system-tests', [
-    'dist',
-    'ftpUploadTask:selenium'
-  ]);
-
   grunt.registerTask('run-system-tests', [
-    'env:dockerSeleniumEnv',
-    'mochaTest:system'
-  ]);
-
-  grunt.registerTask('run-local-system-tests', [
     'env:localSeleniumEnv',
     'mochaTest:system'
   ]);
