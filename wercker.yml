@@ -13,7 +13,7 @@ build:
             code: bower install --allow-root
         - script:
             name: Start selenium
-            code: start-selenium
+            code: start-selenium.sh
         - grunt:
             tasks: ci-test
             fail-on-warnings: true
