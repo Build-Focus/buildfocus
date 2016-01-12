@@ -1,12 +1,13 @@
 'use strict';
 
+import notificationHelper = require("test/helpers/notification-test-helper");
+
 import serialization = require('app/scripts/city/serialization/serialization-format');
 import Buildings = require('app/scripts/city/buildings/buildings');
 import BuildingType = require('app/scripts/city/buildings/building-type');
 
 var POMODORO_DURATION = 1000 * 60 * 20;
 var BREAK_DURATION = 1000 * 60 * 5;
-var NOTIFICATION_ID = "pomodoro-notification";
 
 var clockStub: Sinon.SinonFakeTimers;
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
@@ -177,75 +178,73 @@ describe('Acceptance: Pomodoros', function () {
   });
 
   describe("Notifications", function () {
+    beforeEach(() => {
+      startPomodoro();
+      clockStub.tick(POMODORO_DURATION);
+      notificationHelper.spyForNotificationCreation().reset();
+    });
+
     it("should appear when a pomodoro is completed successfully", function () {
       startPomodoro();
       clockStub.tick(POMODORO_DURATION);
 
-      expect(chromeStub.notifications.create.calledOnce).to.equal(true);
+      expect(notificationHelper.spyForResultNotificationCreation().callCount).to.equal(1);
+      expect(notificationHelper.spyForActionNotificationCreation().callCount).to.equal(1);
     });
 
     it("should show the new building, if you complete a pomodoro", () => {
       startPomodoro();
       clockStub.tick(POMODORO_DURATION);
 
-      expect(chromeStub.notifications.create.args[0][1].iconUrl).to.include("images/city/");
+      expect(notificationHelper.spyForResultNotificationCreation().args[0][1].iconUrl).to.include("images/city/");
     });
 
-    it("should start a new pomodoro when clicked", function () {
-      startPomodoro();
-      clockStub.tick(POMODORO_DURATION);
+    it("should open the focus page if you click the new building notification", () => {
+      notificationHelper.clickViewCity();
+      expect(chromeStub.tabs.create.calledOnce).to.equal(true);
+    });
 
-      chromeStub.notifications.onClicked.trigger(NOTIFICATION_ID);
-
+    it("should let you start a new pomodoro", function () {
+      notificationHelper.clickStartPomodoro();
       expect(badgeIconColour()).to.be.rgbPixel(POMODORO_COLOUR);
     });
 
     it("should let you take a break after your pomodoro", function () {
-      startPomodoro();
-      clockStub.tick(POMODORO_DURATION);
-
-      chromeStub.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 0);
+      notificationHelper.clickTakeABreak();
       clockStub.tick(BREAK_DURATION - 1);
 
       expect(badgeIconColour()).to.be.rgbPixel(BREAK_COLOUR);
-      expect(chromeStub.notifications.create.callCount).to.equal(1);
+      expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
     });
 
     it("should trigger again after your break is up", function () {
-      startPomodoro();
-      clockStub.tick(POMODORO_DURATION);
-
-      chromeStub.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 0);
+      notificationHelper.clickTakeABreak();
       clockStub.tick(BREAK_DURATION);
 
-      expect(chromeStub.notifications.create.callCount).to.equal(2);
-      expect(chromeStub.notifications.create.args[1][1].title).to.equal("Break time's over");
+      expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(1);
+      expect(notificationHelper.spyForNotificationCreation().args[0][1].title).to.equal("Break time's over");
     });
 
     it("should cancel your break if you start a new pomodoro", function () {
-      startPomodoro();
-      clockStub.tick(POMODORO_DURATION);
-
-      chromeStub.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 0);
+      notificationHelper.clickTakeABreak();
       startPomodoro();
       clockStub.tick(BREAK_DURATION);
 
-      expect(chromeStub.notifications.create.callCount).to.equal(1);
+      expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
     });
 
     it("should let you cancel pomodoro-ing after your pomodoro", function () {
-      startPomodoro();
-      clockStub.tick(POMODORO_DURATION);
-
-      chromeStub.notifications.onButtonClicked.trigger(NOTIFICATION_ID, 1);
+      notificationHelper.clickNotNow();
 
       clockStub.tick(1);
       expect(badgeIconColour()).to.be.rgbPixel(BADGE_TEXT_COLOUR);
-      expect(chromeStub.notifications.create.callCount).to.equal(1);
+      expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
 
-      clockStub.tick(BREAK_DURATION);
+      clockStub.tick(POMODORO_DURATION);
       expect(badgeIconColour()).to.be.rgbPixel(BADGE_TEXT_COLOUR);
-      expect(chromeStub.notifications.create.callCount).to.equal(1);
+      expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
+
+      expect(chromeStub.tabs.create.callCount).to.equal(0);
     });
   });
 
@@ -259,7 +258,7 @@ describe('Acceptance: Pomodoros', function () {
     it("should clear notifications when a start pomodoro message is received", function () {
       chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
 
-      expect(chromeStub.notifications.clear.calledOnce).to.equal(true);
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
     });
 
     it("should start a break when a break message is received", function () {
@@ -270,14 +269,14 @@ describe('Acceptance: Pomodoros', function () {
 
       clockStub.tick(BREAK_DURATION);
 
-      expect(chromeStub.notifications.create.calledOnce).to.equal(true);
-      expect(chromeStub.notifications.create.args[0][1].title).to.equal("Break time's over");
+      expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(1);
+      expect(notificationHelper.spyForNotificationCreation().args[0][1].title).to.equal("Break time's over");
     });
 
     it("should clear notifications when a start break message is received", function () {
       chromeStub.runtime.onMessage.trigger({"action": "start-break"});
 
-      expect(chromeStub.notifications.clear.calledOnce).to.equal(true);
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
     });
   });
 

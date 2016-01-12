@@ -8,7 +8,8 @@ import tracking = require('tracking');
 
 import Buildings = require('city/buildings/buildings');
 
-const NOTIFICATION_ID = "pomodoro-notification";
+const RESULT_NOTIFICATION_ID = "buildfocus-result-notification";
+const ACTIONS_NOTIFICATION_ID = "buildfocus-action-notification";
 
 interface ImageConfigSource {
   (building: Buildings.Building): { imagePath: string }
@@ -17,34 +18,40 @@ interface ImageConfigSource {
 class NotificationService {
   private notificationReissueTimeoutId: number;
 
-  public onClick = SubscribableEvent();
+  public onPomodoroStart = SubscribableEvent();
   public onBreak = SubscribableEvent();
-  public onMore = SubscribableEvent();
+  public onShowResult = SubscribableEvent();
 
   constructor(private getBuildingConfig: ImageConfigSource) {
     chrome.notifications.onClicked.addListener((clickedNotificationId) => {
-      if (clickedNotificationId === NOTIFICATION_ID) {
+      if (clickedNotificationId === ACTIONS_NOTIFICATION_ID) {
         this.clearNotifications();
         tracking.trackEvent("start-from-notification");
-        this.onClick.trigger();
+        this.onPomodoroStart.trigger();
+      }
+
+      else if (clickedNotificationId === RESULT_NOTIFICATION_ID) {
+        this.clearNotifications();
+        tracking.trackEvent("open-page-from-notification");
+        this.onShowResult.trigger();
       }
     });
 
     chrome.notifications.onButtonClicked.addListener((clickedNotificationId, buttonIndex) => {
-      if (clickedNotificationId === NOTIFICATION_ID) {
+      if (clickedNotificationId === ACTIONS_NOTIFICATION_ID) {
         this.clearNotifications();
+
         if (buttonIndex === 0) {
           tracking.trackEvent("start-break-from-notification");
           this.onBreak.trigger();
         } else if (buttonIndex === 1) {
-          tracking.trackEvent("open-page-from-notification");
-          this.onMore.trigger();
+          tracking.trackEvent("close-notification-from-not-now");
         }
       }
     });
 
     chrome.notifications.onClosed.addListener((closedNotificationid, byUser) => {
-      if (closedNotificationid === NOTIFICATION_ID && byUser) {
+      if (_.contains([ACTIONS_NOTIFICATION_ID, RESULT_NOTIFICATION_ID], closedNotificationid) && byUser) {
         this.clearNotifications();
         tracking.trackEvent("close-notification");
       }
@@ -54,15 +61,23 @@ class NotificationService {
   public showSuccessNotification = (building: Buildings.Building) => {
     var buildingConfig = this.getBuildingConfig(building);
 
-    var notification = this.buildNotification(
-      "Success! Go again?",
-      "Click here to focus for another\n25 minutes",
-      [{"title": "Take a break"}, {"title": "More..."}],
+    var buildingNotification = this.buildNotification(
+      "Success! Great work.",
+      "Your city's getting bigger and better. Click here to take a look.",
+      [],
       buildingConfig ? buildingConfig.imagePath : undefined
     );
 
+    var continueNotification = this.buildNotification(
+      "Go again?",
+      "Click here to focus again for another 25 minutes.",
+      [{title: "Take a break"}, {"title": "Not now"}]
+    );
+
     this.clearNotifications();
-    chrome.notifications.create(NOTIFICATION_ID, notification, () => reportChromeErrors());
+    chrome.notifications.create(ACTIONS_NOTIFICATION_ID, continueNotification, () => reportChromeErrors());
+    chrome.notifications.create(RESULT_NOTIFICATION_ID, buildingNotification, () => reportChromeErrors());
+
     this.notificationReissueTimeoutId = setTimeout(() => this.showSuccessNotification(building), 7500);
   };
 
@@ -74,13 +89,14 @@ class NotificationService {
     );
 
     this.clearNotifications();
-    chrome.notifications.create(NOTIFICATION_ID, notification, () => reportChromeErrors());
+    chrome.notifications.create(ACTIONS_NOTIFICATION_ID, notification, () => reportChromeErrors());
     this.notificationReissueTimeoutId = setTimeout(this.showBreakNotification.bind(this), 7500);
   };
 
   public clearNotifications = () => {
     clearTimeout(this.notificationReissueTimeoutId);
-    chrome.notifications.clear(NOTIFICATION_ID, () => reportChromeErrors());
+    chrome.notifications.clear(RESULT_NOTIFICATION_ID, () => reportChromeErrors());
+    chrome.notifications.clear(ACTIONS_NOTIFICATION_ID, () => reportChromeErrors());
   };
 
   private buildNotification = (title: string, message: string, buttons: Array<any>,

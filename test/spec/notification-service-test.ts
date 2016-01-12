@@ -1,32 +1,16 @@
 'use strict';
 
 import NotificationService = require("app/scripts/notification-service");
+import notificationHelper = require("test/helpers/notification-test-helper");
 
 var notifications;
 
-var onClickCallback;
+var onStartCallback;
 var onBreakCallback;
+var onShowResultCallback;
 
 var clockStub;
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
-
-var NOTIFICATION_NAME = "pomodoro-notification";
-
-function clickNotification(notificationName?: string) {
-  chromeStub.notifications.onClicked.trigger(notificationName || NOTIFICATION_NAME);
-}
-
-function clickTakeABreak(notificationName?: string) {
-  chromeStub.notifications.onButtonClicked.trigger(notificationName || NOTIFICATION_NAME, 0);
-}
-
-function clickMore(notificationName?: string) {
-  chromeStub.notifications.onButtonClicked.trigger(notificationName || NOTIFICATION_NAME, 1);
-}
-
-function closeNotification(notificationName?: string) {
-  chromeStub.notifications.onClosed.trigger(notificationName || NOTIFICATION_NAME, true);
-}
 
 describe('Notification service', function () {
   before(function () {
@@ -43,84 +27,115 @@ describe('Notification service', function () {
 
     var imageSource = sinon.stub().returns({ imagePath: "building-image" });
     notifications = new NotificationService(imageSource);
-    onClickCallback = sinon.stub();
-    onBreakCallback = sinon.stub();
 
-    notifications.onClick(onClickCallback);
+    onStartCallback = sinon.stub();
+    onBreakCallback = sinon.stub();
+    onShowResultCallback = sinon.stub();
+
+    notifications.onPomodoroStart(onStartCallback);
     notifications.onBreak(onBreakCallback);
+    notifications.onShowResult(onShowResultCallback);
   });
 
   describe("success notifications", () => {
     beforeEach(() => notifications.showSuccessNotification());
 
-    it('should appear', function () {
-      expect(chromeStub.notifications.create.calledOnce).to.equal(true);
+    it('should show the success result', function () {
+      expect(notificationHelper.spyForResultNotificationCreation().callCount).to.equal(1);
     });
 
-    it('should show a new building image', function () {
-      expect(chromeStub.notifications.create.args[0][1].iconUrl).to.equal("building-image");
+    it('should show the success actions', function () {
+      expect(notificationHelper.spyForActionNotificationCreation().callCount).to.equal(1);
+    });
+
+    it('should show a new building image on the result', function () {
+      expect(notificationHelper.spyForResultNotificationCreation().args[0][1].iconUrl).to.equal("building-image");
     });
   });
 
-  describe("break notifiations", () => {
+  describe("break notifications", () => {
     beforeEach(() => notifications.showBreakNotification());
 
-    it('should appear', function () {
-      expect(chromeStub.notifications.create.calledOnce).to.equal(true);
+    it('should show only one notification', () => {
+      expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(1)
     });
 
     it('should show the BF logo', function () {
-      expect(chromeStub.notifications.create.args[0][1].iconUrl).to.equal("images/icon-128.png");
+      expect(notificationHelper.spyForNotificationCreation().args[0][1].iconUrl).to.equal("images/icon-128.png");
     });
   });
 
   describe("button subscriptions", () => {
-    it('should call onClick callbacks when a pomodoro notification is clicked', function () {
-      clickNotification();
-      expect(onClickCallback.calledOnce).to.equal(true);
-    });
-
-    it('should not call onClick callbacks when some other notification is clicked', function () {
-      clickNotification("other-notification");
-      expect(onClickCallback.called).to.equal(false);
+    it('should call onClick callbacks when a pomodoro is started', function () {
+      notificationHelper.clickStartPomodoro();
+      expect(onStartCallback.calledOnce).to.equal(true);
     });
 
     it('should call onBreak callbacks when a pomodoro break button is clicked', function () {
-      clickTakeABreak();
+      notificationHelper.clickTakeABreak();
       expect(onBreakCallback.calledOnce).to.equal(true);
     });
 
+    it('should call onShowResult callbacks when the view city button is clicked', function () {
+      notificationHelper.clickViewCity();
+      expect(onShowResultCallback.calledOnce).to.equal(true);
+    });
+
+    it('should not call onClick callbacks when some other notification is clicked', function () {
+      notificationHelper.clickUnrelatedNotification();
+      expect(onStartCallback.called).to.equal(false);
+    });
+
     it('should not call onBreak callbacks when a button on some other notification is clicked', function () {
-      clickTakeABreak("other-notification");
-      expect(onBreakCallback.calledOnce).to.equal(false);
+      notificationHelper.clickUnrelatedNotificationButton();
+      expect(onBreakCallback.called).to.equal(false);
+    });
+
+    it('should call no callbacks when the now not button is pressed', function () {
+      notificationHelper.clickNotNow();
+
+      expect(onStartCallback.called).to.equal(false);
+      expect(onBreakCallback.called).to.equal(false);
+      expect(onShowResultCallback.called).to.equal(false);
     });
   });
 
   describe("notification dismissal", function () {
-    it("should clear the notification initially when a new notification arrives", function () {
+    it("should clear both notifications initially when a new notification arrives", function () {
       notifications.showSuccessNotification();
-      expect(chromeStub.notifications.clear.calledOnce).to.equal(true);
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
     });
 
-    it("should cancel a notification after it's clicked", function () {
+    it("should cancel both notifications after a pomodoro is started", function () {
       notifications.showSuccessNotification();
+      chromeStub.notifications.clear.reset();
 
-      clickNotification();
-      expect(chromeStub.notifications.clear.calledTwice).to.equal(true);
+      notificationHelper.clickStartPomodoro();
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
     });
 
-    it("should cancel a notification after the break button is clicked", function () {
+    it("should cancel both notifications after a break is started", function () {
       notifications.showSuccessNotification();
+      chromeStub.notifications.clear.reset();
 
-      clickTakeABreak();
-      expect(chromeStub.notifications.clear.calledTwice).to.equal(true);
+      notificationHelper.clickTakeABreak();
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
     });
 
-    it("should cancel a notification if the not now button is clicked", function () {
+    it("should cancel both notifications after a not now is clicked", function () {
       notifications.showSuccessNotification();
+      chromeStub.notifications.clear.reset();
 
-      clickMore();
-      expect(chromeStub.notifications.clear.calledTwice).to.equal(true);
+      notificationHelper.clickNotNow();
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
+    });
+
+    it("should cancel both notifications after the city is viewed", function () {
+      notifications.showSuccessNotification();
+      chromeStub.notifications.clear.reset();
+
+      notificationHelper.clickViewCity();
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
     });
   });
 
@@ -131,26 +146,26 @@ describe('Notification service', function () {
 
         it(`should cancel and reissue ${name} notifications that aren't touched within 8 seconds`, function () {
           clockStub.tick(8000);
-          expect(chromeStub.notifications.create.callCount).to.equal(2);
+          expect(notificationHelper.spyForActionNotificationCreation().callCount).to.equal(2);
         });
 
         it(`should not reissue ${name} notifications if they're clicked within 8 seconds`, function () {
-          clickNotification();
+          notificationHelper.clickStartPomodoro();
           clockStub.tick(8000);
-          expect(chromeStub.notifications.create.callCount).to.equal(1);
+          expect(notificationHelper.spyForActionNotificationCreation().callCount).to.equal(1);
         });
 
         it(`should not reissue ${name} notifications if they're closed within 8 seconds`, function () {
-          closeNotification();
+          notificationHelper.closeActionsNotification();
           clockStub.tick(8000);
-          expect(chromeStub.notifications.create.callCount).to.equal(1);
+          expect(notificationHelper.spyForActionNotificationCreation().callCount).to.equal(1);
         });
 
         it(`should reissue ${name} notifications if they're closed by the reissue itself`, function () {
           clockStub.tick(8000);
-          chromeStub.notifications.onClosed.trigger(NOTIFICATION_NAME, false);
+          notificationHelper.closeResultNotification();
 
-          expect(chromeStub.notifications.create.callCount).to.equal(2);
+          expect(notificationHelper.spyForActionNotificationCreation().callCount).to.equal(2);
         });
       });
     }

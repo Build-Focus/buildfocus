@@ -28,7 +28,7 @@ export = function setupBackgroundPage() {
   var focusButton = new FocusButton(pomodoroService.progress, pomodoroService.isActive);
   var notificationService = new NotificationService(getBuildingConfig);
 
-  notificationService.onClick(pomodoroService.start);
+  notificationService.onPomodoroStart(pomodoroService.start);
   pomodoroService.onPomodoroStart(notificationService.clearNotifications);
 
   pomodoroService.onPomodoroSuccess(function () {
@@ -49,7 +49,7 @@ export = function setupBackgroundPage() {
     chrome.tabs.create({url: chrome.extension.getURL("main.html")});
   }
 
-  notificationService.onMore(showMainPage);
+  notificationService.onShowResult(showMainPage);
   focusButton.onClick(() => {
     tracking.trackEvent("open-page-from-focus-button");
     showMainPage();
