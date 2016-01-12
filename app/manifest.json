@@ -27,9 +27,7 @@
     "notifications",
     "identity",
     "identity.email",
-    "topSites",
-    "http://*/*",
-    "https://*/*"
+    "topSites"
   ],
   "web_accessible_resources": [
     "main.html"
