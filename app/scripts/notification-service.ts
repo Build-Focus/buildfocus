@@ -71,7 +71,7 @@ class NotificationService {
     var continueNotification = this.buildNotification(
       "Go again?",
       "Click here to focus again for another 25 minutes.",
-      [{title: "Take a break"}, {"title": "Not now"}]
+      [{title: "Take a break"}, {"title": "Stop for now"}]
     );
 
     this.clearNotifications();
@@ -85,7 +85,7 @@ class NotificationService {
     var notification = this.buildNotification(
       "Break time's over",
       "Click here to get some focus for\n25 minutes",
-      [{"title": "Just one more break"}, {"title": "More..."}]
+      [{"title": "Just one more break"}, {"title": "Stop for now"}]
     );
 
     this.clearNotifications();
