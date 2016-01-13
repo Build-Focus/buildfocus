@@ -1,7 +1,8 @@
+import SinonFakeTimers = Sinon.SinonFakeTimers;
 'use strict';
 
 import NotificationService = require("app/scripts/notification-service");
-import notificationHelper = require("test/helpers/notification-test-helper");
+import NotificationHelper = require("test/helpers/notification-test-helper");
 
 var notifications;
 
@@ -9,7 +10,8 @@ var onStartCallback;
 var onBreakCallback;
 var onShowResultCallback;
 
-var clockStub;
+var clockStub: SinonFakeTimers;
+var notificationHelper = new NotificationHelper(() => clockStub);
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
 describe('Notification service', function () {

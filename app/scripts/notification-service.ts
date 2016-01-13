@@ -76,7 +76,11 @@ class NotificationService {
 
     this.clearNotifications();
     chrome.notifications.create(ACTIONS_NOTIFICATION_ID, continueNotification, () => reportChromeErrors());
-    chrome.notifications.create(RESULT_NOTIFICATION_ID, buildingNotification, () => reportChromeErrors());
+
+    // Push the other one async - this ensures they always appear in the correct order (result above actions)
+    setTimeout(() => {
+      chrome.notifications.create(RESULT_NOTIFICATION_ID, buildingNotification, () => reportChromeErrors())
+    }, 0);
 
     this.notificationReissueTimeoutId = setTimeout(() => this.showSuccessNotification(building), 7500);
   };

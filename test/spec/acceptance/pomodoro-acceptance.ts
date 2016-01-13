@@ -1,6 +1,6 @@
 'use strict';
 
-import notificationHelper = require("test/helpers/notification-test-helper");
+import NotificationHelper = require("test/helpers/notification-test-helper");
 
 import serialization = require('app/scripts/city/serialization/serialization-format');
 import Buildings = require('app/scripts/city/buildings/buildings');
@@ -10,6 +10,7 @@ var POMODORO_DURATION = 1000 * 60 * 20;
 var BREAK_DURATION = 1000 * 60 * 5;
 
 var clockStub: Sinon.SinonFakeTimers;
+var notificationHelper = new NotificationHelper(() => clockStub);
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
 function resetSpies() {
