@@ -61,6 +61,11 @@ function identifyCurrentUser() {
   });
 }
 
+function trackInstallsAndUpdates() {
+  chrome.runtime.onInstalled.addListener((installReason) => tracking.trackEvent("install", installReason));
+  chrome.runtime.onUpdateAvailable.addListener((updateData) => tracking.trackEvent("update-available", updateData));
+}
+
 interface Tracking {
   trackEvent(eventName: string, eventData?: { [key: string]: any }): void;
 }
@@ -76,6 +81,8 @@ if (config.trackingConfig.enabled) {
       calq.action.track(eventName, eventData);
     }
   };
+
+  trackInstallsAndUpdates();
 } else {
   tracking = { trackEvent: () => {} };
 }
