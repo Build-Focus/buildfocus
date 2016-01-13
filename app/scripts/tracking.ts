@@ -53,12 +53,8 @@ function identifyCurrentUser() {
   chrome.identity.getProfileUserInfo((userInfo) => {
     if (userInfo.id) {
       calq.user.identify(userInfo.id);
-
-      var userProfile:any = _.merge({
-        "$email": userInfo.email
-      }, config.trackingConfig.extraProfileInfo);
-
-      calq.user.profile(userProfile);
+      calq.user.profile({ "$email": userInfo.email });
+      calq.action.setGlobalProperty(config.trackingConfig.extraInfo);
     } else {
       rollbar.info("No user profile info available", { infoResult: userInfo });
     }
