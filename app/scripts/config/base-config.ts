@@ -41,7 +41,7 @@ requirejs.config({
     createjs: { exports: 'createjs' },
     tween: { deps: ['createjs'], exports: 'Tween' }
   },
-  "waitSeconds": 20 // We're usually running in the background, and we can wait a little if the machine's slow
+  "waitSeconds": 60 // We're usually running in the background, and we can wait a little if the machine's slow
 });
 
 // Type definition for the app config, to promise to typescript that one of the prod/test/dev configs
