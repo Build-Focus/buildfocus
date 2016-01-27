@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+  <title>Build Focus</title>
+  <link rel="stylesheet" href="../build/app/styles/main.css" />
+  <link rel="icon" href="../build/app/images/icon-32.png">
+  <style>
+    main, .city, .city > canvas {
+      height: 90%;
+    }
+  </style>
+</head>
+<body>
+  <main style="display: none" data-bind="visible: true">
+    <nav>
+      <div class="logo">
+        <img src="../build/app/images/logo.png" />
+      </div>
+    </nav>
+
+    <section class="city-and-buttons">
+      <button data-bind="click: addSuccess">Add</button>
+      <button data-bind="click: addFailure">Remove</button>
+
+      <div class="city" data-bind="render: { source: cityRenderer.render }"></div>
+    </section>
+  </main>
+
+  <script src="../build/app/bower_components/requirejs/require.js"></script>
+  <script>chrome.runtime.id = "ednpnngpmfdcjpkjnigpokincopbdgbp";</script>
+  <script src="../build/app/scripts/config/base-config.js"></script>
+  <script>
+    requirejs.config({
+      baseUrl: "../build/app/scripts"
+    });
+
+    require(["createjs", "lodash", "URIjs/URI"], function (easeljs, _, URI) {
+      // Stub out easeljs.Bitmap to let us redirect for non-extension paths
+      var OriginalBitmapConstructor = easeljs.Bitmap;
+      easeljs.Bitmap = function () {
+        var imagePath = arguments[0];
+        var relativePath = imagePath.replace(/^\//, "");
+        var buildLocation = new URI("../build/app/").absoluteTo(window.location);
+
+        var fixedPath = new URI(relativePath).absoluteTo(buildLocation).toString();
+        var fixedArgs = [fixedPath].concat(_.tail(arguments));
+
+        OriginalBitmapConstructor.apply(this, fixedArgs);
+      };
+      easeljs.Bitmap.prototype = OriginalBitmapConstructor.prototype;
+
+      // *After* that's stubbed, set up a basic city builder structure.
+      require(["knockout", "city/city", "city/weight-upgrades",
+               "city/buildings/buildings", "city/rendering/city-renderer"],
+        function (ko, City, weightUpgrades, Buildings, CityRenderer) {
+          var city = new City();
+
+          var cityBuilder = {
+            cityRenderer: new CityRenderer(city),
+            addSuccess: function () {
+              var possibleUpgrades = weightUpgrades(city.getPossibleUpgrades());
+              var randomUpgrade = possibleUpgrades.get();
+              city.construct(randomUpgrade);
+              return randomUpgrade;
+            },
+
+            addFailure: function() {
+              var buildingToRemove = _.sample(city.getBuildings());
+              if (buildingToRemove) city.remove(buildingToRemove);
+            }
+          };
+
+          ko.applyBindings(cityBuilder);
+        }
+      );
+    });
+  </script>
+</body>
+</html>
