@@ -118,7 +118,6 @@
 
     .overlay {
       position: absolute;
-      transform: translate(0, -50%);
       right: 0;
       left: 0;
       text-align: center;
@@ -128,28 +127,38 @@
       &.pomodoro-overlay {
         display: block;
         top: 45%;
+        transform: translate(0, -50%);
         color: #e00505;
+
+        .overlay-text {
+          font-size: 90pt;
+        }
+
+        .overlay-timer {
+          font-size: 50pt;
+        }
       }
 
-      &.break-overlay { }
+      &.break-overlay {
+        display: block;
+        top: 60%;
 
-      .overlay-text {
-        font-size: 90pt;
-      }
-
-      .overlay-timer {
         font-size: 50pt;
+        color: #106D26;
+
+        .overlay-text, .overlay-timer {
+          display: inline;
+          width: 49%;
+        }
+
+        .overlay-text {
+          float: left;
+        }
+
+        .overlay-timer {
+          float: right;
+        }
       }
-    }
-
-    .break-in-progress-overlay {
-      position: absolute;
-      top: 8em;
-      right: 0;
-      left: 0;
-      text-align: center;
-
-      padding-top: 50px;
     }
   }
 }
