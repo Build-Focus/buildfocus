@@ -3,6 +3,7 @@
 const prodConfig: ApplicationConfig = {
   pomodoroDuration: 1000 * 60 * 25,
   breakDuration: 1000 * 60 * 5,
+  timerFrequency: 100,
 
   rollbarConfig: {
     accessToken: "50f66d878cc84307a37ebfc6202a7836",

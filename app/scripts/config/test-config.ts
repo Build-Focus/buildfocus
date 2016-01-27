@@ -3,6 +3,7 @@
 const testConfig: ApplicationConfig = {
   pomodoroDuration: 1000 * 60 * 20,
   breakDuration: 1000 * 60 * 5,
+  timerFrequency: 1000,
 
   rollbarConfig: {
     enabled: false

@@ -35,6 +35,11 @@ function closeThisTab() {
   });
 }
 
+enum OverlayType {
+  PomodoroOverlay,
+  BreakOverlay
+}
+
 class MainPageViewModel {
   private pomodoroService = new ProxyPomodoroService();
   private score = new Score();
@@ -42,15 +47,42 @@ class MainPageViewModel {
 
   failed = (getQueryParameter("failed") === "true");
   failingUrl = getQueryParameter("failingUrl");
-  failingDomain = ko.computed(() => this.failingUrl ? getDomainFromUrl(this.failingUrl) : null);
+  failingDomain = ko.pureComputed(() => this.failingUrl ? getDomainFromUrl(this.failingUrl) : null);
 
-  canStartPomodoro = ko.computed(() => !this.pomodoroService.isActive());
+  private breakActive = this.pomodoroService.isBreakActive;
+  private pomodoroActive = this.pomodoroService.isActive;
 
-  canStartBreak = ko.computed(() => !this.pomodoroService.isActive() &&
-                                    !this.pomodoroService.isBreakActive());
+  timeRemaining = this.pomodoroService.timeRemaining;
 
-  canSayNotNow = ko.computed(() => !this.pomodoroService.isActive() &&
-                                   !this.pomodoroService.isBreakActive());
+  private overlayType = ko.pureComputed(() => {
+    if (this.pomodoroActive()) {
+      return OverlayType.PomodoroOverlay;
+    } else if (this.breakActive()) {
+      return OverlayType.BreakOverlay;
+    } else {
+      return null;
+    }
+  });
+
+  overlayStyle = ko.pureComputed(() => {
+    return {
+      [OverlayType.PomodoroOverlay]: "pomodoro-overlay",
+      [OverlayType.BreakOverlay]: "break-overlay"
+    }[this.overlayType()];
+  });
+  overlayText = ko.pureComputed(() => {
+    return {
+      [OverlayType.PomodoroOverlay]: "Focusing",
+      [OverlayType.BreakOverlay]: "On a break"
+    }[this.overlayType()];
+  });
+  overlayShown = ko.pureComputed(() => this.overlayType() !== null);
+
+  canStartPomodoro = ko.pureComputed(() => !this.pomodoroActive());
+  canStartBreak = ko.pureComputed(() => !this.pomodoroActive() &&
+                                        !this.breakActive());
+  canSayNotNow = ko.pureComputed(() => !this.pomodoroActive() &&
+                                       !this.breakActive());
 
   startPomodoro() {
     this.pomodoroService.start();

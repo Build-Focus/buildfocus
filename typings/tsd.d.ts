@@ -12,3 +12,5 @@
 /// <reference path="knockout.es5/knockout.es5.d.ts" />
 /// <reference path="heap/heap.d.ts" />
 /// <reference path="calq/calq.d.ts" />
+/// <reference path="moment/moment-node.d.ts" />
+/// <reference path="moment/moment.d.ts" />

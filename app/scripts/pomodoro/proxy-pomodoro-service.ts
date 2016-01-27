@@ -15,7 +15,9 @@ class ProxyPomodoroService {
 
   isActive = subscribedObservable("pomodoro-is-active", false);
   isBreakActive = subscribedObservable("break-is-active", false);
+
   progress = subscribedObservable("pomodoro-service-progress", null);
+  timeRemaining = subscribedObservable("pomodoro-service-time-remaining", null);
 
   onPomodoroStart = subscribableEvent();
   onPomodoroSuccess = subscribableEvent();
@@ -23,6 +25,6 @@ class ProxyPomodoroService {
 
   onBreakStart = subscribableEvent();
   onBreakEnd = subscribableEvent();
-};
+}
 
 export = ProxyPomodoroService;

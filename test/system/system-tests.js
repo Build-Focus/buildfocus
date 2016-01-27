@@ -31,6 +31,7 @@ describe("System tests - ", function () {
     return client.pause(1000).getTabIds().then(function (ids) {
       if (ids.length > 1) {
         return client.switchToLastTab()
+                     .waitForVisible(".hopscotch-close", 2000)
                      .click(".hopscotch-close")
                      .closeTab();
       } else {
@@ -63,6 +64,14 @@ describe("System tests - ", function () {
         .url("http://example.com")
         .pause(1000)
         .getUrl().should.eventually.contain(extensionPage("main.html?failed=true"));
+    });
+
+    it("Can start a pomodoro", ()  => {
+      return startPomodoro()
+        .url(extensionPage("main.html"))
+        .pause(500)
+        .isEnabled(".startPomodoro").should.eventually.equal(false, "Pomodoro button should be disabled")
+        .getText(".overlay").should.eventually.match(/Focusing\s+24:\d\d/);
     });
 
     xit("Can complete a pomodoro", function () {

@@ -50,6 +50,11 @@
                 data-bind="click: notNow, enable: canSayNotNow">
           Not now
         </button>
+
+        <div class="overlay" data-bind="css: overlayStyle, if: overlayShown">
+          <div class="overlay-text" data-bind="text: overlayText"></div>
+          <div class="overlay-timer" data-bind="duration: timeRemaining">0:30</div>
+        </div>
       </div>
     </section>
   </main>

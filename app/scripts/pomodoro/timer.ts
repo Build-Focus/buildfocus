@@ -1,6 +1,7 @@
 'use strict';
 
 import ko = require("knockout");
+import config = require("config");
 
 function now() {
   return new Date().valueOf();
@@ -8,21 +9,31 @@ function now() {
 
 class Timer {
   private runningTimerId: KnockoutObservable<number> = ko.observable(null);
+  private fullDuration: number = null;
 
-  progress: KnockoutObservable<number> = ko.observable(0);
-  isRunning: KnockoutComputed<boolean> = ko.computed(() => {
+  progress: KnockoutComputed<number> = ko.pureComputed(() => {
+    if (this.timeRemaining() !== null) {
+      return Math.floor((1 - (this.timeRemaining() / this.fullDuration)) * 100);
+    } else {
+      return null;
+    }
+  });
+  timeRemaining: KnockoutObservable<number> = ko.observable(null);
+  isRunning: KnockoutComputed<boolean> = ko.pureComputed(() => {
     return this.runningTimerId() !== null;
   });
 
   start(duration: number, callback: () => void) {
     this.reset();
 
+    this.fullDuration = duration;
+    this.timeRemaining(duration);
+
     var timerStartTime = now();
     var timerEndTime = timerStartTime + duration;
 
     this.runningTimerId(window.setInterval(() => {
-      var rawProgress = (now() - timerStartTime) / duration;
-      this.progress(Math.floor(rawProgress * 100));
+      this.timeRemaining(timerEndTime - now());
 
       if (now() >= timerEndTime) {
         this.stopTimer();
@@ -30,7 +41,7 @@ class Timer {
           callback();
         }
       }
-    }, 100));
+    }, config.timerFrequency));
   }
 
   private stopTimer() {
@@ -42,7 +53,8 @@ class Timer {
 
   reset() {
     this.stopTimer();
-    this.progress(0);
+    this.fullDuration = null;
+    this.timeRemaining(null);
   }
 }
 

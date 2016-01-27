@@ -3,6 +3,7 @@
 const devConfig: ApplicationConfig = {
   pomodoroDuration: 1000 * 10,
   breakDuration: 1000 * 3,
+  timerFrequency: 100,
 
   rollbarConfig: {
     accessToken: "50f66d878cc84307a37ebfc6202a7836",

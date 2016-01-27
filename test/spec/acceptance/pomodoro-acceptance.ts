@@ -117,29 +117,24 @@ function givenBadDomains(urlPatterns) {
   chromeStub.storage.onChanged.trigger({"badDomainPatterns": {"newValue": urlPatterns}});
 }
 
-describe('Acceptance: Pomodoros', function () {
-  before(function () {
-    clockStub = sinon.useFakeTimers();
-  });
+describe('Acceptance: Pomodoros', () => {
+  before(() => clockStub = sinon.useFakeTimers());
+  after(() => clockStub.restore());
 
-  after(function () {
-    clockStub.restore();
-  });
-
-  beforeEach(function () {
+  beforeEach(() => {
     // Make sure any active pomodoros are definitely finished
     clockStub.tick(POMODORO_DURATION);
 
     resetSpies();
   });
 
-  it("should open the pomodoro page if the button is clicked", function () {
+  it("should open the pomodoro page if the button is clicked", () => {
     chromeStub.browserAction.onClicked.trigger();
 
     expect(chromeStub.tabs.create.calledOnce).to.equal(true);
   });
 
-  it("should add a building for a successful pomodoros", function () {
+  it("should add a building for a successful pomodoros", () => {
     var initialCityValue = getCityValue();
 
     startPomodoro();
@@ -150,7 +145,7 @@ describe('Acceptance: Pomodoros', function () {
     expect(resultingCityValue).to.equal(initialCityValue + 1);
   });
 
-  it("should remove a building for failed pomodoros", function () {
+  it("should remove a building for failed pomodoros", () => {
     givenBadDomain("twitter.com");
     startPomodoro();
     clockStub.tick(POMODORO_DURATION);
@@ -163,7 +158,7 @@ describe('Acceptance: Pomodoros', function () {
     expect(resultingCitySize).to.equal(initialCitySize - 1);
   });
 
-  it("should do nothing if a pomodoro is started while one's already running", function () {
+  it("should do nothing if a pomodoro is started while one's already running", () => {
     var initialCityValue = getCityValue();
 
     startPomodoro();
@@ -178,14 +173,14 @@ describe('Acceptance: Pomodoros', function () {
     expect(resultingCityValue).to.equal(initialCityValue + 1);
   });
 
-  describe("Notifications", function () {
+  describe("Notifications", () => {
     beforeEach(() => {
       startPomodoro();
       clockStub.tick(POMODORO_DURATION);
       notificationHelper.spyForNotificationCreation().reset();
     });
 
-    it("should appear when a pomodoro is completed successfully", function () {
+    it("should appear when a pomodoro is completed successfully", () => {
       startPomodoro();
       clockStub.tick(POMODORO_DURATION);
 
@@ -205,12 +200,12 @@ describe('Acceptance: Pomodoros', function () {
       expect(chromeStub.tabs.create.calledOnce).to.equal(true);
     });
 
-    it("should let you start a new pomodoro", function () {
+    it("should let you start a new pomodoro", () => {
       notificationHelper.clickStartPomodoro();
       expect(badgeIconColour()).to.be.rgbPixel(POMODORO_COLOUR);
     });
 
-    it("should let you take a break after your pomodoro", function () {
+    it("should let you take a break after your pomodoro", () => {
       notificationHelper.clickTakeABreak();
       clockStub.tick(BREAK_DURATION - 1);
 
@@ -218,7 +213,7 @@ describe('Acceptance: Pomodoros', function () {
       expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
     });
 
-    it("should trigger again after your break is up", function () {
+    it("should trigger again after your break is up", () => {
       notificationHelper.clickTakeABreak();
       clockStub.tick(BREAK_DURATION);
 
@@ -226,7 +221,7 @@ describe('Acceptance: Pomodoros', function () {
       expect(notificationHelper.spyForNotificationCreation().args[0][1].title).to.equal("Break time's over");
     });
 
-    it("should cancel your break if you start a new pomodoro", function () {
+    it("should cancel your break if you start a new pomodoro", () => {
       notificationHelper.clickTakeABreak();
       startPomodoro();
       clockStub.tick(BREAK_DURATION);
@@ -234,7 +229,7 @@ describe('Acceptance: Pomodoros', function () {
       expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
     });
 
-    it("should let you cancel pomodoro-ing after your pomodoro", function () {
+    it("should let you cancel pomodoro-ing after your pomodoro", () => {
       notificationHelper.clickNotNow();
 
       clockStub.tick(1);
@@ -249,20 +244,20 @@ describe('Acceptance: Pomodoros', function () {
     });
   });
 
-  describe("OnMessage", function () {
-    it("should start a pomodoro when a start message is received", function () {
+  describe("OnMessage", () => {
+    it("should start a pomodoro when a start message is received", () => {
       chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
 
       expect(badgeIconColour()).to.be.rgbPixel(POMODORO_COLOUR);
     });
 
-    it("should clear notifications when a start pomodoro message is received", function () {
+    it("should clear notifications when a start pomodoro message is received", () => {
       chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
 
       expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
     });
 
-    it("should start a break when a break message is received", function () {
+    it("should start a break when a break message is received", () => {
       chromeStub.runtime.onMessage.trigger({"action": "start-break"});
 
       expect(badgeIconColour()).to.be.rgbPixel(BREAK_COLOUR);
@@ -274,14 +269,14 @@ describe('Acceptance: Pomodoros', function () {
       expect(notificationHelper.spyForNotificationCreation().args[0][1].title).to.equal("Break time's over");
     });
 
-    it("should clear notifications when a start break message is received", function () {
+    it("should clear notifications when a start break message is received", () => {
       chromeStub.runtime.onMessage.trigger({"action": "start-break"});
 
       expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
     });
   });
 
-  it("should show a failure page when a pomodoro is failed", function () {
+  it("should show a failure page when a pomodoro is failed", () => {
     givenBadDomain("twitter.com");
 
     startPomodoro();
@@ -294,7 +289,7 @@ describe('Acceptance: Pomodoros', function () {
     expect(chromeStub.tabs.create.calledOnce).to.equal(false, "should not open new failure tab");
   });
 
-  it("should show a separate failure page when a pomodoro is failed if the tab's immediately closed", function () {
+  it("should show a separate failure page when a pomodoro is failed if the tab's immediately closed", () => {
     givenBadDomain("twitter.com");
 
     startPomodoro();
@@ -306,7 +301,7 @@ describe('Acceptance: Pomodoros', function () {
     expect(chromeStub.tabs.create.calledOnce).to.equal(true, "should open new failure tab when tab update doesn't work");
   });
 
-  it("should show a failure page if a pomodoro is started with a failing page already open", function () {
+  it("should show a failure page if a pomodoro is started with a failing page already open", () => {
     givenBadDomain("twitter.com");
     activateTab("http://twitter.com");
 
@@ -319,19 +314,19 @@ describe('Acceptance: Pomodoros', function () {
     expect(chromeStub.tabs.create.calledOnce).to.equal(false, "should not open new failure tab");
   });
 
-  describe("Progress bar", function () {
-    describe("for pomodoros", function () {
-      it("shouldn't be shown initially", function () {
+  describe("Progress bar", () => {
+    describe("for pomodoros", () => {
+      it("shouldn't be shown initially", () => {
         expect(getBadgePixel(0, 0)).to.be.rgbPixel(BADGE_BACKGROUND_COLOUR);
       });
 
-      it("should be 0% after starting a pomodoro", function () {
+      it("should be 0% after starting a pomodoro", () => {
         startPomodoro();
 
         expect(getBadgePixel(0, 0)).to.be.transparent();
       });
 
-      it("should be 50% half way through a pomodoro", function () {
+      it("should be 50% half way through a pomodoro", () => {
         startPomodoro();
         clockStub.tick(POMODORO_DURATION / 2);
 
@@ -340,7 +335,7 @@ describe('Acceptance: Pomodoros', function () {
         expect(getBadgePixel(0, 18)).to.be.transparent();
       });
 
-      it("should be 99% when a pomodoro is nearly completed", function () {
+      it("should be 99% when a pomodoro is nearly completed", () => {
         startPomodoro();
         clockStub.tick(POMODORO_DURATION - 1);
 
@@ -350,14 +345,14 @@ describe('Acceptance: Pomodoros', function () {
         expect(getBadgePixel(0, 5)).to.be.rgbPixel(POMODORO_COLOUR);
       });
 
-      it("shouldn't be shown after a pomodoro is completed", function () {
+      it("shouldn't be shown after a pomodoro is completed", () => {
         startPomodoro();
         clockStub.tick(POMODORO_DURATION);
 
         expect(getBadgePixel(0, 0)).to.be.rgbPixel(BADGE_BACKGROUND_COLOUR);
       });
 
-      it("shouldn't be shown after a pomodoro is failed", function () {
+      it("shouldn't be shown after a pomodoro is failed", () => {
         givenBadDomain("twitter.com");
 
         startPomodoro();
@@ -368,13 +363,13 @@ describe('Acceptance: Pomodoros', function () {
       });
     });
 
-    describe("for breaks", function () {
-      it("should be 0% after starting a break", function () {
+    describe("for breaks", () => {
+      it("should be 0% after starting a break", () => {
         chromeStub.runtime.onMessage.trigger({"action": "start-break"});
         expect(getBadgePixel(0, 0)).to.be.transparent();
       });
 
-      it("should be 50% half way through a break", function () {
+      it("should be 50% half way through a break", () => {
         chromeStub.runtime.onMessage.trigger({"action": "start-break"});
         clockStub.tick(BREAK_DURATION / 2);
 
@@ -383,7 +378,7 @@ describe('Acceptance: Pomodoros', function () {
         expect(getBadgePixel(0, 18)).to.be.transparent();
       });
 
-      it("should be 99% when a break is nearly completed", function () {
+      it("should be 99% when a break is nearly completed", () => {
         chromeStub.runtime.onMessage.trigger({"action": "start-break"});
         clockStub.tick(BREAK_DURATION - 1);
 
@@ -393,7 +388,7 @@ describe('Acceptance: Pomodoros', function () {
         expect(getBadgePixel(0, 5)).to.be.rgbPixel(BREAK_COLOUR);
       });
 
-      it("shouldn't be shown after a break is completed", function () {
+      it("shouldn't be shown after a break is completed", () => {
         chromeStub.runtime.onMessage.trigger({"action": "start-break"});
         clockStub.tick(BREAK_DURATION);
 
