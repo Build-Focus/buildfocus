@@ -28,6 +28,8 @@ function updateStageToFit(stage: easeljs.Stage, canvas: HTMLCanvasElement) {
     // Offset position to center the rendering
     stage.x += (canvas.width - (bounds.width * scaleFactor)) / 2;
     stage.y += (canvas.height - (bounds.height * scaleFactor)) / 2;
+
+    stage.update();
   }
 }
 
@@ -45,27 +47,29 @@ ko.bindingHandlers['render'] = {
     var stage = new easeljs.Stage(canvas);
     ko.utils.domData.set(element, STAGE_DATA_KEY, stage);
 
+    var tickCallback = () => updateStageToFit(stage, canvas);
     easeljs.Ticker.framerate = 24;
+    easeljs.Ticker.addEventListener("tick", tickCallback);
 
-    var updateStageSize = () => {
-      updateStageToFit(stage, canvas);
-      stage.update();
-    };
+    window.addEventListener("resize", () => {
+      if (!canvasSizeNeedsUpdate) requestAnimationFrame(updateCanvasSize);
+      canvasSizeNeedsUpdate = true;
+    });
 
+    var canvasSizeNeedsUpdate = false;
     var updateCanvasSize = () => {
       resizeToFit(canvas, canvas.parentElement);
-      updateStageSize();
-    }
-
-    easeljs.Ticker.addEventListener("tick", updateStageSize);
-    window.addEventListener("resize", updateCanvasSize);
+      updateStageToFit(stage, canvas);
+      canvasSizeNeedsUpdate = false;
+    };
 
     ko.utils.domNodeDisposal.addDisposeCallback(element, () => {
-      easeljs.Ticker.removeEventListener("tick", updateStageSize);
+      easeljs.Ticker.removeEventListener("tick", tickCallback);
       window.removeEventListener("resize", updateCanvasSize);
       stage.enableDOMEvents(false);
     });
   },
+
   update: function (element: HTMLElement, valueAccessor: () => RenderBindingOptions) {
     var options = valueAccessor();
     var getRenderables = options.source;
