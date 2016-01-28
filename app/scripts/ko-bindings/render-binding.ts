@@ -31,11 +31,15 @@ function updateStageToFit(stage: easeljs.Stage, canvas: HTMLCanvasElement) {
   }
 }
 
+function resizeToFit(canvas: HTMLCanvasElement, parent: HTMLElement) {
+  canvas.width = parent.clientWidth;
+  canvas.height = parent.clientHeight;
+}
+
 ko.bindingHandlers['render'] = {
   init: function (element: HTMLElement, valueAccessor: () => RenderBindingOptions) {
     var canvas = document.createElement("canvas");
-    canvas.width = element.clientWidth;
-    canvas.height = element.clientHeight;
+    resizeToFit(canvas, element);
     $(element).append(canvas);
 
     var stage = new easeljs.Stage(canvas);
@@ -43,14 +47,22 @@ ko.bindingHandlers['render'] = {
 
     easeljs.Ticker.framerate = 24;
 
-    var tickCallback = (event) => {
+    var updateStageSize = () => {
       updateStageToFit(stage, canvas);
       stage.update();
     };
 
-    easeljs.Ticker.addEventListener("tick", tickCallback);
+    var updateCanvasSize = () => {
+      resizeToFit(canvas, canvas.parentElement);
+      updateStageSize();
+    }
+
+    easeljs.Ticker.addEventListener("tick", updateStageSize);
+    window.addEventListener("resize", updateCanvasSize);
+
     ko.utils.domNodeDisposal.addDisposeCallback(element, () => {
-      easeljs.Ticker.removeEventListener("tick", tickCallback);
+      easeljs.Ticker.removeEventListener("tick", updateStageSize);
+      window.removeEventListener("resize", updateCanvasSize);
       stage.enableDOMEvents(false);
     });
   },
