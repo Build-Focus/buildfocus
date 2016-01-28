@@ -80,6 +80,9 @@
       &[disabled] {
         opacity: .2;
         cursor: default;
+
+        -webkit-filter: blur(2px);
+        filter: blur(2px);
       }
     }
 
