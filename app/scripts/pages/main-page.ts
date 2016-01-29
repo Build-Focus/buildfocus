@@ -84,6 +84,8 @@ class MainPageViewModel {
   canSayNotNow = ko.pureComputed(() => !this.pomodoroActive() &&
                                        !this.breakActive());
 
+  warningPopupShown = ko.observable(false);
+
   startPomodoro() {
     this.pomodoroService.start();
     tracking.trackEvent("start-from-main-page");

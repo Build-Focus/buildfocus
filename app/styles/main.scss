@@ -14,6 +14,33 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'cabin';
+  src: url('fonts/cabin-bold-webfont.eot');
+  src: url('fonts/cabin-bold-webfont.eot?#iefix') format('embedded-opentype'),
+  url('fonts/cabin-bold-webfont.woff2') format('woff2'),
+  url('fonts/cabin-bold-webfont.woff') format('woff'),
+  url('fonts/cabin-bold-webfont.ttf') format('truetype'),
+  url('fonts/cabin-bold-webfont.svg#cabinbold') format('svg');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'cabin';
+  src: url('fonts/cabin-regular-webfont.eot');
+  src: url('fonts/cabin-regular-webfont.eot?#iefix') format('embedded-opentype'),
+  url('fonts/cabin-regular-webfont.woff2') format('woff2'),
+  url('fonts/cabin-regular-webfont.woff') format('woff'),
+  url('fonts/cabin-regular-webfont.ttf') format('truetype'),
+  url('fonts/cabin-regular-webfont.svg#cabinregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+$light-background: #A5D6F5;
+$dark-background: #384145;
+
 @import 'city-and-buttons.scss';
 @import 'options.scss';
 
@@ -26,6 +53,26 @@ input[type=text] {
   color: #222;
 }
 
+button {
+  padding: .5em 1em;
+  border: 0 rgba(0,0,0,0);
+  background-color: #E6E6E6;
+  border-radius: 2px;
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+}
+
+button:focus, button:hover {
+  background-image: linear-gradient(transparent, rgba(0,0,0, 0.05) 40%, rgba(0,0,0, 0.10));
+  outline: 0;
+}
+
+button:active {
+  box-shadow: 0 0 0 1px rgba(0,0,0, 0.2) inset, 0 0 6px rgba(0,0,0, 0.3) inset;
+  border-color: #000;
+}
+
 html {
   height: 100%;
 
@@ -36,15 +83,24 @@ html {
     margin: 0;
 
     text-align: center;
-    background-color: #A5D6F5;
-    background-image: radial-gradient(circle at 50% 40%, #C8E0EF 0%, #a1d2e8 95%);
 
     font-family: 'tertreextra_bold';
+
+    background-color: $light-background;
+    background-image: radial-gradient(circle at 50% 40%, #C8E0EF 0%, #a1d2e8 95%);
   }
 
   main {
+    background-color: $light-background;
+    background-image: radial-gradient(circle at 50% 40%, #C8E0EF 0%, #a1d2e8 95%);
+
     height: 100%;
     position: relative;
+
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-property: filter, -webkit-filter;
+    transition-duration: 0.2s;
+    transition-property: filter, -webkit-filter;
   }
 }
 
@@ -101,4 +157,64 @@ nav {
 
 .tour-intro-tour li {
   padding: 5px 0;
+}
+
+.warning-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 450px;
+  transform: translate(-50%, -50%);
+  background-color: $dark-background;
+  border-radius: 3px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  color: #fff;
+
+  h2 {
+    width: 100%;
+    background-color: #E04B4B;
+    background: linear-gradient(180deg, #E04B4B, #B53E3E);
+    margin: 0;
+    padding: 20px 0;
+    font-size: 40pt;
+    border-radius: 3px 3px 0 0;
+  }
+
+  p {
+    font-family: "Cabin", Arial, sans-serif;
+    font-size: 15pt;
+    padding: 0 20px 6px;
+    text-align: left;
+  }
+
+  .warning-buttons {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 0 0 3px 3px;
+
+    background-color: #F0F0F0;
+    box-shadow: 0 -10px 10px -2px rgba(0,0,0,0.1);
+
+    button {
+      margin: 0 10px;
+      font-size: 18pt;
+
+      &.close-distractions {
+        background-color: #006ACC;
+      }
+
+      &.leave-distractions {
+        color: $dark-background;
+        background-color: rgba(0,0,0,0.1);
+        border: 1px solid rgba(0, 0, 0, 0.37);
+      }
+    }
+  }
+}
+
+.faded {
+  -webkit-filter: blur(1px) brightness(60%) saturate(50%);
+  filter: blur(1px) brightness(60%) saturate(50%);
+  pointer-events: none;
 }
