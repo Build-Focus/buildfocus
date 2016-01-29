@@ -82,7 +82,7 @@ var tourDefinition = {
       showNextButton: false
     },
     {
-      target: '.buttons',
+      target: '.controls',
       placement: 'top',
       title: 'Start focusing',
       content: `<p>The controls here let you get started.</p>

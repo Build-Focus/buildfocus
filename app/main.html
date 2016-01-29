@@ -30,13 +30,13 @@
 
       <div class="city" data-bind="render: { source: renderCity, afterRender: onPageLoaded }"></div>
 
-      <div class="buttons">
-        <button class="startPomodoro pure-button"
+      <div class="controls">
+        <button class="startPomodoro"
                 data-bind="click: startPomodoro, enable: canStartPomodoro">
           Focus
         </button>
 
-        <button class="takeABreak pure-button"
+        <button class="takeABreak"
                 data-bind="click: startBreak, enable: canStartBreak">
           Take a break
 
@@ -46,7 +46,7 @@
           </small>
         </button>
 
-        <button class="notNow pure-button"
+        <button class="notNow"
                 data-bind="click: notNow, enable: canSayNotNow">
           Not now
         </button>
