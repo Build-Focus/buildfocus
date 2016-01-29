@@ -28,7 +28,7 @@ class OptionsPageViewModel {
     this.badDomains(_.reject(this.badDomains(), badDomain));
   };
 
-  pageLoaded() {
+  onPageLoaded() {
     runTourIfRequired();
   }
 }

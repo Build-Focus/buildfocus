@@ -105,7 +105,7 @@ class MainPageViewModel {
     closeThisTab();
   }
 
-  pageLoaded() {
+  onPageLoaded() {
     runTourIfRequired();
   }
 
