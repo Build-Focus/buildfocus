@@ -80,7 +80,7 @@ class NotificationService {
     // Push the other one async - this ensures they always appear in the correct order (result above actions)
     setTimeout(() => {
       chrome.notifications.create(RESULT_NOTIFICATION_ID, buildingNotification, () => reportChromeErrors())
-    }, 0);
+    }, 1);
 
     this.notificationReissueTimeoutId = setTimeout(() => this.showSuccessNotification(building), 7500);
   };

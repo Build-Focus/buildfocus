@@ -207,7 +207,7 @@ describe('Acceptance: Pomodoros', () => {
 
     it("should let you take a break after your pomodoro", () => {
       notificationHelper.clickTakeABreak();
-      clockStub.tick(BREAK_DURATION - 1);
+      clockStub.tick(BREAK_DURATION / 2);
 
       expect(badgeIconColour()).to.be.rgbPixel(BREAK_COLOUR);
       expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
