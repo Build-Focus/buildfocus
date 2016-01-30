@@ -7,6 +7,13 @@ define(["test/helpers/image-matcher", "test/helpers/colour-matchers", "test/help
     chai.use(ImageMatcher);
     chai.use(SoonMatcher);
     chai.use(ApproxMatcher);
+
+    var runningInDebug = !!document.URL.match(/debug\.html/);
+    if (runningInDebug) {
+      mocha.timeout(0);
+    } else {
+      mocha.timeout(2000);
+    }
   }
 );
 
