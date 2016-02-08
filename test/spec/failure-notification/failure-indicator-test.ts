@@ -51,7 +51,6 @@ describe("Failure indicator", () => {
 
   beforeEach(() => {
     clockStub.reset();
-    chromeStub.reset();
   });
 
   it("should update tab url immediately", () => {

@@ -69,8 +69,12 @@
       they are (but make sure you don't open them!)
     </p>
     <div class="warning-buttons">
-      <button class="close-distractions">Close them</button>
-      <button class="leave-distractions">Leave them</button>
+      <button class="close-distractions" data-bind="click: closeDistractingTabs">
+        Close them
+      </button>
+      <button class="leave-distractions" data-bind="click: leaveDistractingTabs">
+        Leave them
+      </button>
     </div>
   </div>
 

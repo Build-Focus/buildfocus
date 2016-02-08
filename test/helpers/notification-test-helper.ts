@@ -7,6 +7,11 @@ const ACTION_NOTIFICATION_ID = "buildfocus-action-notification";
 class NotificationHelper {
   constructor(private clockStub: () => SinonFakeTimers) { }
 
+  resetNotificationSpies() {
+    chromeStub.notifications.clear.reset();
+    chromeStub.notifications.create.reset();
+  }
+
   // Notification body click helpers
   clickViewCity() {
     chromeStub.notifications.onClicked.trigger(RESULT_NOTIFICATION_ID);

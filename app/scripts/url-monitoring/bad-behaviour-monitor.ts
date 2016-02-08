@@ -6,7 +6,7 @@ import SubscribableEvent = require("subscribable-event");
 import SettingsRepository = require('repositories/settings-repository');
 
 interface Tab {
-  id: number;
+  id?: number;
   url?: string;
 }
 

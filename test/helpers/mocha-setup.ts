@@ -14,6 +14,28 @@ define(["test/helpers/image-matcher", "test/helpers/colour-matchers", "test/help
     } else {
       mocha.timeout(2000);
     }
+
+    beforeEach(() => {
+      var chromeStub = <typeof SinonChrome> <any> window.chrome;
+
+      chromeStub.runtime.lastError = undefined;
+      chromeStub.tabs.create.reset();
+      chromeStub.tabs.update.reset();
+      chromeStub.tabs.remove.reset();
+
+      chromeStub.tabs.get.reset();
+      chromeStub.tabs.update.reset();
+      chromeStub.tabs.query.reset();
+      chromeStub.tabs.getCurrent.reset();
+
+      chromeStub.notifications.clear.reset();
+      chromeStub.notifications.create.reset();
+
+      chromeStub.storage.sync.get.yields({});
+      chromeStub.storage.local.get.yields({});
+
+      chromeStub.runtime.sendMessage.reset();
+    });
   }
 );
 

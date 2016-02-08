@@ -12,10 +12,10 @@
       "commit": "84dfeeac378552c22297a5d555b1999a396d7e7c"
     },
     "chrome/chrome.d.ts": {
-      "commit": "84dfeeac378552c22297a5d555b1999a396d7e7c"
+      "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
     },
     "webrtc/MediaStream.d.ts": {
-      "commit": "84dfeeac378552c22297a5d555b1999a396d7e7c"
+      "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
     },
     "lodash/lodash.d.ts": {
       "commit": "84dfeeac378552c22297a5d555b1999a396d7e7c"
@@ -35,9 +35,6 @@
     "tweenjs/tweenjs.d.ts": {
       "commit": "c7b1128cc9a8f5797bade826e7632b36b06a856c"
     },
-    "bluebird/bluebird.d.ts": {
-      "commit": "8f51d25ad3523cd01f2d92e343247852f6b70dff"
-    },
     "knockout.es5/knockout.es5.d.ts": {
       "commit": "db3a54c801e29e73bdaae327a64ed7991778c958"
     },
@@ -52,6 +49,15 @@
     },
     "moment/moment-node.d.ts": {
       "commit": "86dbea8fc37d9473fee465da4f0a21bea4f8cbd9"
+    },
+    "filesystem/filesystem.d.ts": {
+      "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
+    },
+    "filewriter/filewriter.d.ts": {
+      "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
+    },
+    "es6-promise/es6-promise.d.ts": {
+      "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
     }
   }
 }

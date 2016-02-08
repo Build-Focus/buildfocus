@@ -10,7 +10,7 @@ import tracking = require('tracking');
 
 import Score = require("score");
 import SettingsRepository = require("repositories/settings-repository");
-import currentTabs = require("url-monitoring/current-tabs");
+import TabsMonitor = require("url-monitoring/tabs-monitor");
 import PomodoroService = require("pomodoro/pomodoro-service");
 import FocusButton = require("focus-button");
 import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
@@ -23,7 +23,7 @@ const firstInstallTimeKey = "first-install-time";
 export = function setupBackgroundPage() {
   var score = new Score();
   var settings = new SettingsRepository();
-  var badBehaviourMonitor = new BadBehaviourMonitor(currentTabs, settings);
+  var badBehaviourMonitor = new BadBehaviourMonitor(new TabsMonitor().activeTabs, settings);
   var pomodoroService = new PomodoroService(badBehaviourMonitor);
   var focusButton = new FocusButton(pomodoroService.progress, pomodoroService.isActive);
   var notificationService = new NotificationService(getBuildingConfig);

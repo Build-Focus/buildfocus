@@ -6,34 +6,19 @@ import serialization = require('app/scripts/city/serialization/serialization-for
 import Buildings = require('app/scripts/city/buildings/buildings');
 import BuildingType = require('app/scripts/city/buildings/building-type');
 
+import {
+  resetTabHelper,
+  activateTab,
+  closeTab,
+  givenBadDomains
+} from "test/helpers/tab-helper";
+
 var POMODORO_DURATION = 1000 * 60 * 20;
 var BREAK_DURATION = 1000 * 60 * 5;
 
 var clockStub: Sinon.SinonFakeTimers;
 var notificationHelper = new NotificationHelper(() => clockStub);
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
-
-function resetSpies() {
-  clockStub.reset();
-
-  chromeStub.runtime.lastError = undefined;
-  chromeStub.notifications.clear.reset();
-  chromeStub.notifications.create.reset();
-  chromeStub.tabs.create.reset();
-  chromeStub.tabs.update.reset();
-
-  chromeStub.tabs.get.yields({url: "main.html?failed=true"});
-  chromeStub.tabs.update.yields();
-  chromeStub.storage.sync.get.yields({});
-  chromeStub.storage.local.get.yields({});
-
-  activateTab("http://google.com");
-  givenBadDomains([]);
-}
-
-function startPomodoro() {
-  chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
-}
 
 function getCityData(): serialization.CityData {
   return _(chromeStub.storage.local.set.args).map(function (args) {
@@ -94,28 +79,14 @@ function badgeIconColour() {
   return getBadgePixel(11, 5); // Top left of the F
 }
 
+function startPomodoro() {
+  chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
+}
+
 var POMODORO_COLOUR = [224, 5, 5];
 var BREAK_COLOUR = [34, 187, 4];
 var BADGE_BACKGROUND_COLOUR = [251, 184, 65];
 var BADGE_TEXT_COLOUR = [0, 0, 0];
-
-function activateTab(url) {
-  chromeStub.tabs.query.yields([{ "url": url, "id": 1 }]);
-  chromeStub.tabs.onActivated.trigger();
-}
-
-function closeTab() {
-  chrome.runtime.lastError = { "message": "No tab with id..." };
-  chromeStub.tabs.get.yields();
-}
-
-function givenBadDomain(urlPattern) {
-  givenBadDomains([urlPattern]);
-}
-
-function givenBadDomains(urlPatterns) {
-  chromeStub.storage.onChanged.trigger({"badDomainPatterns": {"newValue": urlPatterns}});
-}
 
 describe('Acceptance: Pomodoros', () => {
   before(() => clockStub = sinon.useFakeTimers());
@@ -124,8 +95,9 @@ describe('Acceptance: Pomodoros', () => {
   beforeEach(() => {
     // Make sure any active pomodoros are definitely finished
     clockStub.tick(POMODORO_DURATION);
+    clockStub.reset();
 
-    resetSpies();
+    resetTabHelper();
   });
 
   it("should open the pomodoro page if the button is clicked", () => {
@@ -146,7 +118,7 @@ describe('Acceptance: Pomodoros', () => {
   });
 
   it("should remove a building for failed pomodoros", () => {
-    givenBadDomain("twitter.com");
+    givenBadDomains("twitter.com");
     startPomodoro();
     clockStub.tick(POMODORO_DURATION);
     var initialCitySize = getCitySize();
@@ -176,8 +148,8 @@ describe('Acceptance: Pomodoros', () => {
   describe("Notifications", () => {
     beforeEach(() => {
       startPomodoro();
-      clockStub.tick(POMODORO_DURATION);
-      notificationHelper.spyForNotificationCreation().reset();
+      clockStub.tick(POMODORO_DURATION + 1);
+      notificationHelper.resetNotificationSpies();
     });
 
     it("should appear when a pomodoro is completed successfully", () => {
@@ -245,14 +217,16 @@ describe('Acceptance: Pomodoros', () => {
   });
 
   describe("OnMessage", () => {
+    beforeEach(() => notificationHelper.resetNotificationSpies());
+
     it("should start a pomodoro when a start message is received", () => {
-      chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
+      startPomodoro();
 
       expect(badgeIconColour()).to.be.rgbPixel(POMODORO_COLOUR);
     });
 
     it("should clear notifications when a start pomodoro message is received", () => {
-      chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
+      startPomodoro();
 
       expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
     });
@@ -277,7 +251,7 @@ describe('Acceptance: Pomodoros', () => {
   });
 
   it("should show a failure page when a pomodoro is failed", () => {
-    givenBadDomain("twitter.com");
+    givenBadDomains("twitter.com");
 
     startPomodoro();
     activateTab("http://twitter.com");
@@ -290,7 +264,7 @@ describe('Acceptance: Pomodoros', () => {
   });
 
   it("should show a separate failure page when a pomodoro is failed if the tab's immediately closed", () => {
-    givenBadDomain("twitter.com");
+    givenBadDomains("twitter.com");
 
     startPomodoro();
     activateTab("http://twitter.com");
@@ -302,7 +276,7 @@ describe('Acceptance: Pomodoros', () => {
   });
 
   it("should show a failure page if a pomodoro is started with a failing page already open", () => {
-    givenBadDomain("twitter.com");
+    givenBadDomains("twitter.com");
     activateTab("http://twitter.com");
 
     startPomodoro();
@@ -353,7 +327,7 @@ describe('Acceptance: Pomodoros', () => {
       });
 
       it("shouldn't be shown after a pomodoro is failed", () => {
-        givenBadDomain("twitter.com");
+        givenBadDomains("twitter.com");
 
         startPomodoro();
         clockStub.tick(POMODORO_DURATION / 2);

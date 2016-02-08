@@ -11,6 +11,11 @@ import tracking = require('tracking');
 import ProxyPomodoroService = require('pomodoro/proxy-pomodoro-service');
 import CityRenderer = require('city/rendering/city-renderer');
 
+import SettingsRepository = require("repositories/settings-repository");
+import TabMonitor = require("url-monitoring/tabs-monitor");
+import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
+import reportChromeErrors = require('report-chrome-errors');
+
 import runTourIfRequired = require('pages/tour');
 
 function getQueryParameter(name: string) {
@@ -44,6 +49,14 @@ class MainPageViewModel {
   private pomodoroService = new ProxyPomodoroService();
   private score = new Score();
   private cityRenderer = new CityRenderer(this.score.city);
+  private settings = new SettingsRepository();
+  private badBehaviourMonitor = new BadBehaviourMonitor(new TabMonitor().allTabs, this.settings);
+
+  constructor() {
+    this.pomodoroActive.subscribe((newValue) => {
+      if (newValue === false) this.warningPopupTriggered(false)
+    });
+  }
 
   failed = (getQueryParameter("failed") === "true");
   failingUrl = getQueryParameter("failingUrl");
@@ -84,12 +97,37 @@ class MainPageViewModel {
   canSayNotNow = ko.pureComputed(() => !this.pomodoroActive() &&
                                        !this.breakActive());
 
-  warningPopupShown = ko.observable(false);
+  private warningPopupTriggered = ko.observable(false);
+  warningPopupShown = ko.computed<Boolean>(() => {
+    if (this.warningPopupTriggered() &&
+        this.badBehaviourMonitor.currentBadTabs().length > 0) {
+      return true;
+    } else {
+      // Turns itself off completely if it was triggered, but is now invalid.
+      this.warningPopupTriggered(false);
+      return false;
+    }
+  });
+
+  closeDistractingTabs() {
+    this.warningPopupTriggered(false);
+    var tabsToRemove = this.badBehaviourMonitor.currentBadTabs();
+    chrome.tabs.remove(tabsToRemove.map((t) => t.id), () => reportChromeErrors);
+    closeThisTab();
+  }
+
+  leaveDistractingTabs() {
+    this.warningPopupTriggered(false);
+  }
 
   startPomodoro() {
     this.pomodoroService.start();
     tracking.trackEvent("start-from-main-page");
-    closeThisTab();
+    if (this.badBehaviourMonitor.currentBadTabs().length === 0) {
+      closeThisTab();
+    } else {
+      this.warningPopupTriggered(true);
+    }
   }
 
   startBreak() {
