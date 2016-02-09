@@ -1,8 +1,5 @@
 'use strict';
 
-import Rollbar = require("rollbar");
-Rollbar.enable();
-
 import ko = require('knockout');
 import Score = require('score');
 import easeljs = require('createjs');

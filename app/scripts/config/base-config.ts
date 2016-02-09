@@ -41,7 +41,19 @@ requirejs.config({
     createjs: { exports: 'createjs' },
     tween: { deps: ['createjs'], exports: 'Tween' }
   },
-  "waitSeconds": 60 // We're usually running in the background, and we can wait a little if the machine's slow
+
+  // We're usually running in the background, and we can wait a little if the machine's slow
+  "waitSeconds": 60
+});
+
+require(["rollbar"], function (rollbar) {
+  requirejs.onError = (error) => {
+    if (error.requireType === "timeout") {
+      rollbar.warning("RequireJS timeout", error);
+    } else {
+      rollbar.error("Unknown RequireJS error", error);
+    }
+  };
 });
 
 // Type definition for the app config, to promise to typescript that one of the prod/test/dev configs

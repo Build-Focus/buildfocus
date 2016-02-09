@@ -1,5 +1,5 @@
 declare module "rollbar" {
-  interface Notifier {
+  interface RollbarNotifier {
     log(...errorData: any[]): void;
     debug(...errorData: any[]): void;
     info(...errorData: any[]): void;
@@ -9,10 +9,6 @@ declare module "rollbar" {
     critical(...errorData: any[]): void;
   }
 
-  interface Rollbar extends Notifier {
-    enable(): Notifier;
-  }
-
-  var rollbar: Rollbar;
+  var rollbar: RollbarNotifier;
   export = rollbar;
 }
