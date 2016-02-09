@@ -1,6 +1,6 @@
 'use strict';
 
-import reportChromeErrors = require('report-chrome-errors');
+import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
 
 function publishedObservable<T>(valueName: string, realObservable: KnockoutObservable<T>, storageArea = "local") {
   // I think is not outright required, but it is a bit cleaner to do so, and helps

@@ -8,10 +8,9 @@ import tracking = require('tracking');
 import ProxyPomodoroService = require('pomodoro/proxy-pomodoro-service');
 import CityRenderer = require('city/rendering/city-renderer');
 
-import SettingsRepository = require("repositories/settings-repository");
-import TabMonitor = require("url-monitoring/tabs-monitor");
-import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
-import reportChromeErrors = require('report-chrome-errors');
+import BadTabsWarningViewModel = require('components/bad-tabs-warning/bad-tabs-warning-viewmodel');
+
+import closeCurrentTab = require("chrome-utilities/close-current-tab");
 
 import runTourIfRequired = require('pages/tour');
 
@@ -26,17 +25,6 @@ function getDomainFromUrl(url: string): string {
   return domain;
 }
 
-function closeThisTab() {
-  chrome.tabs.query({currentWindow: true}, function (tabs) {
-    // Only close this tab if there are other tabs in the window.
-    if (tabs.length > 1) {
-      chrome.tabs.getCurrent(function (tab) {
-        chrome.tabs.remove(tab.id);
-      });
-    }
-  });
-}
-
 enum OverlayType {
   PomodoroOverlay,
   BreakOverlay
@@ -46,14 +34,6 @@ class MainPageViewModel {
   private pomodoroService = new ProxyPomodoroService();
   private score = new Score();
   private cityRenderer = new CityRenderer(this.score.city);
-  private settings = new SettingsRepository();
-  private badBehaviourMonitor = new BadBehaviourMonitor(new TabMonitor().allTabs, this.settings);
-
-  constructor() {
-    this.pomodoroActive.subscribe((newValue) => {
-      if (newValue === false) this.warningPopupTriggered(false)
-    });
-  }
 
   failed = (getQueryParameter("failed") === "true");
   failingUrl = getQueryParameter("failingUrl");
@@ -94,36 +74,15 @@ class MainPageViewModel {
   canSayNotNow = ko.pureComputed(() => !this.pomodoroActive() &&
                                        !this.breakActive());
 
-  private warningPopupTriggered = ko.observable(false);
-  warningPopupShown = ko.computed<Boolean>(() => {
-    if (this.warningPopupTriggered() &&
-        this.badBehaviourMonitor.currentBadTabs().length > 0) {
-      return true;
-    } else {
-      // Turns itself off completely if it was triggered, but is now invalid.
-      this.warningPopupTriggered(false);
-      return false;
-    }
-  });
-
-  closeDistractingTabs() {
-    this.warningPopupTriggered(false);
-    var tabsToRemove = this.badBehaviourMonitor.currentBadTabs();
-    chrome.tabs.remove(tabsToRemove.map((t) => t.id), () => reportChromeErrors);
-    closeThisTab();
-  }
-
-  leaveDistractingTabs() {
-    this.warningPopupTriggered(false);
-  }
+  warningPopup = new BadTabsWarningViewModel();
 
   startPomodoro() {
     this.pomodoroService.start();
     tracking.trackEvent("start-from-main-page");
-    if (this.badBehaviourMonitor.currentBadTabs().length === 0) {
-      closeThisTab();
+    if (this.warningPopup.shouldShowIfTriggered()) {
+      this.warningPopup.trigger();
     } else {
-      this.warningPopupTriggered(true);
+      closeCurrentTab();
     }
   }
 
@@ -134,12 +93,12 @@ class MainPageViewModel {
     if (this.failingUrl) {
       window.location.href = this.failingUrl;
     } else {
-      closeThisTab();
+      closeCurrentTab();
     }
   }
 
   notNow() {
-    closeThisTab();
+    closeCurrentTab();
   }
 
   onPageLoaded() {

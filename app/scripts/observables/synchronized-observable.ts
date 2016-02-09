@@ -2,7 +2,7 @@
 
 import ko = require('knockout');
 import _ = require('lodash');
-import reportChromeErrors = require('report-chrome-errors');
+import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
 
 export = function synchronizedObservable<T>(valueName: string, initialValue: T = undefined, storageAreaName = "local"): KnockoutObservable<T> {
   var observable: KnockoutObservable<T> = ko.observable(initialValue)

@@ -3,7 +3,7 @@
 import _ = require('lodash');
 import SubscribableEvent = require('subscribable-event');
 
-import reportChromeErrors = require('report-chrome-errors');
+import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
 import tracking = require('tracking');
 
 import Buildings = require('city/buildings/buildings');

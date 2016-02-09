@@ -247,7 +247,7 @@ module.exports = function (grunt) {
             'manifest.json',
             '*.{ico,png,txt}',
             'images/**/*.{webp,gif,png,svg}',
-            '*.html',
+            '**/*.html',
             'styles/libs/**/*.*',
             'styles/fonts/**/*.*',
             '_locales/**/*.json',

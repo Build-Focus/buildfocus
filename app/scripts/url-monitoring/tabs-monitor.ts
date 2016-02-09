@@ -20,7 +20,7 @@ class TabsMonitor {
       this.allTabs(tabs);
       this.activeTabs(_.where(tabs, {active: true}));
     });
-  }
+  };
 }
 
 export = TabsMonitor;
