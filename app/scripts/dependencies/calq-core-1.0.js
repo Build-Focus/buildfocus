@@ -1,7 +1,7 @@
 ﻿function CalqClient(stub) {
 
     // The API server we talk to for submitting. Always end with /
-    this._apiBaseUrl = "http" + ("https:" === window.location.protocol ? "s" : "") + '://api.calq.io/';
+    this._apiBaseUrl = "https://api.calq.io/";
     // Name of cookie 
     this._cookieName = "_calq_d";
     // Optional domain to use when writing cookies (if null, will be omitted)
