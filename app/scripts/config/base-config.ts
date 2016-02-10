@@ -46,16 +46,6 @@ requirejs.config({
   "waitSeconds": 60
 });
 
-require(["rollbar"], function (rollbar) {
-  requirejs.onError = (error) => {
-    if (error.requireType === "timeout") {
-      rollbar.warning("RequireJS timeout", error);
-    } else {
-      rollbar.error("Unknown RequireJS error", error);
-    }
-  };
-});
-
 // Type definition for the app config, to promise to typescript that one of the prod/test/dev configs
 // will solve its problems.
 interface ApplicationConfig {

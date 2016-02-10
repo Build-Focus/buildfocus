@@ -21,4 +21,14 @@ const prodConfig: ApplicationConfig = {
   }
 };
 
+require(["rollbar"], function (rollbar) {
+  requirejs.onError = (error) => {
+    if (error.requireType === "timeout") {
+      rollbar.warning("RequireJS timeout", error);
+    } else {
+      rollbar.error("Unknown RequireJS error", error);
+    }
+  };
+});
+
 export = prodConfig;
