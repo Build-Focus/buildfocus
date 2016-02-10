@@ -4,9 +4,9 @@ import OptionsPageViewModel = require('app/scripts/pages/options-page');
 import Domain = require('app/scripts/url-monitoring/domain');
 import BadTabsWarningActions = require('app/scripts/components/bad-tabs-warning/bad-tabs-warning-action');
 
-describe('Acceptance: Options page', function () {
-  describe("Distracting sites", function () {
-    it("should be empty initially", function () {
+describe('Acceptance: Options page', () => {
+  describe("Distracting sites", () => {
+    it("should be empty initially", () => {
       var viewModel = new OptionsPageViewModel();
 
       expect(viewModel.badDomains()).to.be.empty;
@@ -32,17 +32,20 @@ describe('Acceptance: Options page', function () {
     });
   });
   
-  describe("Bad tabs default action", () => {
-    it("should be 'Prompt' initially", () => {
+  describe("Bad tabs default action picker", () => {
+    it("should be set to 'Prompt' initially", () => {
       var viewModel = new OptionsPageViewModel();
       expect(viewModel.badTabsWarningAction()).to.equal(BadTabsWarningActions.Prompt);
     });
 
-    it("should have names for all available options", () => {
+    it("should build a list of options with names", () => {
       var viewModel = new OptionsPageViewModel();
-
-      var actionOptions = viewModel.allBadTabsWarningActions;
-      actionOptions.forEach((option) => expect(viewModel.getBadTabsWarningActionName(option)).to.be.a('string'));
+      viewModel.allBadTabsWarningActions.forEach((option) => expect(option.name).to.be.a('string'));
     });
-  })
+
+    it("should build a list of options with numeric ids", () => {
+      var viewModel = new OptionsPageViewModel();
+      viewModel.allBadTabsWarningActions.forEach((option) => expect(option.id).to.be.a('number'));
+    });
+  });
 });

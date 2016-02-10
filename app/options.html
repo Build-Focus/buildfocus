@@ -34,11 +34,11 @@
           <!-- ko foreach: allBadTabsWarningActions -->
           <input name="badTabsWarningOptions"
                  type="radio"
-                 data-bind="attr: { id: 'badTabAction' + $data },
-                            value: $data,
+                 data-bind="attr: { id: 'badTabAction' + id },
+                            value: id,
                             checked: $parent.badTabsWarningAction" />
-          <label data-bind="attr: { for: 'badTabAction' + $data },
-                            text: $parent.getBadTabsWarningActionName($data)"></label>
+          <label data-bind="attr: { for: 'badTabAction' + id },
+                            text: name"></label>
           <!-- /ko -->
           <div class="toggle-highlight"></div>
         </div>

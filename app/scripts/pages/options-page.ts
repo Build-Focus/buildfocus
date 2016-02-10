@@ -28,18 +28,20 @@ class OptionsPageViewModel {
   };
 
   badTabsWarningAction = this.settings.badTabsWarningAction;
+
+  private badTabsWarningActionNames = {
+    [BadTabsWarningAction.Prompt]: "Ask you",
+    [BadTabsWarningAction.CloseThem]: "Close them",
+    [BadTabsWarningAction.LeaveThem]: "Leave them",
+  };
+
   allBadTabsWarningActions = Object.keys(BadTabsWarningAction)
-                                   .map(v => parseInt(v, 10))
-                                   .filter(v => !isNaN(v));
-
-  getBadTabsWarningActionName(badTabsAction: BadTabsWarningAction) {
-    return {
-      [BadTabsWarningAction.Prompt]: "Ask you",
-      [BadTabsWarningAction.CloseThem]: "Close them",
-      [BadTabsWarningAction.LeaveThem]: "Leave them",
-    }[badTabsAction];
-  }
-
+     .map(actionKey => parseInt(actionKey, 10))
+     .filter(actionKey => !isNaN(actionKey))
+     .map(actionKey => { return {
+       id: actionKey,
+       name: this.badTabsWarningActionNames[actionKey]
+     }});
 
   onPageLoaded() {
     runTourIfRequired();
