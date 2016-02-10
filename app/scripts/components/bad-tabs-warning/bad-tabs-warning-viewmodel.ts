@@ -8,10 +8,14 @@ import ProxyPomodoroService = require("pomodoro/proxy-pomodoro-service");
 import closeCurrentTab = require("chrome-utilities/close-current-tab");
 import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
 
+import BadTabsWarningAction = require('components/bad-tabs-warning/bad-tabs-warning-action');
+
 class BadTabsWarningViewModel {
   private badBehaviourMonitor = new BadBehaviourMonitor(this.tabsToMonitor, this.settings);
 
   private triggered = ko.observable(false);
+
+  rememberInFuture = ko.observable(false);
 
   constructor(private pomodoroService: ProxyPomodoroService,
               private tabsToMonitor: KnockoutObservableArray<Tab>,
@@ -23,7 +27,22 @@ class BadTabsWarningViewModel {
   }
 
   trigger() {
-    this.triggered(true);
+    switch (this.settings.badTabsWarningAction()) {
+      case BadTabsWarningAction.Prompt:
+        this.triggered(true);
+        return;
+      case BadTabsWarningAction.CloseThem:
+        this.closeDistractingTabs();
+        return;
+      case BadTabsWarningAction.LeaveThem:
+        this.leaveDistractingTabs();
+        return;
+    }
+  }
+
+  dismiss() {
+    this.triggered(false);
+    this.rememberInFuture(false);
   }
 
   shouldShowIfTriggered = ko.pureComputed(() => {
@@ -34,22 +53,27 @@ class BadTabsWarningViewModel {
     if (this.triggered() && this.shouldShowIfTriggered()) {
       return true;
     } else {
-      // Turn off completely if we were triggered, but are now invalid.
-      this.triggered(false);
+      // Turn off completely if we were triggered before, but are now invalid.
+      this.dismiss();
       return false;
     }
   });
 
   closeDistractingTabs() {
-    this.triggered(false);
     var tabsToRemove = this.badBehaviourMonitor.currentBadTabs();
     chrome.tabs.remove(tabsToRemove.map((t) => t.id), () => reportChromeErrors);
+
+    if (this.rememberInFuture()) this.settings.badTabsWarningAction(BadTabsWarningAction.CloseThem);
+
+    this.dismiss();
     closeCurrentTab();
   }
 
   leaveDistractingTabs() {
-    this.triggered(false);
+    if (this.rememberInFuture()) this.settings.badTabsWarningAction(BadTabsWarningAction.LeaveThem);
+    this.dismiss();
   }
+
 }
 
 export = BadTabsWarningViewModel;

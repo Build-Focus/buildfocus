@@ -1,6 +1,7 @@
 import ko = require("knockout");
 
 import BadTabsWarningViewModel = require("app/scripts/components/bad-tabs-warning/bad-tabs-warning-viewmodel");
+import BadTabsWarningAction = require("app/scripts/components/bad-tabs-warning/bad-tabs-warning-action");
 import ProxyPomodoroService = require("app/scripts/pomodoro/proxy-pomodoro-service");
 import Tab = require("app/scripts/url-monitoring/tab");
 import SettingsRepository = require("app/scripts/repositories/settings-repository");
@@ -24,7 +25,10 @@ describe('Bad tabs warning popup', () => {
 
     tabs = ko.observableArray([]);
     pomodoroService = <ProxyPomodoroService> { isActive: ko.observable(false) };
-    settings = <SettingsRepository> { badDomains: ko.observable([new Domain("twitter.com")]) };
+    settings = <SettingsRepository> {
+      badDomains: ko.observable([new Domain("twitter.com")]),
+      badTabsWarningAction: ko.observable(BadTabsWarningAction.Prompt)
+    };
     viewModel = new BadTabsWarningViewModel(pomodoroService, tabs, settings);
   });
 
@@ -58,7 +62,7 @@ describe('Bad tabs warning popup', () => {
         pomodoroService.isActive(true);
       });
 
-      it("should be shown", () => {
+      it("should be shown by default", () => {
         expect(viewModel.isShowing()).to.equal(true, "Should show a warning popup");
       });
 
@@ -72,7 +76,7 @@ describe('Bad tabs warning popup', () => {
         expect(viewModel.isShowing()).to.equal(false, "Should not show a warning popup after the pomodoro");
       });
 
-      describe("and 'Leave them' is selected", () => {
+      describe("and 'Leave them' is clicked", () => {
         beforeEach(() => viewModel.leaveDistractingTabs());
 
         it("should close no tabs", () => {
@@ -82,9 +86,13 @@ describe('Bad tabs warning popup', () => {
         it("should disappear", () => {
           expect(viewModel.isShowing()).to.equal(false, "Should not show a warning popup");
         });
+
+        it("should not change the default setting, by default", () => {
+          expect(settings.badTabsWarningAction()).to.equal(BadTabsWarningAction.Prompt);
+        });
       });
 
-      describe("and 'Close them' is selected", () => {
+      describe("and 'Close them' is clicked", () => {
         beforeEach(() => viewModel.closeDistractingTabs());
 
         it("should close the distracting tabs", () => {
@@ -104,6 +112,10 @@ describe('Bad tabs warning popup', () => {
         it("should disappear", () => {
           expect(viewModel.isShowing()).to.equal(false, "Should not show a warning popup");
         });
+
+        it("should not change the default setting, by default", () => {
+          expect(settings.badTabsWarningAction()).to.equal(BadTabsWarningAction.Prompt);
+        });
       });
     });
 
@@ -113,6 +125,57 @@ describe('Bad tabs warning popup', () => {
       it("should not be shown", () => {
         expect(viewModel.isShowing()).to.equal(false, "Should not show a warning popup if this page didn't actively trigger it");
       });
-    })
+    });
+
+    describe("if Leave Them is set as the default when the pomodoro is started", () => {
+      beforeEach(() => {
+        settings.badTabsWarningAction(BadTabsWarningAction.LeaveThem);
+        viewModel.trigger();
+        pomodoroService.isActive(true);
+      });
+
+      it("should not show a popup", () => {
+        expect(viewModel.isShowing()).to.equal(false, "Should not show a warning popup if 'Leave Them' is set");
+      });
+
+      it("should not close any tabs", () => {
+        expect(chromeStub.tabs.remove.called).to.equal(false, "Should not close anything if 'Leave Them' is set");
+      });
+    });
+
+    describe("if Close Them is set as the default when the pomodoro is started", () => {
+      beforeEach(() => {
+        settings.badTabsWarningAction(BadTabsWarningAction.CloseThem);
+        viewModel.trigger();
+        pomodoroService.isActive(true);
+      });
+
+      it("should not show a popup", () => {
+        expect(viewModel.isShowing()).to.equal(false, "Should not show a warning popup if 'Close Them' is set");
+      });
+
+      it("should close this tab automatically", () => {
+        chromeStub.tabs.query.yield([ExtensionTab, GoogleTab]);
+        expect(chromeStub.tabs.remove.calledWith(ExtensionTab.id)).to.equal(true, "Should auto-close own tab");
+      });
+
+      it("should close the distracting tabs automatically", () => {
+        expect(chromeStub.tabs.remove.calledWith([TwitterTab.id])).to.equal(true, "Should close distracting tabs");
+      });
+    });
+  });
+
+  describe("with 'remember this in future' ticked", () => {
+    beforeEach(() => viewModel.rememberInFuture(true));
+
+    it("'Close them' should save its setting", () => {
+      viewModel.closeDistractingTabs();
+      expect(settings.badTabsWarningAction()).to.equal(BadTabsWarningAction.CloseThem);
+    });
+
+    it("'Leave them' should save its setting", () => {
+      viewModel.leaveDistractingTabs();
+      expect(settings.badTabsWarningAction()).to.equal(BadTabsWarningAction.LeaveThem);
+    });
   });
 });
