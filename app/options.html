@@ -6,7 +6,7 @@
     <link rel="icon" href="/images/icon-32.png">
   </head>
   <body data-bind="template: { afterRender: onPageLoaded }">
-    <main style="display: none" data-bind="visible: true">
+    <main class="options" style="display: none" data-bind="visible: true">
       <a href="/main.html">
         <div class="logo">
           <img src="/images/logo.png" />
@@ -21,6 +21,20 @@
           Settings
         </a>
       </nav>
+
+      <h1>Settings</h1>
+
+      <section class="badTabsWarningAction">
+        <h3>Default distracting tab action:</h3>
+        <p>
+          If you start focusing, and you've already got distracting tabs open in the
+          background, what should happen?
+        </p>
+        <select data-bind="options: allBadTabsWarningActions,
+                           optionsText: getBadTabsWarningActionName,
+                           value: badTabsWarningAction">
+        </select>
+      </section>
 
       <section class="domainPatterns">
         <h3>Distracting sites:</h3>
