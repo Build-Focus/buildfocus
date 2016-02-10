@@ -43,6 +43,7 @@ $dark-background: #384145;
 
 @import 'city-and-buttons.scss';
 @import 'options.scss';
+@import 'bad-tabs-warning.scss';
 
 a {
   text-decoration: none;
@@ -157,72 +158,6 @@ nav {
 
 .tour-intro-tour li {
   padding: 5px 0;
-}
-
-.warning-modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 450px;
-  transform: translate(-50%, -50%);
-  background-color: $dark-background;
-  border-radius: 3px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-  color: #fff;
-
-  h2 {
-    width: 100%;
-    background-color: #E04B4B;
-    background: linear-gradient(180deg, #E04B4B, #B53E3E);
-    margin: 0;
-    padding: 20px 0;
-    font-size: 40pt;
-    border-radius: 3px 3px 0 0;
-  }
-
-  p {
-    font-family: "Cabin", Arial, sans-serif;
-    font-size: 15pt;
-    padding: 0 20px 6px;
-    text-align: left;
-  }
-
-  .warning-buttons {
-    width: 100%;
-    padding: 20px 20px 15px;
-    box-sizing: border-box;
-    border-radius: 0 0 3px 3px;
-
-    background-color: #F0F0F0;
-    box-shadow: 0 -10px 10px -2px rgba(0,0,0,0.1);
-
-    button {
-      margin: 0 10px;
-      font-size: 18pt;
-
-      &.close-distractions {
-        background-color: #006ACC;
-      }
-
-      &.leave-distractions {
-        color: $dark-background;
-        background-color: rgba(0,0,0,0.1);
-        border: 1px solid rgba(0, 0, 0, 0.37);
-      }
-    }
-
-    .remember {
-      width: 80%;
-      margin: 12px auto 0;
-      color: #666;
-      font-size: 14pt;
-
-      input[type=checkbox] {
-        transform: scale(1.3);
-        margin-right: 6px;
-      }
-    }
-  }
 }
 
 .faded {
