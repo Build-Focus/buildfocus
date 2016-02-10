@@ -15,7 +15,7 @@ main.options {
   section {
     font-family: "trebuchet ms", arial, sans-serif;
     font-size: 110%;
-    padding: 20px 0;
+    padding: 30px 0 20px;
 
     h3 {
       font-size: 20pt;
@@ -35,6 +35,72 @@ main.options {
       font-size: 15pt;
       padding: 3px;
     }
+
+    .badTabsWarningOptions {
+      display: flex;
+      width: 400px;
+      position: relative;
+      background-color: #000;
+
+      border-radius: 3px;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.2);
+
+      user-select: none;
+      -webkit-user-select: none;
+
+      input[type=radio] {
+        position: absolute;
+        left: -5000px;
+
+        &:checked:nth-of-type(1) ~ .toggle-highlight {
+          left: 0;
+        }
+
+        &:checked:nth-of-type(2) ~ .toggle-highlight {
+          left: 33%;
+        }
+
+        &:checked:nth-of-type(3) ~ .toggle-highlight {
+          left: 66%;
+        }
+
+        &:checked + label {
+          color: #000;
+        }
+      }
+
+      .toggle-highlight {
+        width: 34%;
+        padding: 0;
+        margin: 0;
+
+        transition: all 0.2s ease-in;
+
+        position: absolute;
+        top: -3px;
+        bottom: -3px;
+        border-radius: 2px;
+
+        background-color: #FBB840;
+        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
+        border: 1px solid #333;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+      }
+
+      label {
+        flex-grow: 1;
+        flex-basis: 0;
+        z-index: 1;
+        cursor: pointer;
+
+        color: #fff;
+        font-size: 14pt;
+        padding: 8px;
+        text-align: center;
+
+        transition: all 0.18s ease-in;
+      }
+    }
   }
 
   .domainPatterns {
@@ -46,8 +112,13 @@ main.options {
         min-width: 300px;
         height: 35px;
         margin-top: 1px;
-        padding: 3px;
+        padding: 3px 10px;
+
+        font-size: 11pt;
+
         border: none;
+        border-radius: 3px;
+        border: 1px solid rgba(0,0,0,0.5);
       }
 
       button[type=submit] {
@@ -56,7 +127,10 @@ main.options {
         margin-top: -4px;
 
         background-color: #0078e7;
+        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
+        border: 1px solid #005dba;
         color: #fff;
+        font-size: 11pt;
 
         font-weight: bold;
       }

@@ -34,9 +34,9 @@ class OptionsPageViewModel {
 
   getBadTabsWarningActionName(badTabsAction: BadTabsWarningAction) {
     return {
-      [BadTabsWarningAction.Prompt]: "Warn you",
-      [BadTabsWarningAction.CloseThem]: "Close them automatically",
-      [BadTabsWarningAction.LeaveThem]: "Leave them open (be careful!)",
+      [BadTabsWarningAction.Prompt]: "Ask you",
+      [BadTabsWarningAction.CloseThem]: "Close them",
+      [BadTabsWarningAction.LeaveThem]: "Leave them",
     }[badTabsAction];
   }
 

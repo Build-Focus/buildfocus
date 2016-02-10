@@ -30,10 +30,18 @@
           If you start focusing, and you've already got distracting tabs open in the
           background, what should happen?
         </p>
-        <select data-bind="options: allBadTabsWarningActions,
-                           optionsText: getBadTabsWarningActionName,
-                           value: badTabsWarningAction">
-        </select>
+        <div class="badTabsWarningOptions">
+          <!-- ko foreach: allBadTabsWarningActions -->
+          <input name="badTabsWarningOptions"
+                 type="radio"
+                 data-bind="attr: { id: 'badTabAction' + $data },
+                            value: $data,
+                            checked: $parent.badTabsWarningAction" />
+          <label data-bind="attr: { for: 'badTabAction' + $data },
+                            text: $parent.getBadTabsWarningActionName($data)"></label>
+          <!-- /ko -->
+          <div class="toggle-highlight"></div>
+        </div>
       </section>
 
       <section class="domainPatterns">
