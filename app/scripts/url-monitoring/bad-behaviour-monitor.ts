@@ -4,11 +4,7 @@ import ko = require("knockout");
 import _ = require("lodash");
 import SubscribableEvent = require("subscribable-event");
 import SettingsRepository = require('repositories/settings-repository');
-
-interface Tab {
-  id?: number;
-  url?: string;
-}
+import Tab = require('url-monitoring/tab');
 
 class BadBehaviourMonitor {
   constructor(private currentTabs: KnockoutObservableArray<Tab>, private settings: SettingsRepository) { }

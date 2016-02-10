@@ -7,11 +7,12 @@ import easeljs = require('createjs');
 import tracking = require('tracking');
 import ProxyPomodoroService = require('pomodoro/proxy-pomodoro-service');
 import CityRenderer = require('city/rendering/city-renderer');
+import TabsMonitor = require('url-monitoring/tabs-monitor');
+import SettingsRepository = require("repositories/settings-repository");
 
 import BadTabsWarningViewModel = require('components/bad-tabs-warning/bad-tabs-warning-viewmodel');
 
 import closeCurrentTab = require("chrome-utilities/close-current-tab");
-
 import runTourIfRequired = require('pages/tour');
 
 function getQueryParameter(name: string) {
@@ -34,6 +35,9 @@ class MainPageViewModel {
   private pomodoroService = new ProxyPomodoroService();
   private score = new Score();
   private cityRenderer = new CityRenderer(this.score.city);
+  private settings = new SettingsRepository();
+
+  warningPopup = new BadTabsWarningViewModel(this.pomodoroService, new TabsMonitor().allTabs, this.settings);
 
   failed = (getQueryParameter("failed") === "true");
   failingUrl = getQueryParameter("failingUrl");
@@ -73,8 +77,6 @@ class MainPageViewModel {
                                         !this.breakActive());
   canSayNotNow = ko.pureComputed(() => !this.pomodoroActive() &&
                                        !this.breakActive());
-
-  warningPopup = new BadTabsWarningViewModel();
 
   startPomodoro() {
     this.pomodoroService.start();

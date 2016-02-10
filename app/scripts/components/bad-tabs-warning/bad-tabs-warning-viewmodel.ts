@@ -1,24 +1,21 @@
 import ko = require('raw-knockout');
 
 import SettingsRepository = require("repositories/settings-repository");
-import TabMonitor = require("url-monitoring/tabs-monitor");
 import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
+import Tab = require("url-monitoring/tab");
 import ProxyPomodoroService = require("pomodoro/proxy-pomodoro-service");
 
 import closeCurrentTab = require("chrome-utilities/close-current-tab");
 import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
 
-import warningTemplate = require('text!bad-tabs-warning-template.html');
-
 class BadTabsWarningViewModel {
-  private pomodoroService = new ProxyPomodoroService();
-  private settings = new SettingsRepository();
-  private badBehaviourMonitor = new BadBehaviourMonitor(new TabMonitor().allTabs, this.settings);
+  private badBehaviourMonitor = new BadBehaviourMonitor(this.tabsToMonitor, this.settings);
 
   private triggered = ko.observable(false);
 
-  // TODO: Inject dependencies?
-  constructor() {
+  constructor(private pomodoroService: ProxyPomodoroService,
+              private tabsToMonitor: KnockoutObservableArray<Tab>,
+              private settings: SettingsRepository) {
     // Automatically deactivate if the pomodoro stops
     this.pomodoroService.isActive.subscribe((newValue) => {
       if (newValue === false) this.triggered(false);

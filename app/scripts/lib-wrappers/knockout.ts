@@ -5,7 +5,7 @@ declare module "raw-knockout" {
   export = knockout;
 }
 
-define(["raw-knockout", "knockout-es5", "ko-bindings/render-binding", "ko-bindings/duration-binding"], function (ko) {
+define(["lodash", "raw-knockout", "knockout-es5", "ko-bindings/render-binding", "ko-bindings/duration-binding"], function (_, ko) {
   ko.observable.fn.subscribeAndUpdate = function (target) {
     target(this());
     return this.subscribe(target);
@@ -22,8 +22,20 @@ define(["raw-knockout", "knockout-es5", "ko-bindings/render-binding", "ko-bindin
   ko.computed.fn.subscribeAndUpdate = ko.observable.fn.subscribeAndUpdate;
   ko.computed.fn.triggerableSubscribe = ko.observable.fn.triggerableSubscribe;
 
+  loadAllTemplatesFromImports();
+
   return ko;
 });
+
+function loadAllTemplatesFromImports() {
+  var imports = document.querySelectorAll('link[rel=import]');
+  _.forEach(imports,  (importLink: any) => { // Should be HTMLLinkElement, but that doesn't have .import yet.
+    var importedTemplates = importLink.import.querySelectorAll("template");
+    _.forEach(importedTemplates, (templateNode) => {
+      document.body.appendChild(document.importNode(templateNode, true));
+    });
+  });
+}
 
 interface KnockoutObservable<T> {
   subscribeAndUpdate(callback: (newValue: T) => void): TriggerableKnockoutSubscription;

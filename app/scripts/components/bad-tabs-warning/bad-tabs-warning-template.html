@@ -1,0 +1,20 @@
+<template id="bad-tabs-warning-popup-template">
+  <div class="warning-modal" style="display: none" data-bind="visible: isShowing">
+    <h2>Look out!</h2>
+    <p>
+      <strong>You've started focusing, but you have distracting pages that are already open.</strong>
+    </p>
+    <p>
+      Build Focus can close these for you if you'd like, or you can keep them open as
+      they are (but make sure you don't open them!)
+    </p>
+    <div class="warning-buttons">
+      <button class="close-distractions" data-bind="click: closeDistractingTabs">
+        Close them
+      </button>
+      <button class="leave-distractions" data-bind="click: leaveDistractingTabs">
+        Leave them
+      </button>
+    </div>
+  </div>
+</template>

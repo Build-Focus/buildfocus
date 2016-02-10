@@ -3,7 +3,9 @@
 <head>
   <title>Build Focus</title>
   <link rel="stylesheet" href="styles/main.css" />
-  <link rel="icon" href="/images/icon-32.png">
+  <link rel="icon" href="/images/icon-32.png" />
+
+  <link rel="import" href="/scripts/components/bad-tabs-warning/bad-tabs-warning-template.html" />
 </head>
 <body>
   <main style="display: none" data-bind="visible: true, css: { faded: warningPopup.isShowing() }">
@@ -63,27 +65,6 @@
     name: 'bad-tabs-warning-popup-template',
     data: warningPopup
   }"></div>
-
-  <template id="bad-tabs-warning-popup-template">
-    <div class="warning-modal" style="display: none" data-bind="visible: isShowing">
-      <h2>Look out!</h2>
-      <p>
-        <strong>You've started focusing, but you have distracting pages that are already open.</strong>
-      </p>
-      <p>
-        Build Focus can close these for you if you'd like, or you can keep them open as
-        they are (but make sure you don't open them!)
-      </p>
-      <div class="warning-buttons">
-        <button class="close-distractions" data-bind="click: closeDistractingTabs">
-          Close them
-        </button>
-        <button class="leave-distractions" data-bind="click: leaveDistractingTabs">
-          Leave them
-        </button>
-      </div>
-    </div>
-  </template>
 
   <script src="bower_components/requirejs/require.js"></script>
   <script src="scripts/config/base-config.js"></script>
