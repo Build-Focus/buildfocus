@@ -62,14 +62,14 @@ var tourDefinition = {
       showNextButton: false
     },
     {
-      target: '.domainPatterns form',
+      target: '.domain-patterns form',
       placement: 'right',
       title: 'What distracts you?',
       content: `<p>Enter the URLs of a few sites that normally distract you.</p>
                 <p>Try Facebook.com, Twitter.com or anything else that stops you getting things done.</p>
                 <p>Press next below when you're done (you can always come back and change this later)</p>`,
       onShow: function () {
-        $(".domainPatterns input[type=text]").focus()
+        $(".domain-patterns input[type=text]").focus()
       }
     },
     {

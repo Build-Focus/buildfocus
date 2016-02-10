@@ -24,15 +24,15 @@
 
       <h1>Settings</h1>
 
-      <section class="badTabsWarningAction">
+      <section class="bad-tabs-warning-action">
         <h3>Default distracting tab action:</h3>
         <p>
           If you start focusing, and you've already got distracting tabs open in the
           background, what should happen?
         </p>
-        <div class="badTabsWarningOptions">
+        <div class="bad-tabs-warning-options">
           <!-- ko foreach: allBadTabsWarningActions -->
-          <input name="badTabsWarningOptions"
+          <input name="bad-tabs-warning-options"
                  type="radio"
                  data-bind="attr: { id: 'badTabAction' + id },
                             value: id,
@@ -44,7 +44,7 @@
         </div>
       </section>
 
-      <section class="domainPatterns">
+      <section class="domain-patterns">
         <h3>Distracting sites:</h3>
 
         <form data-bind="submit: saveEnteredBadDomain">
