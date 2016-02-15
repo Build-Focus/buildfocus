@@ -19,6 +19,7 @@ requirejs.config({
     "heap": "../bower_components/heap/lib/heap",
     "hopscotch": "../bower_components/hopscotch/dist/js/hopscotch",
     "moment": "../bower_components/moment/moment",
+    "keen": "../bower_components/keen-js/dist/keen",
 
     "raw-knockout": "../bower_components/knockout/dist/knockout",
     "knockout-es5": "../bower_components/knockout-es5/dist/knockout-es5",
@@ -52,7 +53,12 @@ interface ApplicationConfig {
   pomodoroDuration: number;
   breakDuration: number;
   rollbarConfig: Object;
-  trackingConfig: { enabled: boolean, extraInfo: {} };
+  trackingConfig: {
+    enabled: boolean,
+    projectId: string,
+    writeKey: string,
+    extraInfo: {}
+  };
   timerFrequency: number;
 }
 

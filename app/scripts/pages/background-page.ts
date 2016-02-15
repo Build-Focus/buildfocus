@@ -3,7 +3,8 @@
 import ko = require("knockout");
 import _ = require("lodash");
 
-import tracking = require('tracking');
+import tracking = require('tracking/tracking');
+import storeOnce = require('chrome-utilities/store-once');
 
 import Score = require("score");
 import SettingsRepository = require("repositories/settings-repository");
@@ -14,8 +15,6 @@ import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
 import NotificationService = require("notification-service");
 import indicateFailure = require("failure-notification/failure-indicator");
 import getBuildingConfig = require('city/rendering/building-rendering-config');
-
-const firstInstallTimeKey = "first-install-time";
 
 export = function setupBackgroundPage() {
   var score = new Score();
@@ -52,10 +51,7 @@ export = function setupBackgroundPage() {
     showMainPage();
   });
 
-  chrome.storage.local.get(firstInstallTimeKey, function (data) {
-    if (!data[firstInstallTimeKey]) {
-      showMainPage();
-      chrome.storage.local.set({[firstInstallTimeKey]: Date.now()})
-    }
+  storeOnce.isSetLocally("first-install-time", true).then((hasBeenInstalled) => {
+    if (!hasBeenInstalled) showMainPage();
   });
 }

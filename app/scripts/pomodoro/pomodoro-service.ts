@@ -7,7 +7,7 @@ import Timer = require("pomodoro/timer");
 import config = require("config");
 import BadBehaviourMonitor = require('url-monitoring/bad-behaviour-monitor');
 
-import tracking = require('tracking');
+import tracking = require('tracking/tracking');
 
 class PomodoroService {
   private badBehaviourMonitor: BadBehaviourMonitor;
@@ -92,7 +92,7 @@ class PomodoroService {
     this.clearBehaviourSubscription();
     this.pomodoroTimer.reset();
     this.onPomodoroFailure.trigger(tabId, url);
-    tracking.trackEvent("failure", { failureUrl: url });
+    tracking.trackEvent("failure", { "failure_url": url });
   }
 
   takeABreak = () => {

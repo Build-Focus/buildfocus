@@ -4,7 +4,7 @@ import _ = require('lodash');
 import SubscribableEvent = require('subscribable-event');
 
 import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
-import tracking = require('tracking');
+import tracking = require('tracking/tracking');
 
 import Buildings = require('city/buildings/buildings');
 

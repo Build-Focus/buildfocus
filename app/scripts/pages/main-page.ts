@@ -4,7 +4,7 @@ import ko = require('knockout');
 import Score = require('score');
 import easeljs = require('createjs');
 
-import tracking = require('tracking');
+import tracking = require('tracking/tracking');
 import ProxyPomodoroService = require('pomodoro/proxy-pomodoro-service');
 import CityRenderer = require('city/rendering/city-renderer');
 import TabsMonitor = require('url-monitoring/tabs-monitor');
@@ -80,7 +80,7 @@ class MainPageViewModel {
 
   startPomodoro() {
     this.pomodoroService.start();
-    tracking.trackEvent("start-from-main-page");
+    tracking.trackPageClosingEvent("start-from-main-page");
     if (this.warningPopup.shouldShowIfTriggered()) {
       this.warningPopup.trigger();
     } else {
@@ -90,7 +90,7 @@ class MainPageViewModel {
 
   startBreak() {
     this.pomodoroService.takeABreak();
-    tracking.trackEvent("start-break-from-main-page");
+    tracking.trackPageClosingEvent("start-break-from-main-page");
 
     if (this.failingUrl) {
       window.location.href = this.failingUrl;
