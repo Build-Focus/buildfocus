@@ -8,6 +8,8 @@ import Domain = require("url-monitoring/domain");
 import runTourIfRequired = require('pages/tour');
 import BadTabsWarningAction = require('components/bad-tabs-warning/bad-tabs-warning-action');
 
+import tracking = require('tracking/tracking');
+
 // TODO: Once this grows bigger, refactor sites list and other settings into standalone components.
 class OptionsPageViewModel {
   private settings = new SettingsRepository();
@@ -19,11 +21,15 @@ class OptionsPageViewModel {
   canSaveEnteredBadDomain = ko.computed(() => this.enteredBadDomain().isValid);
 
   saveEnteredBadDomain = () => {
+    tracking.trackEvent("settings.add-bad-domain", {domain: this.enteredBadDomain()});
+
     this.badDomains(this.badDomains().concat(this.enteredBadDomain()));
     this.enteredBadDomainPattern("");
   };
 
   deleteBadDomain = (badDomain: Domain) => {
+    tracking.trackEvent("settings.delete-bad-domain", {domain: badDomain.pattern});
+
     this.badDomains(_.reject(this.badDomains(), badDomain));
   };
 

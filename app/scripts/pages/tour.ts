@@ -1,5 +1,6 @@
 import $ = require('jquery');
 import hopscotch = require('hopscotch');
+import tracking = require('tracking/tracking');
 
 const tourLevelsKey = "intro-tour-levels";
 
@@ -68,9 +69,7 @@ var tourDefinition = {
       content: `<p>Enter the URLs of a few sites that normally distract you.</p>
                 <p>Try Facebook.com, Twitter.com or anything else that stops you getting things done.</p>
                 <p>Press next below when you're done (you can always come back and change this later)</p>`,
-      onShow: function () {
-        $(".domain-patterns input[type=text]").focus()
-      }
+      onShow: () => $(".domain-patterns input[type=text]").focus()
     },
     {
       target: '.home-button',
@@ -99,11 +98,20 @@ var tourDefinition = {
     }
   ],
   skipIfNoElement: false,
-  onClose: tourCompleted,
-  onEnd: tourCompleted
+  onClose: () => {
+    tracking.trackEvent("tour.closed");
+    tourCompleted();
+  },
+  onEnd: () => {
+    tracking.trackEvent("tour.completed");
+    tourCompleted();
+  }
 };
 
 // TODO: Actually test this (with Selenium, realistically)
 export = function runTourIfRequired() {
-  ifTourRequired(() => hopscotch.startTour(tourDefinition));
+  ifTourRequired(() => {
+    tracking.trackEvent("tour.started");
+    hopscotch.startTour(tourDefinition);
+  });
 };

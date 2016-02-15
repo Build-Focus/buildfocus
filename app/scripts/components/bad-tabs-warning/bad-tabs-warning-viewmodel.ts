@@ -7,6 +7,7 @@ import ProxyPomodoroService = require("pomodoro/proxy-pomodoro-service");
 
 import closeCurrentTab = require("chrome-utilities/close-current-tab");
 import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
+import tracking = require('tracking/tracking');
 
 import BadTabsWarningAction = require('components/bad-tabs-warning/bad-tabs-warning-action');
 
@@ -27,6 +28,8 @@ class BadTabsWarningViewModel {
   }
 
   trigger() {
+    tracking.trackEvent("tabs-warning.trigger", { configuration: this.settings.badTabsWarningAction });
+
     switch (this.settings.badTabsWarningAction()) {
       case BadTabsWarningAction.Prompt:
         this.triggered(true);
@@ -60,6 +63,9 @@ class BadTabsWarningViewModel {
   });
 
   closeDistractingTabs() {
+    tracking.trackPageClosingEvent("tabs-warning.close-tabs", { configuration: this.settings.badTabsWarningAction,
+                                                                remember: this.rememberInFuture() });
+
     var tabsToRemove = this.badBehaviourMonitor.currentBadTabs();
     chrome.tabs.remove(tabsToRemove.map((t) => t.id), () => reportChromeErrors);
 
@@ -70,6 +76,9 @@ class BadTabsWarningViewModel {
   }
 
   leaveDistractingTabs() {
+    tracking.trackPageClosingEvent("tabs-warning.leave-tabs", { configuration: this.settings.badTabsWarningAction,
+                                                                remember: this.rememberInFuture()});
+
     if (this.rememberInFuture()) this.settings.badTabsWarningAction(BadTabsWarningAction.LeaveThem);
     this.dismiss();
   }
