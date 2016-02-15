@@ -3,6 +3,8 @@
 import MainPageViewModel = require('app/scripts/pages/main-page');
 import City = require('app/scripts/city/city');
 
+import asPromise = require('test/helpers/as-promise');
+
 import {
   resetTabHelper,
   activateTab,
@@ -93,9 +95,11 @@ describe('Acceptance: Main page', () => {
       givenTabs("http://google.com", "chrome-extension://this-extension/main.html");
       var viewModel = new MainPageViewModel();
 
-      viewModel[triggerMethodName]();
-
-      expect(chromeStub.tabs.remove.called).to.equal(true);
+      return asPromise(() => {
+        viewModel[triggerMethodName]()
+      }).then(() => {
+        expect(chromeStub.tabs.remove.called).to.equal(true);
+      });
     });
 
     it("should not close the tab if it's the only tab", () => {
@@ -216,15 +220,21 @@ describe('Acceptance: Main page', () => {
       });
 
       it("'Leave them' leaves the tabs alone", () => {
-        viewModel.warningPopup.leaveDistractingTabs();
-        expect(chromeStub.tabs.remove.called).to.equal(false, "Should not close anything if distracting tabs are left");
+        return asPromise(() => {
+          viewModel.warningPopup.leaveDistractingTabs();
+        }).then(() => {
+          expect(chromeStub.tabs.remove.called).to.equal(false, "Should not close anything if distracting tabs are left");
+        });
       });
 
       it("'Close them' closes the distracting tabs and this tab", () => {
-        viewModel.warningPopup.closeDistractingTabs()
-        expect(chromeStub.tabs.remove.calledWith([1])).to.equal(true, "Should close distracting tabs");
-        expect(chromeStub.tabs.remove.calledWith("current-tab-id")).to.equal(true,
-          "Should auto-close own tab and distracting tabs");
+        return asPromise(() => {
+          viewModel.warningPopup.closeDistractingTabs()
+        }).then(() => {
+          expect(chromeStub.tabs.remove.calledWith([1])).to.equal(true, "Should close distracting tabs");
+          expect(chromeStub.tabs.remove.calledWith("current-tab-id")).to.equal(true,
+            "Should auto-close own tab and distracting tabs");
+        });
       });
     });
   });

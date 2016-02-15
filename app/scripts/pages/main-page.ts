@@ -80,27 +80,28 @@ class MainPageViewModel {
 
   startPomodoro() {
     this.pomodoroService.start();
-    tracking.trackPageClosingEvent("start-from-main-page");
+
     if (this.warningPopup.shouldShowIfTriggered()) {
+      tracking.trackEvent("start-from-main-page");
       this.warningPopup.trigger();
     } else {
-      closeCurrentTab();
+      tracking.trackEvent("start-from-main-page").then(() => closeCurrentTab());
     }
   }
 
   startBreak() {
     this.pomodoroService.takeABreak();
-    tracking.trackPageClosingEvent("start-break-from-main-page");
 
     if (this.failingUrl) {
+      tracking.trackEvent("start-break-from-main-page");
       window.location.href = this.failingUrl;
     } else {
-      closeCurrentTab();
+      tracking.trackEvent("start-break-from-main-page").then(() => closeCurrentTab());
     }
   }
 
   notNow() {
-    closeCurrentTab();
+    tracking.trackEvent("not-now").then(() => closeCurrentTab());
   }
 
   onPageLoaded() {

@@ -123,15 +123,14 @@ function trackExtensionLoad() {
   ]).then((rawData) => {
     tracking.trackEvent("page-load", {
       "url": window.location.href,
-      "first-use": rawData[0],
-      "install-time": rawData[1]
+      "first_use": rawData[0],
+      "install_time": rawData[1]
     });
   });
 }
 
 interface Tracking {
-  trackEvent(eventName: string, eventData?: { [key: string]: any }): void;
-  trackPageClosingEvent(eventName: string, eventData?: { [key: string]: any }): void;
+  trackEvent(eventName: string, eventData?: { [key: string]: any }): Promise<void>;
 }
 
 var tracking: Tracking;
@@ -141,23 +140,31 @@ if (config.trackingConfig.enabled) {
   var keenClient = setUpKeen();
 
   tracking = {
-    trackEvent: function (eventName:string, eventData?:{ [key: string]: any }):void {
-      calq.action.track(eventName, eventData);
-      keenClient.addEvent(eventName, eventData, (err) => {
-        if (err) rollbar.error("Tracking error", {err: err, name: eventName, data: eventData});
+    trackEvent: function (eventName:string, eventData?:{ [key: string]: any }): Promise<void> {
+      return new Promise<void>(function (resolve, reject) {
+        var timerId = setTimeout(() => {
+          timerId = null;
+          resolve();
+        }, 1000);
+
+        calq.action.track(eventName, eventData);
+        keenClient.addEvent(eventName, eventData, (err) => {
+          if (err) {
+            rollbar.error("Tracking error", {err: err, name: eventName, data: eventData});
+          }
+
+          if (timerId) {
+            clearTimeout(timerId);
+            resolve();
+          }
+        });
       });
-    },
-    trackPageClosingEvent: function (eventName:string, eventData?:{ [key: string]: any }):void {
-      calq.action.trackHTMLLink(eventName, eventData);
-      keenClient.addEvent(eventName, eventData, (err) => {
-        if (err) rollbar.error("Tracking (on page closing) error", {err: err, name: eventName, data: eventData});
-      });
-    },
+    }
   };
 
   identifyCurrentUser(keenClient).then(trackExtensionLoad).then(trackInstallsAndUpdates);
 } else {
-  tracking = { trackEvent: () => {}, trackPageClosingEvent: () => {} };
+  tracking = { trackEvent: () => Promise.resolve<void>() };
 }
 
 export = tracking;

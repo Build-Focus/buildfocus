@@ -63,24 +63,27 @@ class BadTabsWarningViewModel {
   });
 
   closeDistractingTabs() {
-    tracking.trackPageClosingEvent("tabs-warning.close-tabs", { configuration: this.settings.badTabsWarningAction,
-                                                                remember: this.rememberInFuture() });
-
     var tabsToRemove = this.badBehaviourMonitor.currentBadTabs();
     chrome.tabs.remove(tabsToRemove.map((t) => t.id), () => reportChromeErrors);
 
     if (this.rememberInFuture()) this.settings.badTabsWarningAction(BadTabsWarningAction.CloseThem);
 
     this.dismiss();
-    closeCurrentTab();
+
+    tracking.trackEvent("tabs-warning.close-tabs", {
+      configuration: this.settings.badTabsWarningAction,
+      remember: this.rememberInFuture()
+    }).then(() => closeCurrentTab());
   }
 
   leaveDistractingTabs() {
-    tracking.trackPageClosingEvent("tabs-warning.leave-tabs", { configuration: this.settings.badTabsWarningAction,
-                                                                remember: this.rememberInFuture()});
-
     if (this.rememberInFuture()) this.settings.badTabsWarningAction(BadTabsWarningAction.LeaveThem);
     this.dismiss();
+
+    tracking.trackEvent("tabs-warning.leave-tabs", {
+      configuration: this.settings.badTabsWarningAction,
+      remember: this.rememberInFuture()
+    });
   }
 
 }

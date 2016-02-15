@@ -94,7 +94,9 @@ var tourDefinition = {
                 <p>Good luck!</p>`,
       showNextButton: false,
       nextOnTargetClick: true,
-      onShow: tourCompleted
+      onShow: () => {
+        tracking.trackEvent("tour.completed").then(() => tourCompleted());
+      }
     }
   ],
   skipIfNoElement: false,
@@ -103,7 +105,6 @@ var tourDefinition = {
     tourCompleted();
   },
   onEnd: () => {
-    tracking.trackEvent("tour.completed");
     tourCompleted();
   }
 };
