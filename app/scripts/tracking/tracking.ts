@@ -124,7 +124,8 @@ function trackExtensionLoad() {
     tracking.trackEvent("page-load", {
       "url": window.location.href,
       "first_use": rawData[0],
-      "install_time": rawData[1]
+      "install_time": rawData[1],
+      "manifest": chrome.runtime.getManifest()
     });
   });
 }
