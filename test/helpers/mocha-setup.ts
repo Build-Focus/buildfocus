@@ -45,14 +45,23 @@ define(["test/helpers/image-matcher", "test/helpers/colour-matchers", "test/help
       chromeStub.tabs.remove.reset();
 
       chromeStub.tabs.get.reset();
+      chromeStub.tabs.get.resetBehavior();
       chromeStub.tabs.update.reset();
+      chromeStub.tabs.update.resetBehavior();
       chromeStub.tabs.query.reset();
+      chromeStub.tabs.query.resetBehavior();
       chromeStub.tabs.getCurrent.reset();
+      chromeStub.tabs.getCurrent.resetBehavior();
 
       chromeStub.notifications.clear.reset();
       chromeStub.notifications.create.reset();
 
+      chromeStub.storage.sync.get.reset();
+      chromeStub.storage.sync.get.resetBehavior();
       chromeStub.storage.sync.get.yields({});
+
+      chromeStub.storage.local.get.reset();
+      chromeStub.storage.local.get.resetBehavior();
       chromeStub.storage.local.get.yields({});
 
       chromeStub.runtime.sendMessage.reset();
