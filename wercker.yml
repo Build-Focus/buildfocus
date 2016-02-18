@@ -17,8 +17,6 @@ build:
         - grunt:
             tasks: ci-test
             fail-on-warnings: true
-    after-steps:
-        - internal/store-container
 
 deploy:
     steps:
