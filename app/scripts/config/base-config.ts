@@ -19,7 +19,7 @@ requirejs.config({
     "heap": "../bower_components/heap/lib/heap",
     "hopscotch": "../bower_components/hopscotch/dist/js/hopscotch",
     "moment": "../bower_components/moment/moment",
-    "keen": "../bower_components/keen-js/dist/keen",
+    "keen": "../bower_components/keen-js/dist/keen-tracker",
 
     "raw-knockout": "../bower_components/knockout/dist/knockout",
     "knockout-es5": "../bower_components/knockout-es5/dist/knockout-es5",
