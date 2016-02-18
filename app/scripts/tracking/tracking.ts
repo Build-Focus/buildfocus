@@ -146,7 +146,7 @@ if (config.trackingConfig.enabled) {
         var timerId = setTimeout(() => {
           timerId = null;
           resolve();
-        }, 1000);
+        }, 500);
 
         calq.action.track(eventName, eventData);
         keenClient.addEvent(eventName, eventData, (err) => {
