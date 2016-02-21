@@ -34,17 +34,17 @@ define(function () {
 
   function appendDebugInfo(imagePath, actualImage, expectedImage, diffData) {
     var debugOutput = document.createElement("p");
-    debugOutput.appendChild($("<span>Actual:</span>")[0]);
+    debugOutput.appendChild($("<div>Actual:</div>")[0]);
     debugOutput.appendChild(actualImage);
 
     debugOutput.appendChild(document.createElement("br"));
 
-    debugOutput.appendChild($("<span>Expected " + imagePath + ":</span>")[0]);
+    debugOutput.appendChild($("<div>Expected " + imagePath + ":</div>")[0]);
     debugOutput.appendChild(expectedImage);
 
     debugOutput.appendChild(document.createElement("br"));
 
-    debugOutput.appendChild($("<span>Diff:</span>")[0]);
+    debugOutput.appendChild($("<div>Diff:</div>")[0]);
     var diffImage = document.createElement("img");
     diffImage.src = diffData.getImageDataUrl();
     debugOutput.appendChild(diffImage);
