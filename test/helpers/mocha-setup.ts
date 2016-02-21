@@ -1,4 +1,5 @@
-define(["test/helpers/image-matcher", "test/helpers/colour-matchers", "test/helpers/soon-matcher", "test/helpers/approx-matcher", "test/helpers/as-promise"],
+define(["test/helpers/image-matcher", "test/helpers/colour-matchers", "test/helpers/soon-matcher",
+        "test/helpers/approx-matcher", "test/helpers/as-promise", "test/helpers/preload-building-bitmaps"],
   function (ImageMatcher, ColourMatchers, SoonMatcher, ApproxMatcher, asPromise) {
     mocha.setup('bdd');
     window.expect = chai.expect;

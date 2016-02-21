@@ -78,7 +78,7 @@ define(function () {
       return assertion;
     }, function asProperty() {
       var assertion = this;
-      setDelay(assertion, 2000);
+      setDelay(assertion, 500);
       return assertion;
     });
   };

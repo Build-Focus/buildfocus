@@ -14,7 +14,7 @@ import FocusButton = require("focus-button");
 import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
 import NotificationService = require("notification-service");
 import indicateFailure = require("failure-notification/failure-indicator");
-import getBuildingConfig = require('city/rendering/building-rendering-config');
+import renderableConfigLoader = require('city/rendering/config/config-loader');
 
 export = function setupBackgroundPage() {
   var score = new Score();
@@ -22,7 +22,7 @@ export = function setupBackgroundPage() {
   var badBehaviourMonitor = new BadBehaviourMonitor(new TabsMonitor().activeTabs, settings);
   var pomodoroService = new PomodoroService(badBehaviourMonitor);
   var focusButton = new FocusButton(pomodoroService.progress, pomodoroService.isActive);
-  var notificationService = new NotificationService(getBuildingConfig);
+  var notificationService = new NotificationService(renderableConfigLoader);
 
   notificationService.onPomodoroStart(pomodoroService.start);
   pomodoroService.onPomodoroStart(notificationService.clearNotifications);

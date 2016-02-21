@@ -11,8 +11,8 @@ import Buildings = require('city/buildings/buildings');
 const RESULT_NOTIFICATION_ID = "buildfocus-result-notification";
 const ACTIONS_NOTIFICATION_ID = "buildfocus-action-notification";
 
-interface ImageConfigSource {
-  (building: Buildings.Building): { imagePath: string }
+interface BuildingImageConfigSource {
+  getBuildingConfig(building: Buildings.Building): { imagePath: string }
 }
 
 class NotificationService {
@@ -22,7 +22,7 @@ class NotificationService {
   public onBreak = SubscribableEvent();
   public onShowResult = SubscribableEvent();
 
-  constructor(private getBuildingConfig: ImageConfigSource) {
+  constructor(private renderableConfigLoader: BuildingImageConfigSource) {
     chrome.notifications.onClicked.addListener((clickedNotificationId) => {
       if (clickedNotificationId === ACTIONS_NOTIFICATION_ID) {
         this.clearNotifications();
@@ -59,7 +59,7 @@ class NotificationService {
   }
 
   public showSuccessNotification = (building: Buildings.Building) => {
-    var buildingConfig = this.getBuildingConfig(building);
+    var buildingConfig = this.renderableConfigLoader.getBuildingConfig(building);
 
     var buildingNotification = this.buildNotification(
       "Success! Great work.",

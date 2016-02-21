@@ -4,7 +4,7 @@ import easeljs = require('createjs');
 import Coord = require('city/coord');
 import Buildings = require('city/buildings/buildings');
 import Renderable = require('city/rendering/renderable');
-import getBuildingConfig = require('city/rendering/building-rendering-config');
+import renderableConfigLoader = require('city/rendering/config/config-loader');
 
 class RenderableBuilding implements Renderable {
   constructor(private building: Buildings.Building) { }
@@ -17,10 +17,7 @@ class RenderableBuilding implements Renderable {
   zIndex = 2;
 
   render(): easeljs.DisplayObject {
-    var config = getBuildingConfig(this.building);
-
-    if (!config) throw new Error("Failed to render building, no image for type: " + this.building.buildingType +
-      "and direction: " + this.building.direction);
+    var config = renderableConfigLoader.getBuildingConfig(this.building);
 
     var image = new easeljs.Bitmap(config.imagePath);
     image.x = config.xOffset;

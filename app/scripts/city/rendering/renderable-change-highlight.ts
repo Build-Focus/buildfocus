@@ -4,7 +4,7 @@ import easeljs = require('createjs');
 import Coord = require('city/coord');
 import Buildings = require('city/buildings/buildings');
 import Renderable = require('city/rendering/renderable');
-import getBuildingConfig = require('city/rendering/building-rendering-config');
+import configLoader = require('city/rendering/config/config-loader');
 
 import change = require('city/change');
 
@@ -52,17 +52,11 @@ class RenderableChangeHighlight implements Renderable {
   }
 
   private getBitmapForChange() {
-    if (this.change.type === change.Type.Created) {
-      let bitmap = new easeljs.Bitmap("/images/city/highlights/stars.png");
-      bitmap.x = -148;
-      bitmap.y = -300;
-      return bitmap;
-
-    } else if (this.change.type === change.Type.Destroyed) {
-      let bitmap = new easeljs.Bitmap("/images/city/highlights/rubble.png");
-      return bitmap;
-
-    } else throw new Error("Failed to render change highlight, unknown change type: " + this.change.type);
+    var bitmapConfig = configLoader.getChangeHighlightConfig(this.change);
+    var bitmap = new easeljs.Bitmap(bitmapConfig.imagePath);
+    bitmap.x = bitmapConfig.xOffset;
+    bitmap.y = bitmapConfig.yOffset;
+    return bitmap;
   }
 }
 

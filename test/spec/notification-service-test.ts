@@ -27,8 +27,8 @@ describe('Notification service', function () {
     clockStub.reset();
     chromeStub.reset();
 
-    var imageSource = sinon.stub().returns({ imagePath: "building-image" });
-    notifications = new NotificationService(imageSource);
+    var getImageConfig = sinon.stub().returns({ imagePath: "building-image" });
+    notifications = new NotificationService({ getBuildingConfig: getImageConfig });
 
     onStartCallback = sinon.stub();
     onBreakCallback = sinon.stub();
