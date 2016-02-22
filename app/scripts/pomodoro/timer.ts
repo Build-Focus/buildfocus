@@ -18,10 +18,12 @@ class Timer {
       return null;
     }
   });
+
   timeRemaining: KnockoutObservable<number> = ko.observable(null);
   isRunning: KnockoutComputed<boolean> = ko.pureComputed(() => {
-    return this.runningTimerId() !== null;
+    return this.runningTimerId() !== null && !this.isPaused();
   });
+  isPaused = ko.observable(false);
 
   start(duration: number, callback: () => void) {
     this.reset();
@@ -33,12 +35,16 @@ class Timer {
     var timerEndTime = timerStartTime + duration;
 
     this.runningTimerId(window.setInterval(() => {
-      this.timeRemaining(timerEndTime - now());
+      if (this.isPaused()) {
+        // Keep shifting our end time back while we're paused
+        timerEndTime = now() + this.timeRemaining();
+      } else {
+        // Tick down towards our end time (never letting time remaining go below 0)
+        this.timeRemaining(Math.max(timerEndTime - now(), 0));
 
-      if (now() >= timerEndTime) {
-        this.stopTimer();
-        if (callback) {
-          callback();
+        if (this.timeRemaining() === 0) {
+          this.stopTimer();
+          if (callback) callback();
         }
       }
     }, config.timerFrequency));
@@ -51,10 +57,19 @@ class Timer {
     }
   }
 
+  pause() {
+    if (this.isRunning()) this.isPaused(true);
+  }
+
+  resume() {
+    this.isPaused(false);
+  }
+
   reset() {
     this.stopTimer();
     this.fullDuration = null;
     this.timeRemaining(null);
+    this.isPaused(false);
   }
 }
 

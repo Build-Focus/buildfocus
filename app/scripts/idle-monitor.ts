@@ -1,4 +1,5 @@
 import rollbar = require("rollbar");
+import config = require("config");
 import subscribableEvent = require("subscribable-event");
 
 class IdleMonitor {
@@ -6,7 +7,7 @@ class IdleMonitor {
   onActive = subscribableEvent();
 
   constructor() {
-    chrome.idle.setDetectionInterval(30); // TODO: Add Selenium tests to actually check this works right
+    chrome.idle.setDetectionInterval(config.idleTimeout / 1000); // TODO: Add Selenium tests to actually check this works right
 
     chrome.idle.onStateChanged.addListener((newState: string) => {
       if (newState === "lock" || newState === "idle") {

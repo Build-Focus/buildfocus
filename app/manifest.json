@@ -27,7 +27,8 @@
     "notifications",
     "identity",
     "identity.email",
-    "topSites"
+    "topSites",
+    "idle"
   ],
   "web_accessible_resources": [
     "main.html"

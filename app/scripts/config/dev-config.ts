@@ -1,9 +1,12 @@
 'use strict';
 
 const devConfig: ApplicationConfig = {
-  pomodoroDuration: 1000 * 10,
-  breakDuration: 1000 * 3,
+  pomodoroDuration: 1000 * 45,
+  breakDuration: 1000 * 5,
   timerFrequency: 100,
+
+  idleTimeout: 1000 * 15,
+  totallyIdleTimeout: 1000 * 30,
 
   rollbarConfig: {
     accessToken: "50f66d878cc84307a37ebfc6202a7836",
