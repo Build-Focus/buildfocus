@@ -55,8 +55,8 @@ interface ApplicationConfig {
 
   // How long you have to do nothing before you're 'idle', and we pause (note: locking your pc triggers this instantly)
   idleTimeout: number;
-  // How long you have to be 'idle' before you're 'totally idle', and your current pomodoro is completely reset.
-  totallyIdleTimeout: number;
+  // How long you have to be 'idle' before you're 'gone', and your current pomodoro is completely reset.
+  goneTimeout: number;
 
   rollbarConfig: Object;
   trackingConfig: {

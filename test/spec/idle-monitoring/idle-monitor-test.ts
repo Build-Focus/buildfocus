@@ -1,4 +1,4 @@
-import IdleMonitor = require("app/scripts/idle-monitor");
+import IdleMonitor = require("app/scripts/idle-monitoring/idle-monitor");
 
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
@@ -19,7 +19,7 @@ describe("Idle monitor", () => {
 
   it("triggers nothing initially", () => {
     expect(idleCallback.called).to.equal(false, "Should not call idle callback initially");
-    expect(activeCallback.called).to.equal(false, "Should not call active callback initially");
+    expect(activeCallback.called).to.equal(false, "Should not call activeCallback callback initially");
   });
 
   it("triggers onIdle when going idle", () => {

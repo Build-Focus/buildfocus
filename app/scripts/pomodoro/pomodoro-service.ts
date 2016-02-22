@@ -7,7 +7,6 @@ import Timer = require("pomodoro/timer");
 import config = require("config");
 
 import BadBehaviourMonitor = require('url-monitoring/bad-behaviour-monitor');
-import IdleMonitor = require("idle-monitor");
 
 import tracking = require('tracking/tracking');
 
@@ -45,9 +44,7 @@ class PomodoroService {
     }
   });
 
-  constructor(private badBehaviourMonitor: BadBehaviourMonitor, private idleMonitor: IdleMonitor) {
-    this.setupIdleHandling();
-
+  constructor(private badBehaviourMonitor: BadBehaviourMonitor) {
     // TODO: This should probably be refactored out elsewhere:
     chrome.runtime.onMessage.addListener((message) => {
       if (message.action === "start-pomodoro") {
@@ -58,30 +55,10 @@ class PomodoroService {
     });
   }
 
-  private setupIdleHandling() {
-    var totallyIdleCallbackId: number = null;
-
-    this.idleMonitor.onIdle(() => {
-      if (this.pomodoroTimer.isRunning()) {
-        totallyIdleCallbackId = setTimeout(() => this.reset(), config.totallyIdleTimeout);
-        this.pomodoroTimer.pause();
-      }
-    });
-
-    this.idleMonitor.onActive(() => {
-      if (this.pomodoroTimer.isPaused()) {
-        clearTimeout(totallyIdleCallbackId);
-        this.pomodoroTimer.resume();
-      }
-    });
-  }
-
   private badTabSubscription: TriggerableKnockoutSubscription;
 
   start = () => {
-    if (this.isActive()) {
-      return;
-    }
+    if (this.isActive()) return;
 
     this.breakTimer.reset();
     this.pomodoroTimer.start(config.pomodoroDuration, () => {
@@ -101,16 +78,24 @@ class PomodoroService {
     this.badTabSubscription.trigger();
   };
 
-  private reset() {
+  private failPomodoro(tabId, url) {
+    this.reset();
+    this.onPomodoroFailure.trigger(tabId, url);
+    tracking.trackEvent("failure", { "failure_url": url });
+  }
+
+  reset() {
     if (this.badTabSubscription) this.badTabSubscription.dispose();
     this.pomodoroTimer.reset();
     this.breakTimer.reset();
   }
 
-  private failPomodoro(tabId, url) {
-    this.reset();
-    this.onPomodoroFailure.trigger(tabId, url);
-    tracking.trackEvent("failure", { "failure_url": url });
+  pause() {
+    if (this.pomodoroTimer.isRunning()) this.pomodoroTimer.pause();
+  }
+
+  resume() {
+    if (this.pomodoroTimer.isPaused()) this.pomodoroTimer.resume();
   }
 
   takeABreak = () => {

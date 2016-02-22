@@ -6,7 +6,7 @@ const testConfig: ApplicationConfig = {
   timerFrequency: 1000,
 
   idleTimeout: 1000 * 30,
-  totallyIdleTimeout: 1000 * 60 * 15,
+  goneTimeout: 1000 * 60 * 15,
 
   rollbarConfig: {
     enabled: false

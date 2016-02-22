@@ -2,15 +2,12 @@
 
 import ko = require('knockout');
 import PomodoroService = require("app/scripts/pomodoro/pomodoro-service");
-import subscribableEvent = require("app/scripts/subscribable-event");
 
 var POMODORO_DURATION = 1000 * 60 * 25;
 var BREAK_DURATION = 1000 * 60 * 5;
 
 var clockStub;
-
 var badBehaviourMonitorFake;
-var idleMonitorFake;
 
 var pomodoroService: PomodoroService;
 
@@ -24,8 +21,7 @@ describe('Pomodoro Integration - Pomodoro service', () => {
 
   beforeEach(() => {
     badBehaviourMonitorFake = { currentBadTabs: ko.observableArray([]) };
-    idleMonitorFake = { onIdle: subscribableEvent(), onActive: subscribableEvent() };
-    pomodoroService = new PomodoroService(badBehaviourMonitorFake, idleMonitorFake);
+    pomodoroService = new PomodoroService(badBehaviourMonitorFake);
   });
 
   describe(".isActive()", () => {

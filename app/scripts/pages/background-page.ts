@@ -12,7 +12,10 @@ import TabsMonitor = require("url-monitoring/tabs-monitor");
 import PomodoroService = require("pomodoro/pomodoro-service");
 import FocusButton = require("focus-button");
 import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
-import IdleMonitor = require("idle-monitor");
+
+import IdleMonitor = require("idle-monitoring/idle-monitor");
+import GoneMonitor = require("idle-monitoring/gone-monitor");
+
 import NotificationService = require("notification-service");
 import indicateFailure = require("failure-notification/failure-indicator");
 import renderableConfigLoader = require('city/rendering/config/config-loader');
@@ -44,6 +47,15 @@ function setupBreaks(notificationService: NotificationService, pomodoroService: 
   pomodoroService.onBreakEnd(notificationService.showBreakNotification);
 }
 
+function setupIdleHandling(notificationService: NotificationService, pomodoroService: PomodoroService) {
+  var idleMonitor = new IdleMonitor();
+  idleMonitor.onIdle(() => pomodoroService.pause());
+  idleMonitor.onActive(() => pomodoroService.resume());
+
+  var goneMonitor = new GoneMonitor(idleMonitor);
+  goneMonitor.onGone(() => pomodoroService.reset());
+}
+
 function setupFocusButton(pomodoroService: PomodoroService) {
   var focusButton = new FocusButton(pomodoroService.progress, pomodoroService.isActive);
   focusButton.onClick(() => {
@@ -55,11 +67,12 @@ function setupFocusButton(pomodoroService: PomodoroService) {
 export = function setupBackgroundPage() {
   var settings = new SettingsRepository();
   var badBehaviourMonitor = new BadBehaviourMonitor(new TabsMonitor().activeTabs, settings);
-  var pomodoroService = new PomodoroService(badBehaviourMonitor, new IdleMonitor());
+  var pomodoroService = new PomodoroService(badBehaviourMonitor);
   var notificationService = new NotificationService(renderableConfigLoader);
 
   setupPomodoroWorkflow(notificationService, pomodoroService);
   setupBreaks(notificationService, pomodoroService);
+  setupIdleHandling(notificationService, pomodoroService);
   setupFocusButton(pomodoroService);
 
   notificationService.onShowResult(showMainPage);

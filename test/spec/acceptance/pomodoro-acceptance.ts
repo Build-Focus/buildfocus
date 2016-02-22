@@ -100,6 +100,7 @@ describe('Acceptance: Pomodoros', () => {
 
   beforeEach(() => {
     // Make sure any active pomodoros are definitely finished
+    chromeStub.idle.onStateChanged.trigger("active");
     clockStub.tick(POMODORO_DURATION);
     clockStub.reset();
 
