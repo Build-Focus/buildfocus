@@ -7,7 +7,7 @@ class IdleMonitor {
   onActive = subscribableEvent();
 
   constructor() {
-    chrome.idle.setDetectionInterval(config.idleTimeout / 1000); // TODO: Add Selenium tests to actually check this works right
+    chrome.idle.setDetectionInterval(config.idleTimeout / 1000);
 
     chrome.idle.onStateChanged.addListener((newState: string) => {
       if (newState === "lock" || newState === "idle") {
