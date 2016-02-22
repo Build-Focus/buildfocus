@@ -6,7 +6,7 @@ const devConfig: ApplicationConfig = {
   timerFrequency: 100,
 
   idleTimeout: 1000 * 15,
-  goneTimeout: 1000 * 30,
+  goneTimeout: 1000 * 15,
 
   rollbarConfig: {
     accessToken: "50f66d878cc84307a37ebfc6202a7836",
