@@ -23,15 +23,6 @@ class PomodoroService {
 
   isActive = publishedObservable("pomodoro-is-active", this.pomodoroTimer.isRunning);
   isBreakActive = publishedObservable("break-is-active", this.breakTimer.isRunning);
-  progress = publishedObservable("pomodoro-service-progress", ko.pureComputed(() => {
-    if (this.pomodoroTimer.isRunning()) {
-      return this.pomodoroTimer.progress();
-    } else if (this.breakTimer.isRunning()) {
-      return this.breakTimer.progress();
-    } else {
-      return null;
-    }
-  }));
   timeRemaining = publishedObservable("pomodoro-service-time-remaining", ko.pureComputed(() => {
     if (this.pomodoroTimer.isRunning()) {
       return this.pomodoroTimer.timeRemaining();
@@ -41,6 +32,16 @@ class PomodoroService {
       return null;
     }
   }));
+
+  progress = ko.pureComputed(() => {
+    if (this.pomodoroTimer.isRunning()) {
+      return this.pomodoroTimer.progress();
+    } else if (this.breakTimer.isRunning()) {
+      return this.breakTimer.progress();
+    } else {
+      return null;
+    }
+  });
 
   constructor(badBehaviourMonitor: BadBehaviourMonitor) {
     this.badBehaviourMonitor = badBehaviourMonitor;
