@@ -5,6 +5,7 @@ import publishedObservable = require("observables/published-observable");
 import subscribableEvent = require("subscribable-event");
 import Timer = require("pomodoro/timer");
 import config = require("config");
+import PomodoroState = require("pomodoro/pomodoro-state");
 
 import BadBehaviourMonitor = require('url-monitoring/bad-behaviour-monitor');
 
@@ -21,13 +22,22 @@ class PomodoroService {
   onBreakStart = subscribableEvent();
   onBreakEnd = subscribableEvent();
 
-  isActive = publishedObservable("pomodoro-is-active", this.pomodoroTimer.isRunning);
-  isPaused = publishedObservable("pomodoro-is-paused", this.pomodoroTimer.isPaused);
-  isBreakActive = publishedObservable("break-is-active", this.breakTimer.isRunning);
+  private state = publishedObservable("pomodoro-service-state", ko.pureComputed(() => {
+    if (this.pomodoroTimer.isRunning()) return PomodoroState.Active;
+    else if (this.pomodoroTimer.isPaused()) return PomodoroState.Paused;
+    else if (this.breakTimer.isRunning()) return PomodoroState.Break;
+    else return PomodoroState.Inactive;
+  }));
+
+  isActive =      ko.pureComputed(() => this.state() === PomodoroState.Active);
+  isPaused =      ko.pureComputed(() => this.state() === PomodoroState.Paused);
+  isBreakActive = ko.pureComputed(() => this.state() === PomodoroState.Break);
+  isInactive =    ko.pureComputed(() => this.state() === PomodoroState.Inactive);
+
   timeRemaining = publishedObservable("pomodoro-service-time-remaining", ko.pureComputed(() => {
-    if (this.pomodoroTimer.isRunning()) {
+    if (this.isActive() || this.isPaused()) {
       return this.pomodoroTimer.timeRemaining();
-    } else if (this.breakTimer.isRunning()) {
+    } else if (this.isBreakActive()) {
       return this.breakTimer.timeRemaining();
     } else {
       return null;
@@ -35,9 +45,9 @@ class PomodoroService {
   }));
 
   progress = ko.pureComputed(() => {
-    if (this.pomodoroTimer.isRunning()) {
+    if (this.isActive() || this.isPaused()) {
       return this.pomodoroTimer.progress();
-    } else if (this.breakTimer.isRunning()) {
+    } else if (this.isBreakActive()) {
       return this.breakTimer.progress();
     } else {
       return null;
@@ -47,11 +57,8 @@ class PomodoroService {
   constructor(private badBehaviourMonitor: BadBehaviourMonitor) {
     // TODO: This should probably be refactored out elsewhere:
     chrome.runtime.onMessage.addListener((message) => {
-      if (message.action === "start-pomodoro") {
-        this.start();
-      } else if (message.action === "start-break") {
-        this.takeABreak();
-      }
+      if (message.action === "start-pomodoro") this.start();
+      else if (message.action === "start-break") this.takeABreak();
     });
   }
 
@@ -91,11 +98,11 @@ class PomodoroService {
   }
 
   pause() {
-    if (this.pomodoroTimer.isRunning()) this.pomodoroTimer.pause();
+    if (this.isActive()) this.pomodoroTimer.pause();
   }
 
   resume() {
-    if (this.pomodoroTimer.isPaused()) this.pomodoroTimer.resume();
+    if (this.isPaused()) this.pomodoroTimer.resume();
   }
 
   takeABreak = () => {

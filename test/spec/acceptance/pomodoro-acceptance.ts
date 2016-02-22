@@ -6,6 +6,8 @@ import serialization = require('app/scripts/city/serialization/serialization-for
 import Buildings = require('app/scripts/city/buildings/buildings');
 import BuildingType = require('app/scripts/city/buildings/building-type');
 
+import PomodoroState = require("app/scripts/pomodoro/pomodoro-state");
+
 import {
   resetTabHelper,
   activateTab,
@@ -26,9 +28,9 @@ function getLastSavedValue(valueKey: string, storageType: string = "local"): any
 
 var getCityData = () => <serialization.CityData> getLastSavedValue("city-data");
 var getPomodoroTimeRemaining = () => <number> getLastSavedValue("pomodoro-service-time-remaining");
-var isPomodoroActive = () => <boolean> getLastSavedValue("pomodoro-is-active");
-var isPomodoroPaused = () => <boolean> getLastSavedValue("pomodoro-is-paused");
-var isBreakActive = () => <boolean> getLastSavedValue("break-is-active");
+var isPomodoroActive = () => getLastSavedValue("pomodoro-service-state") === PomodoroState.Active;
+var isPomodoroPaused = () => getLastSavedValue("pomodoro-service-state") === PomodoroState.Paused;
+var isBreakActive =    () => getLastSavedValue("pomodoro-service-state") === PomodoroState.Break;
 
 function getCityValue() {
   var lastStoredCityData = getCityData();

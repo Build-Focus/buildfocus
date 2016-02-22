@@ -1,6 +1,7 @@
 'use strict';
 
 import MainPageViewModel = require('app/scripts/pages/main-page');
+import PomodoroState = require("app/scripts/pomodoro/pomodoro-state");
 import City = require('app/scripts/city/city');
 
 import asPromise = require('test/helpers/as-promise');
@@ -17,19 +18,15 @@ var chromeStub = <typeof SinonChrome> <any> window.chrome;
 var clockStub;
 
 function pomodoroIsActive() {
-  chromeStub.storage.onChanged.trigger({"pomodoro-is-active": {"newValue": true}});
+  chromeStub.storage.onChanged.trigger({"pomodoro-service-state": {"newValue": PomodoroState.Active}});
 }
 
-function pomodoroIsInactive() {
-  chromeStub.storage.onChanged.trigger({"pomodoro-is-active": {"newValue": false}});
+function pomodoroIsPaused() {
+  chromeStub.storage.onChanged.trigger({"pomodoro-service-state": {"newValue": PomodoroState.Paused}});
 }
 
 function breakIsActive() {
-  chromeStub.storage.onChanged.trigger({"break-is-active": {"newValue": true}});
-}
-
-function breakIsInactive() {
-  chromeStub.storage.onChanged.trigger({"break-is-active": {"newValue": false}});
+  chromeStub.storage.onChanged.trigger({"pomodoro-service-state": {"newValue": PomodoroState.Break}});
 }
 
 function countdownAt(time: number) {
@@ -170,7 +167,7 @@ describe('Acceptance: Main page', () => {
   });
 
   describe("When a break is active", () => {
-    var viewModel;
+    var viewModel: MainPageViewModel;
 
     beforeEach(() => {
       viewModel = new MainPageViewModel();

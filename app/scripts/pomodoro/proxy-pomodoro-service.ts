@@ -3,6 +3,7 @@
 import ko = require("knockout");
 import subscribedObservable = require("observables/subscribed-observable");
 import subscribableEvent = require("subscribable-event");
+import PomodoroState = require("pomodoro/pomodoro-state");
 
 class ProxyPomodoroService {
   start() {
@@ -13,8 +14,12 @@ class ProxyPomodoroService {
     chrome.runtime.sendMessage({"action": "start-break"});
   }
 
-  isActive = subscribedObservable("pomodoro-is-active", false);
-  isBreakActive = subscribedObservable("break-is-active", false);
+  private state = subscribedObservable("pomodoro-service-state", PomodoroState.Inactive);
+
+  isActive =      ko.pureComputed(() => this.state() === PomodoroState.Active);
+  isPaused =      ko.pureComputed(() => this.state() === PomodoroState.Paused);
+  isBreakActive = ko.pureComputed(() => this.state() === PomodoroState.Break);
+  isInactive =    ko.pureComputed(() => this.state() === PomodoroState.Inactive);
 
   timeRemaining = subscribedObservable("pomodoro-service-time-remaining", null);
 }

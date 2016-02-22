@@ -45,6 +45,8 @@ class MainPageViewModel {
 
   private breakActive = this.pomodoroService.isBreakActive;
   private pomodoroActive = this.pomodoroService.isActive;
+  private pomodoroPaused = this.pomodoroService.isPaused;
+  private inactive = this.pomodoroService.isInactive;
 
   timeRemaining = this.pomodoroService.timeRemaining;
 
@@ -72,11 +74,9 @@ class MainPageViewModel {
   });
   overlayShown = ko.pureComputed(() => this.overlayType() !== null);
 
-  canStartPomodoro = ko.pureComputed(() => !this.pomodoroActive());
-  canStartBreak = ko.pureComputed(() => !this.pomodoroActive() &&
-                                        !this.breakActive());
-  canSayNotNow = ko.pureComputed(() => !this.pomodoroActive() &&
-                                       !this.breakActive());
+  canStartPomodoro = ko.pureComputed(() => this.inactive() || this.breakActive());
+  canStartBreak    = ko.pureComputed(() => this.inactive());
+  canSayNotNow     = ko.pureComputed(() => this.inactive());
 
   startPomodoro() {
     this.pomodoroService.start();
