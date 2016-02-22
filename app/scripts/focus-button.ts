@@ -4,8 +4,17 @@ import ko = require("knockout");
 import _ = require("lodash");
 import subscribableEvent = require("subscribable-event");
 import observableImage = require('observables/observable-image');
+import PomodoroState = require("pomodoro/pomodoro-state");
 
-export = function FocusButton(progressObservable, pomodoroActiveObservable) {
+interface PresentablePomodoroService {
+  progress: KnockoutObservable<number>;
+
+  isActive: KnockoutObservable<boolean>;
+  isPaused: KnockoutObservable<boolean>;
+  isBreakActive: KnockoutObservable<boolean>;
+}
+
+export = function FocusButton(pomodoroService: PresentablePomodoroService) {
   this.onClick = subscribableEvent();
   chrome.browserAction.onClicked.addListener(this.onClick.trigger);
 
@@ -54,19 +63,17 @@ export = function FocusButton(progressObservable, pomodoroActiveObservable) {
 
     var context = <CanvasRenderingContext2D> canvas.getContext('2d');
 
-    if (progressObservable() !== null) {
-      var fullDistance = 19*4;
-      var progressDistance = progressObservable() * (fullDistance / 100);
+    var fullDistance = 19*4;
+    var progressDistance = (pomodoroService.progress() || 0) * (fullDistance / 100);
 
-      if (pomodoroActiveObservable()) {
-        drawBackground(context, pomodoroIcon);
-        clearOutline(context, fullDistance, 5);
-        drawOutline(context, "#e00505", progressDistance, 3);
-      } else {
-        drawBackground(context, breakIcon);
-        clearOutline(context, fullDistance, 5);
-        drawOutline(context, "#22bb04", progressDistance, 3);
-      }
+    if (pomodoroService.isActive() || pomodoroService.isPaused()) {
+      drawBackground(context, pomodoroIcon);
+      clearOutline(context, fullDistance, 5);
+      drawOutline(context, "#e00505", progressDistance, 3);
+    } else if (pomodoroService.isBreakActive()) {
+      drawBackground(context, breakIcon);
+      clearOutline(context, fullDistance, 5);
+      drawOutline(context, "#22bb04", progressDistance, 3);
     } else {
       drawBackground(context, logoIcon);
     }

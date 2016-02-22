@@ -166,6 +166,33 @@ describe('Acceptance: Main page', () => {
     });
   });
 
+  describe("When a pomodoro is paused", () => {
+    var viewModel: MainPageViewModel;
+
+    beforeEach(() => {
+      viewModel = new MainPageViewModel();
+      pomodoroIsPaused();
+    });
+
+    it("should disable all buttons", () => {
+      expect(viewModel.canStartPomodoro()).to.equal(false, "Should not be able to start a pomodoro");
+      expect(viewModel.canStartBreak()).to.equal(false, "Should not be able to start a break");
+      expect(viewModel.canSayNotNow()).to.equal(false, "Should not be able to 'not now'");
+    });
+
+    it("should show a pomodoro-style overlay", () => {
+      expect(viewModel.overlayShown()).to.equal(true, "Should show an overlay");
+      expect(viewModel.overlayStyle()).to.equal("pomodoro-overlay");
+      expect(viewModel.overlayText()).to.equal("Paused");
+    });
+
+    it("should show the time remaining", () => {
+      countdownAt(1000);
+
+      expect(viewModel.timeRemaining()).to.equal(1000);
+    });
+  });
+
   describe("When a break is active", () => {
     var viewModel: MainPageViewModel;
 

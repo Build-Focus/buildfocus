@@ -28,6 +28,7 @@ function getDomainFromUrl(url: string): string {
 
 enum OverlayType {
   PomodoroOverlay,
+  PausedOverlay,
   BreakOverlay
 }
 
@@ -53,6 +54,8 @@ class MainPageViewModel {
   private overlayType = ko.pureComputed(() => {
     if (this.pomodoroActive()) {
       return OverlayType.PomodoroOverlay;
+    } else if (this.pomodoroPaused()) {
+      return OverlayType.PausedOverlay;
     } else if (this.breakActive()) {
       return OverlayType.BreakOverlay;
     } else {
@@ -63,13 +66,15 @@ class MainPageViewModel {
   overlayStyle = ko.pureComputed(() => {
     return {
       [OverlayType.PomodoroOverlay]: "pomodoro-overlay",
-      [OverlayType.BreakOverlay]: "break-overlay"
+      [OverlayType.PausedOverlay]:   "pomodoro-overlay",
+      [OverlayType.BreakOverlay]:    "break-overlay"
     }[this.overlayType()];
   });
   overlayText = ko.pureComputed(() => {
     return {
       [OverlayType.PomodoroOverlay]: "Focusing",
-      [OverlayType.BreakOverlay]: "On a break"
+      [OverlayType.PausedOverlay]:   "Paused",
+      [OverlayType.BreakOverlay]:    "On a break"
     }[this.overlayType()];
   });
   overlayShown = ko.pureComputed(() => this.overlayType() !== null);

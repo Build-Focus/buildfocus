@@ -59,7 +59,7 @@ function setupIdleHandling(notificationService: NotificationService, pomodoroSer
 }
 
 function setupFocusButton(pomodoroService: PomodoroService) {
-  var focusButton = new FocusButton(pomodoroService.progress, pomodoroService.isActive);
+  var focusButton = new FocusButton(pomodoroService);
   focusButton.onClick(() => {
     tracking.trackEvent("open-page-from-focus-button");
     showMainPage();
