@@ -17,13 +17,12 @@ import NotificationService = require("notification-service");
 import indicateFailure = require("failure-notification/failure-indicator");
 import renderableConfigLoader = require('city/rendering/config/config-loader');
 
-export = function setupBackgroundPage() {
+function showMainPage() {
+  chrome.tabs.create({url: chrome.extension.getURL("main.html")});
+}
+
+function setupPomodoroWorkflow(notificationService: NotificationService, pomodoroService: PomodoroService) {
   var score = new Score();
-  var settings = new SettingsRepository();
-  var badBehaviourMonitor = new BadBehaviourMonitor(new TabsMonitor().activeTabs, settings);
-  var pomodoroService = new PomodoroService(badBehaviourMonitor, new IdleMonitor());
-  var focusButton = new FocusButton(pomodoroService.progress, pomodoroService.isActive);
-  var notificationService = new NotificationService(renderableConfigLoader);
 
   notificationService.onPomodoroStart(pomodoroService.start);
   pomodoroService.onPomodoroStart(notificationService.clearNotifications);
@@ -37,20 +36,33 @@ export = function setupBackgroundPage() {
     score.addFailure();
     indicateFailure(tabId, url);
   });
+}
 
+function setupBreaks(notificationService: NotificationService, pomodoroService: PomodoroService) {
   notificationService.onBreak(pomodoroService.takeABreak);
   pomodoroService.onBreakStart(notificationService.clearNotifications);
   pomodoroService.onBreakEnd(notificationService.showBreakNotification);
+}
 
-  function showMainPage() {
-    chrome.tabs.create({url: chrome.extension.getURL("main.html")});
-  }
-
-  notificationService.onShowResult(showMainPage);
+function setupFocusButton(pomodoroService: PomodoroService) {
+  var focusButton = new FocusButton(pomodoroService.progress, pomodoroService.isActive);
   focusButton.onClick(() => {
     tracking.trackEvent("open-page-from-focus-button");
     showMainPage();
   });
+}
+
+export = function setupBackgroundPage() {
+  var settings = new SettingsRepository();
+  var badBehaviourMonitor = new BadBehaviourMonitor(new TabsMonitor().activeTabs, settings);
+  var pomodoroService = new PomodoroService(badBehaviourMonitor, new IdleMonitor());
+  var notificationService = new NotificationService(renderableConfigLoader);
+
+  setupPomodoroWorkflow(notificationService, pomodoroService);
+  setupBreaks(notificationService, pomodoroService);
+  setupFocusButton(pomodoroService);
+
+  notificationService.onShowResult(showMainPage);
 
   storeOnce.isSetLocally("first-install-time", true).then((hasBeenInstalled) => {
     if (!hasBeenInstalled) showMainPage();
