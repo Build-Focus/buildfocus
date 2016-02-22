@@ -22,7 +22,7 @@ export = function FocusButton(pomodoroService: PresentablePomodoroService) {
   var pomodoroIcon = observableImage("/images/icon-19-red.png");
   var breakIcon = observableImage("/images/icon-19-green.png");
 
-  function drawBackground(context, image) {
+  function drawBackground(context: CanvasRenderingContext2D, image) {
     if (image()) {
       context.drawImage(image(), 0, 0, 19, 19);
     } else {
@@ -30,19 +30,22 @@ export = function FocusButton(pomodoroService: PresentablePomodoroService) {
     }
   }
 
-  function drawOutline(context, color, length, width) {
+  function drawOutline(context: CanvasRenderingContext2D,
+                       color: string,
+                       length: number,
+                       width: number) {
     context.globalCompositeOperation = "source-over";
     context.strokeStyle = color;
 
     outlineBadge(context, length, width);
   }
 
-  function clearOutline(context, length, width) {
+  function clearOutline(context: CanvasRenderingContext2D, length: number, width: number) {
     context.globalCompositeOperation = "destination-out";
     outlineBadge(context, length, width);
   }
 
-  function outlineBadge(context, length, width) {
+  function outlineBadge(context: CanvasRenderingContext2D, length: number, width: number) {
     context.setLineDash([length, 1000]);
     context.lineWidth = width;
 
@@ -81,7 +84,7 @@ export = function FocusButton(pomodoroService: PresentablePomodoroService) {
     return context.getImageData(0, 0, 19, 19);
   });
 
-  function updateBadgeIcon(imageData) {
+  function updateBadgeIcon(imageData: ImageData) {
     chrome.browserAction.setIcon({
       imageData: imageData
     });
