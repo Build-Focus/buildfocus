@@ -13,7 +13,7 @@ import {
   givenBadDomains
 } from "test/helpers/tab-helper";
 
-var POMODORO_DURATION = 1000 * 60 * 20;
+var POMODORO_DURATION = 1000 * 60 * 25;
 var BREAK_DURATION = 1000 * 60 * 5;
 
 var clockStub: Sinon.SinonFakeTimers;
