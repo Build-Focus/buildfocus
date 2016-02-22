@@ -18,11 +18,16 @@ describe("System tests - ", function () {
     var capabilities = {
       browserName: 'chrome',
       chromeOptions: {
-        'args': ['--load-extension=' + process.env.EXTENSION_PATH]
+        'args': [
+          '--user-data-dir=' + process.env.CHROME_DATA_PATH,
+          '--load-extension=' + process.env.EXTENSION_PATH
+        ]
       },
       host: process.env.SELENIUM_URL
     };
 
+    console.log("Loading extension from ", process.env.EXTENSION_PATH);
+    console.log("Loading user data from ", process.env.CHROME_DATA_PATH);
     client = webdriverio.remote({desiredCapabilities: capabilities}).init();
     chaiAsPromised.transferPromiseness = client.transferPromiseness;
     addCustomCommands(client);
@@ -36,7 +41,9 @@ describe("System tests - ", function () {
                      .click(".hopscotch-close")
                      .closeTab();
       } else {
-        return client;
+        // Make sure we've definitely killed the tour.
+        return client.url(extensionPage("main.html"))
+                     .execute(() => chrome.storage.local.set({ "intro-tour-levels": [1] }));
       }
     }).then(() => console.log("Starting test"));
   });
@@ -127,8 +134,8 @@ describe("System tests - ", function () {
 
   function startPomodoro() {
     return client.openTab()
-      .url(extensionPage("main.html")).pause(500)
-      .click(".startPomodoro").pause(1000)
-      .switchToLastTab();
+                 .url(extensionPage("main.html")).pause(500)
+                 .click(".startPomodoro").pause(1000)
+                 .switchToLastTab();
   }
 });

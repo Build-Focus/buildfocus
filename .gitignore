@@ -18,3 +18,5 @@ package
 _builds/
 _projects/
 _steps/
+
+.chrome-user-data/

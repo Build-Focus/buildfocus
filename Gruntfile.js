@@ -206,7 +206,8 @@ module.exports = function (grunt) {
     env: {
       localSeleniumEnv: {
         SELENIUM_URL: "http://localhost:4444/wd/hub",
-        EXTENSION_PATH: __dirname + "/dist"
+        EXTENSION_PATH: __dirname + "/dist",
+        CHROME_DATA_PATH: (process.env.WERCKER_CACHE_DIR || '.') + '/.chrome-user-data'
       }
     },
 
