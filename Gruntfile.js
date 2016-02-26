@@ -227,6 +227,7 @@ module.exports = function (grunt) {
       all: {
         files: [{
           dot: true,
+          force: true, // Bug in Node 5.7.0 requires this: https://github.com/gruntjs/grunt-contrib-clean/issues/85
           src: [
             'build/*',
             '!build/.git*',
