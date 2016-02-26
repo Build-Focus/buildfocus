@@ -1,6 +1,7 @@
 import ko = require("knockout");
 
 export const POMODORO_COLOUR = [224, 5, 5];
+export const PAUSED_COLOUR = [248, 150, 169];
 export const BREAK_COLOUR = [34, 187, 4];
 export const BADGE_BACKGROUND_COLOUR = [251, 184, 65];
 export const BADGE_TEXT_COLOUR = [0, 0, 0];
@@ -30,5 +31,5 @@ export function getBadgePixel(x, y) {
 }
 
 export function badgeTextColour() {
-  return getBadgePixel(11, 5); // Top left of the B
+  return getBadgePixel(3, 5); // Top of the B
 }

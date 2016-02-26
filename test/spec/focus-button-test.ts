@@ -4,6 +4,7 @@ import FocusButton = require("app/scripts/focus-button");
 
 import {
   POMODORO_COLOUR,
+  PAUSED_COLOUR,
   BREAK_COLOUR,
   BADGE_TEXT_COLOUR,
   BADGE_BACKGROUND_COLOUR,
@@ -68,6 +69,25 @@ describe("Focus button", () => {
     it("should show the default background when the pomodoro is later finished", () => {
       pomodoroService.isActive(false);
       expect(getBadgePixel(0, 0)).to.be.rgbPixel(BADGE_BACKGROUND_COLOUR);
+    });
+
+    describe("and then paused", () => {
+      beforeEach(() => {
+        pomodoroService.isActive(false);
+        pomodoroService.isPaused(true);
+      });
+
+      it("should show the same progress border, but in a lighter colour", () => {
+        pomodoroService.progress(50);
+
+        expect(getBadgePixel(0, 0)).to.be.rgbPixel(PAUSED_COLOUR);
+        expect(getBadgePixel(18, 18)).to.be.rgbPixel(PAUSED_COLOUR);
+        expect(getBadgePixel(0, 18)).to.be.transparent();
+      });
+
+      it("should show a paused icon instead of the BF letters, in a lighter colour", () => {
+        expect(getBadgePixel(6, 7)).to.be.rgbPixel(PAUSED_COLOUR); // Center of paused bar (or the hole in the B)
+      })
     });
   });
 

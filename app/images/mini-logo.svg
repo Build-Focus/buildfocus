@@ -27,9 +27,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2"
-     inkscape:cx="120.02453"
-     inkscape:cy="-26.287888"
+     inkscape:zoom="4"
+     inkscape:cx="438.58646"
+     inkscape:cy="30.643275"
      inkscape:document-units="px"
      inkscape:current-layer="g3064"
      showgrid="false"
@@ -153,6 +153,38 @@
              y="359.10248"
              style="font-size:93.31456757px;font-weight:normal;letter-spacing:-3.26600909px;fill:#22bb04;fill-opacity:1"
              id="tspan3830-65">BF</tspan></text>
+      </g>
+      <g
+         id="g3876"
+         transform="translate(-11.5,17.5)"
+         inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/icon-19-paused.png"
+         inkscape:export-xdpi="15.8"
+         inkscape:export-ydpi="15.8">
+        <rect
+           inkscape:export-ydpi="15.8"
+           inkscape:export-xdpi="15.8"
+           inkscape:export-filename="/home/tim/Dropbox/programming/focus/chrome/app/images/icon-19-green.png"
+           style="fill:#ffffff;fill-opacity:0;stroke:none"
+           id="rect3095-2-1-8"
+           width="108.214"
+           height="108.214"
+           x="1225.9961"
+           y="155.01865"
+           ry="0.74249232" />
+        <g
+           transform="translate(13.25,-15.25)"
+           id="g3872">
+          <path
+             inkscape:connector-curvature="0"
+             id="path3787-6-7"
+             d="m 1289.4781,254.18042 0,-59.60954"
+             style="fill:none;stroke:#f896a9;stroke-width:25.56586647;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+          <path
+             inkscape:connector-curvature="0"
+             id="path3787-6-7-7"
+             d="m 1244.2281,254.18042 0,-59.60954"
+             style="fill:none;stroke:#f896a9;stroke-width:25.56586647;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+        </g>
       </g>
     </g>
   </g>

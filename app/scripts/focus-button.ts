@@ -17,6 +17,7 @@ interface PresentablePomodoroService {
 const LOGO_ICON = observableImage("/images/icon-19.png");
 const POMODORO_ICON = observableImage("/images/icon-19-red.png");
 const BREAK_ICON = observableImage("/images/icon-19-green.png");
+const PAUSED_ICON = observableImage("/images/icon-19-paused.png");
 
 class FocusButton {
   onClick = subscribableEvent();
@@ -35,16 +36,27 @@ class FocusButton {
     var fullDistance = 19*4;
     var progressDistance = (this.pomodoroService.progress() || 0) * (fullDistance / 100);
 
-    if (this.pomodoroService.isActive() || this.pomodoroService.isPaused()) {
-      this.drawBackground(context, POMODORO_ICON);
-      this.clearOutline(context, fullDistance, 5);
-      this.drawOutline(context, "#e00505", progressDistance, 3);
+    var borderColour: string;
+    var centerIcon: KnockoutObservable<HTMLImageElement>;
+
+    if (this.pomodoroService.isActive()) {
+      centerIcon = POMODORO_ICON;
+      borderColour = "#E00505";
+    } else if (this.pomodoroService.isPaused()) {
+      centerIcon = PAUSED_ICON;
+      borderColour = "#F896A9";
     } else if (this.pomodoroService.isBreakActive()) {
-      this.drawBackground(context, BREAK_ICON);
-      this.clearOutline(context, fullDistance, 5);
-      this.drawOutline(context, "#22bb04", progressDistance, 3);
+      centerIcon = BREAK_ICON;
+      borderColour = "#22BB04";
     } else {
-      this.drawBackground(context, LOGO_ICON);
+      centerIcon = LOGO_ICON;
+      borderColour = null;
+    }
+
+    this.drawBackground(context, centerIcon);
+    if (borderColour) {
+      this.clearOutline(context, fullDistance, 5);
+      this.drawOutline(context, borderColour, progressDistance, 3);
     }
 
     return context.getImageData(0, 0, 19, 19);
