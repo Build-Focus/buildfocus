@@ -15,6 +15,15 @@ import {
   givenBadDomains
 } from "test/helpers/tab-helper";
 
+import {
+  POMODORO_COLOUR,
+  BREAK_COLOUR,
+  BADGE_TEXT_COLOUR,
+  BADGE_BACKGROUND_COLOUR,
+  getBadgePixel,
+  badgeTextColour,
+} from "test/helpers/badge-helper";
+
 var POMODORO_DURATION = 1000 * 60 * 25;
 var BREAK_DURATION = 1000 * 60 * 5;
 
@@ -59,40 +68,9 @@ function getCitySize() {
   }
 }
 
-function getBadgeImageData() {
-  var lastSetIconCall = chromeStub.browserAction.setIcon.lastCall;
-
-  if (lastSetIconCall) {
-    return lastSetIconCall.args[0].imageData;
-  } else {
-    return null;
-  }
-}
-
-function getBadgePixel(x, y) {
-  var image = getBadgeImageData();
-  var data = image.data;
-
-  var pixelIndex = image.width * y + x;
-  var pixelByteIndex = pixelIndex * 4;
-  return [data[pixelByteIndex],
-          data[pixelByteIndex+1],
-          data[pixelByteIndex+2],
-          data[pixelByteIndex+3]];
-}
-
-function badgeIconColour() {
-  return getBadgePixel(11, 5); // Top left of the F
-}
-
 function startPomodoro() {
   chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
 }
-
-var POMODORO_COLOUR = [224, 5, 5];
-var BREAK_COLOUR = [34, 187, 4];
-var BADGE_BACKGROUND_COLOUR = [251, 184, 65];
-var BADGE_TEXT_COLOUR = [0, 0, 0];
 
 describe('Acceptance: Pomodoros', () => {
   before(() => clockStub = sinon.useFakeTimers());
@@ -182,14 +160,14 @@ describe('Acceptance: Pomodoros', () => {
 
     it("should let you start a new pomodoro", () => {
       notificationHelper.clickStartPomodoro();
-      expect(badgeIconColour()).to.be.rgbPixel(POMODORO_COLOUR);
+      expect(badgeTextColour()).to.be.rgbPixel(POMODORO_COLOUR);
     });
 
     it("should let you take a break after your pomodoro", () => {
       notificationHelper.clickTakeABreak();
       clockStub.tick(BREAK_DURATION / 2);
 
-      expect(badgeIconColour()).to.be.rgbPixel(BREAK_COLOUR);
+      expect(badgeTextColour()).to.be.rgbPixel(BREAK_COLOUR);
       expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
     });
 
@@ -213,11 +191,11 @@ describe('Acceptance: Pomodoros', () => {
       notificationHelper.clickNotNow();
 
       clockStub.tick(1);
-      expect(badgeIconColour()).to.be.rgbPixel(BADGE_TEXT_COLOUR);
+      expect(badgeTextColour()).to.be.rgbPixel(BADGE_TEXT_COLOUR);
       expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
 
       clockStub.tick(POMODORO_DURATION);
-      expect(badgeIconColour()).to.be.rgbPixel(BADGE_TEXT_COLOUR);
+      expect(badgeTextColour()).to.be.rgbPixel(BADGE_TEXT_COLOUR);
       expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
 
       expect(chromeStub.tabs.create.callCount).to.equal(0);
@@ -230,7 +208,7 @@ describe('Acceptance: Pomodoros', () => {
     it("should start a pomodoro when a start message is received", () => {
       startPomodoro();
 
-      expect(badgeIconColour()).to.be.rgbPixel(POMODORO_COLOUR);
+      expect(badgeTextColour()).to.be.rgbPixel(POMODORO_COLOUR);
     });
 
     it("should clear notifications when a start pomodoro message is received", () => {
@@ -242,7 +220,7 @@ describe('Acceptance: Pomodoros', () => {
     it("should start a break when a break message is received", () => {
       chromeStub.runtime.onMessage.trigger({"action": "start-break"});
 
-      expect(badgeIconColour()).to.be.rgbPixel(BREAK_COLOUR);
+      expect(badgeTextColour()).to.be.rgbPixel(BREAK_COLOUR);
       expect(chromeStub.notifications.create.called).to.equal(false);
 
       clockStub.tick(BREAK_DURATION);
