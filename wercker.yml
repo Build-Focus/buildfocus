@@ -16,6 +16,7 @@ build:
             code: start-selenium
         - grunt:
             tasks: ci-test
+            verbose: true
             fail-on-warnings: true
 
 deploy:
