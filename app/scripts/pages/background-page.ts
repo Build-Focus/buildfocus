@@ -80,6 +80,9 @@ export = function setupBackgroundPage() {
   notificationService.onShowResult(showMainPage);
 
   storeOnce.isSetLocally("first-install-time", true).then((hasBeenInstalled) => {
-    if (!hasBeenInstalled) showMainPage();
+    if (!hasBeenInstalled) {
+      showMainPage();
+      tracking.trackEvent("first-install");
+    }
   });
 }
