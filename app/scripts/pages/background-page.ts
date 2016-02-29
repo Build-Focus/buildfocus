@@ -47,7 +47,7 @@ function setupBreaks(notificationService: NotificationService, pomodoroService: 
   pomodoroService.onBreakEnd(notificationService.showBreakNotification);
 }
 
-function setupIdleHandling(notificationService: NotificationService, pomodoroService: PomodoroService) {
+function setupIdleHandling(pomodoroService: PomodoroService) {
   // You're Idle if you lock your machine, or touch nothing for idleTimeout millis (default 90 seconds)
   var idleMonitor = new IdleMonitor();
   idleMonitor.onIdle(() => pomodoroService.pause());
@@ -74,7 +74,7 @@ export = function setupBackgroundPage() {
 
   setupPomodoroWorkflow(notificationService, pomodoroService);
   setupBreaks(notificationService, pomodoroService);
-  setupIdleHandling(notificationService, pomodoroService);
+  setupIdleHandling(pomodoroService);
   setupFocusButton(pomodoroService);
 
   notificationService.onShowResult(showMainPage);
