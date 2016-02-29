@@ -225,9 +225,11 @@ module.exports = function (grunt) {
     // Empties folders to start fresh
     clean: {
       all: {
+        options: {
+          force: true // Bug in Node 5.7.0 requires this: https://github.com/gruntjs/grunt-contrib-clean/issues/85
+        },
         files: [{
           dot: true,
-          force: true, // Bug in Node 5.7.0 requires this: https://github.com/gruntjs/grunt-contrib-clean/issues/85
           src: [
             'build/*',
             '!build/.git*',
