@@ -48,7 +48,7 @@ function setupBreaks(notificationService: NotificationService, pomodoroService: 
 }
 
 function setupIdleHandling(notificationService: NotificationService, pomodoroService: PomodoroService) {
-  // You're Idle if you lock your machine, or touch nothing for idleTimeout millis (default 30 seconds)
+  // You're Idle if you lock your machine, or touch nothing for idleTimeout millis (default 90 seconds)
   var idleMonitor = new IdleMonitor();
   idleMonitor.onIdle(() => pomodoroService.pause());
   idleMonitor.onActive(() => pomodoroService.resume());

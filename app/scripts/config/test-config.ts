@@ -5,7 +5,7 @@ const testConfig: ApplicationConfig = {
   breakDuration: 1000 * 60 * 5,
   timerFrequency: 1000,
 
-  idleTimeout: 1000 * 30,
+  idleTimeout: 1000 * 90,
   goneTimeout: 1000 * 60 * 15,
 
   rollbarConfig: {
