@@ -1,6 +1,7 @@
 import rollbar = require("rollbar");
 import config = require("config");
 import subscribableEvent = require("subscribable-event");
+import tracking = require("tracking/tracking");
 
 class IdleMonitor {
   onIdle = subscribableEvent();
@@ -12,8 +13,10 @@ class IdleMonitor {
     chrome.idle.onStateChanged.addListener((newState: string) => {
       if (newState === "lock" || newState === "idle") {
         this.onIdle.trigger();
+        tracking.trackEvent("idle.idle", {newState: newState});
       } else if (newState === "active") {
         this.onActive.trigger();
+        tracking.trackEvent("idle.active");
       } else {
         rollbar.warn("Unexpected idle state change", {newState: newState});
       }
