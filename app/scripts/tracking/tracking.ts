@@ -48,13 +48,13 @@ function setUpCalq() {
     }
   })(document, (<any>window).calq || []);
 
-  calq.init("752a1760a1724a0f4fbf8de0c70b0caf");
+  calq.init(config.trackingConfig.calqWriteKey);
 }
 
 function setUpKeen(): KeenClient {
   return new Keen({
-    projectId: config.trackingConfig.projectId,
-    writeKey: config.trackingConfig.writeKey
+    projectId: config.trackingConfig.keenProjectId,
+    writeKey: config.trackingConfig.keenWriteKey
   });
 }
 

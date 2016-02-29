@@ -61,8 +61,9 @@ interface ApplicationConfig {
   rollbarConfig: Object;
   trackingConfig: {
     enabled: boolean,
-    projectId: string,
-    writeKey: string,
+    keenProjectId: string,
+    keenWriteKey: string,
+    calqWriteKey: string,
     extraInfo: {}
   };
 

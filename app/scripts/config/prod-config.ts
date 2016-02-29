@@ -20,8 +20,9 @@ const prodConfig: ApplicationConfig = {
 
   trackingConfig: {
     enabled: true,
-    projectId: "56bcbc2a46f9a7051719100f",
-    writeKey: "5c65a837bd9ee3ad849357d93391485b464933a63fb6c233414495d3d3ce582535cb2f6e278a09310e0d8dced2fe6fb91cb59afbb1ee9fd1b3c765dcf7281c8f5fdf5ebe029f2fff784129877ad950b81d232fec9d3ccc8f95a457745e6cb20a",
+    keenProjectId: "56bcbc2a46f9a7051719100f",
+    keenWriteKey: "5c65a837bd9ee3ad849357d93391485b464933a63fb6c233414495d3d3ce582535cb2f6e278a09310e0d8dced2fe6fb91cb59afbb1ee9fd1b3c765dcf7281c8f5fdf5ebe029f2fff784129877ad950b81d232fec9d3ccc8f95a457745e6cb20a",
+    calqWriteKey: "752a1760a1724a0f4fbf8de0c70b0caf",
     extraInfo: { prod: true }
   }
 };
