@@ -11,7 +11,7 @@ class IdleMonitor {
     chrome.idle.setDetectionInterval(config.idleTimeout / 1000);
 
     chrome.idle.onStateChanged.addListener((newState: string) => {
-      if (newState === "lock" || newState === "idle") {
+      if (newState === "locked" || newState === "idle") {
         this.onIdle.trigger();
         tracking.trackEvent("idle.idle", {newState: newState});
       } else if (newState === "active") {

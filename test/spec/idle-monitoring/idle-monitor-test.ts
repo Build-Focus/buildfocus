@@ -30,7 +30,7 @@ describe("Idle monitor", () => {
   });
 
   it("triggers onIdle when going locked", () => {
-    chromeStub.idle.onStateChanged.trigger("lock");
+    chromeStub.idle.onStateChanged.trigger("locked");
 
     expect(idleCallback.callCount).to.equal(1, "Should call idle callback when going idle");
     expect(activeCallback.callCount).to.equal(0, "Should not call active callback when going idle");
@@ -55,7 +55,7 @@ describe("Idle monitor", () => {
   it("repeatedly triggers callbacks on future activity", () => {
     chromeStub.idle.onStateChanged.trigger("idle");
     chromeStub.idle.onStateChanged.trigger("active");
-    chromeStub.idle.onStateChanged.trigger("lock");
+    chromeStub.idle.onStateChanged.trigger("locked");
     chromeStub.idle.onStateChanged.trigger("active");
     chromeStub.idle.onStateChanged.trigger("idle");
     chromeStub.idle.onStateChanged.trigger("active");
