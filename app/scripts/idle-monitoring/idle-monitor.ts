@@ -13,10 +13,8 @@ class IdleMonitor {
     chrome.idle.onStateChanged.addListener((newState: string) => {
       if (newState === "locked" || newState === "idle") {
         this.onIdle.trigger();
-        tracking.trackEvent("idle.idle", {newState: newState});
       } else if (newState === "active") {
         this.onActive.trigger();
-        tracking.trackEvent("idle.active");
       } else {
         rollbar.warn("Unexpected idle state change", {newState: newState});
       }

@@ -98,11 +98,17 @@ class PomodoroService {
   }
 
   pause() {
-    if (this.isActive()) this.pomodoroTimer.pause();
+    if (this.isActive()) {
+      this.pomodoroTimer.pause();
+      tracking.trackEvent("pomodoro.paused");
+    }
   }
 
   resume() {
-    if (this.isPaused()) this.pomodoroTimer.resume();
+    if (this.isPaused()) {
+      this.pomodoroTimer.resume();
+      tracking.trackEvent("pomodoro.resumed");
+    }
   }
 
   takeABreak = () => {
