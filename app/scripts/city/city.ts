@@ -42,6 +42,8 @@ class City {
     ko.track(this);
   }
 
+  name = "Cityville";
+
   getCells(): Cell[] {
     return this.map.getCells();
   }
