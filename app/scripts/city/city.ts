@@ -19,6 +19,8 @@ import BasicHouse = require('city/buildings/basic-house');
 import RoadPart = require('city/roads/road-part');
 import RoadPlanner = require('city/roads/road-planner');
 
+import generateCityName = require("city/generate-city-name");
+
 import change = require('city/change');
 import serialization = require('city/serialization/serialization-format');
 
@@ -42,7 +44,7 @@ class City {
     ko.track(this);
   }
 
-  name = "Cityville";
+  name = generateCityName();
 
   getCells(): Cell[] {
     return this.map.getCells();
