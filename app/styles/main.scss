@@ -156,6 +156,26 @@ nav {
   }
 }
 
+.feedback {
+  @extend .pure-button;
+
+  position: absolute;
+  left: 0;
+  bottom: 285px;
+
+  padding: 5px 15px;
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+
+  color: #fff;
+  background-color: #006acc;
+
+  font-size: 20pt;
+
+  transform: rotate(90deg);
+  transform-origin: bottom left;
+}
+
 .tour-intro-tour li {
   padding: 5px 0;
 }
