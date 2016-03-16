@@ -5,8 +5,14 @@ declare module "raw-knockout" {
   export = knockout;
 }
 
-define(["lodash", "raw-knockout", "knockout-es5",
-        "ko-bindings/render-binding", "ko-bindings/duration-binding", "ko-bindings/content-editable-binding"], function (_, ko) {
+define([
+  "lodash",
+  "raw-knockout",
+  "knockout-es5",
+  "ko-extensions/render-binding",
+  "ko-extensions/duration-binding",
+  "ko-extensions/content-editable-binding"
+], function (_, ko) {
   ko.observable.fn.subscribeAndUpdate = function (target) {
     target(this());
     return this.subscribe(target);
