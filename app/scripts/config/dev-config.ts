@@ -1,7 +1,7 @@
 'use strict';
 
 const devConfig: ApplicationConfig = {
-  pomodoroDuration: 1000 * 45,
+  pomodoroDuration: 1000 * 10,
   breakDuration: 1000 * 5,
   timerFrequency: 100,
 
