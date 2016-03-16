@@ -9,6 +9,7 @@ import ProxyPomodoroService = require('pomodoro/proxy-pomodoro-service');
 import CityRenderer = require('city/rendering/city-renderer');
 import TabsMonitor = require('url-monitoring/tabs-monitor');
 import SettingsRepository = require("repositories/settings-repository");
+import generateCityName = require("city/generate-city-name");
 
 import BadTabsWarningViewModel = require('components/bad-tabs-warning/bad-tabs-warning-viewmodel');
 
@@ -44,10 +45,15 @@ class MainPageViewModel {
   failingUrl = getQueryParameter("failingUrl");
   failingDomain = ko.pureComputed(() => this.failingUrl ? getDomainFromUrl(this.failingUrl) : null);
 
-  private cityName = ko.pureComputed({
+  cityName = ko.pureComputed({
     read: () => this.score.city.name,
     write: (value) => this.score.city.name = value
   });
+
+  randomizeCityName() {
+    this.cityName(generateCityName());
+    tracking.trackEvent("main-page.randomize-city-name", { name: this.cityName() });
+  };
 
   private breakActive = this.pomodoroService.isBreakActive;
   private pomodoroActive = this.pomodoroService.isActive;

@@ -9,9 +9,10 @@
   justify-content: space-between;
 
   .city-name {
+    position: relative;
     z-index: 1;
 
-    padding: 5px 40px 12px;
+    padding: 7px 40px 10px;
     box-sizing: border-box;
 
     font-size: 36pt;
@@ -22,7 +23,41 @@
     border-width: 0 0 3px 0;
     border-image: linear-gradient(to right, transparent, rgba(255,255,255,0.5) 10%, rgba(255,255,255,0.5) 90%, transparent);
     border-image-slice: 1;
-    outline: none;
+
+    [contenteditable] {
+      display: inline-block;
+      outline: none;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    &:hover .randomizeWrapper {
+      display: inline-block;
+    }
+
+    .randomizeWrapper {
+      display: none;
+
+      font-size: 0;
+      padding: 0 20px 20px 20px;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+
+      button.randomize {
+        @extend .pure-button;
+        background-color: #408ad0;
+
+        padding: 3px 6px;
+        font-size: 16px;
+
+        &:active > * {
+          transition: all 0.2s ease-out;
+          transform: rotateZ(180deg);
+        }
+      }
+    }
   }
 
   .city {

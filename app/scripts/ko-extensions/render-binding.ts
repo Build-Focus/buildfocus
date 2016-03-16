@@ -34,6 +34,9 @@ function updateStageToFit(stage: easeljs.Stage, canvas: HTMLCanvasElement) {
 }
 
 function resizeToFit(canvas: HTMLCanvasElement, parent: HTMLElement) {
+  // Reset our height first, so that any effect we're having on the size of the page is removed.
+  canvas.width = 0;
+  canvas.height = 0;
   canvas.width = parent.clientWidth;
   canvas.height = parent.clientHeight;
 }

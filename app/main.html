@@ -28,7 +28,14 @@
     </nav>
 
     <section class="city-and-buttons">
-      <div class="city-name" data-bind="contentEditable: cityName"></div>
+      <div class="city-name">
+        <span data-bind="contentEditable: cityName"></span>
+        <div class="randomizeWrapper">
+          <button class="randomize" data-bind="click: randomizeCityName">
+            <i class="fa fa-refresh"></i>
+          </button>
+        </div>
+      </div>
 
       <h2 class="failed-tag" data-bind="if: failed">FAILED</h2>
 
