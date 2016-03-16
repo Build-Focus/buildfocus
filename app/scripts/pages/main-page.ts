@@ -44,7 +44,10 @@ class MainPageViewModel {
   failingUrl = getQueryParameter("failingUrl");
   failingDomain = ko.pureComputed(() => this.failingUrl ? getDomainFromUrl(this.failingUrl) : null);
 
-  private cityName = this.score.city.name;
+  private cityName = ko.pureComputed({
+    read: () => this.score.city.name,
+    write: (value) => this.score.city.name = value
+  });
 
   private breakActive = this.pomodoroService.isBreakActive;
   private pomodoroActive = this.pomodoroService.isActive;

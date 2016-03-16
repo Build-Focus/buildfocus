@@ -37,14 +37,16 @@ class City {
   private roadPlanner: RoadPlanner;
 
   constructor() {
+    this.name = generateCityName();
     this.cellFactory = (coord: Coord) => new Cell(coord, CellType.Grass);
     this.map = new Map(this.cellFactory);
     this.roadPlanner = RoadPlanner.GridRoadPlanner;
 
     ko.track(this);
+    ko.getObservable(this, 'name').subscribe(() => this.onChanged.trigger());
   }
 
-  name = generateCityName();
+  name: string;
 
   getCells(): Cell[] {
     return this.map.getCells();
@@ -129,13 +131,15 @@ class City {
   updateFromJSON(data: serialization.CityData): void {
     this.map = Map.deserialize(data.map, this.cellFactory);
     this.lastChange = change.Change.deserialize(data.lastChange);
+    this.name = data.name;
   }
 
   toJSON(): serialization.CityData {
     return {
       map: this.map.serialize(),
       version: serialization.version,
-      lastChange: this.lastChange.serialize()
+      lastChange: this.lastChange.serialize(),
+      name: this.name
     };
   }
 }

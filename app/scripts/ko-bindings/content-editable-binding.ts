@@ -5,7 +5,9 @@ import keyPolyfill = require("keyboardevent-key-polyfill");
 keyPolyfill.polyfill();
 
 ko.bindingHandlers['contentEditable'] = {
-  init: function (element: HTMLElement, valueAccessor: () => string) {
+  init: function (element: HTMLElement, valueAccessor: () => KnockoutObservable<string>) {
+    var observableValue = valueAccessor();
+
     function deselectElement() {
       if (element.contains(<HTMLElement> document.activeElement)) {
         element.blur();
@@ -22,12 +24,19 @@ ko.bindingHandlers['contentEditable'] = {
       }
     });
 
+    element.addEventListener("keyup", function () {
+      observableValue(element.textContent);
+    });
+
     window.addEventListener("click", (e) => {
       if (!element.contains(<HTMLElement> e.target)) {
         deselectElement();
       }
     });
 
-    element.setAttribute("contentEditable", valueAccessor())
+    element.setAttribute("contentEditable", "true");
+  },
+  update: function (element: HTMLElement, valueAccessor: () => string|KnockoutObservable<string>) {
+    element.textContent = ko.unwrap(valueAccessor());
   }
 };

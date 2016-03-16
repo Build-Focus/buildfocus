@@ -1,12 +1,10 @@
 'use strict';
 
-import serialization = require("app/scripts/city/serialization/serialization-format");
+import currentFormat = require("app/scripts/city/serialization/serialization-format");
 import preversionSerialization = require("app/scripts/city/serialization/preversion-serialization-format");
 
 import City = require("app/scripts/city/city");
 import migrateCityData = require('app/scripts/city/serialization/migrate-city-data');
-
-const newestVersion = 2;
 
 describe("Migration", () => {
   function supportsVersion<T>(version: any, data: T, specificTests?: (data: T) => void) {
@@ -18,12 +16,12 @@ describe("Migration", () => {
 
       it("gets all the way to the newest version", () => {
         var migratedData = migrateCityData(data);
-        expect(migratedData.version).to.equal(newestVersion);
+        expect(migratedData.version).to.equal(currentFormat.version);
       });
 
       it("gets all the way to the newest version", () => {
         var migratedData = migrateCityData(data);
-        expect(migratedData.version).to.equal(newestVersion);
+        expect(migratedData.version).to.equal(currentFormat.version);
       });
 
       it("run repeatedly returns the exact same object", () => {
@@ -78,6 +76,25 @@ describe("Migration", () => {
     it("adds a null lastChange", () => {
       var migratedData = migrateCityData(data);
       expect(migratedData.lastChange).to.be.null;
+    });
+  });
+
+  supportsVersion("v2", {
+    map: {
+      cells: [
+        {coord: {x: -1, y: -1}, cellType: 1}, {coord: {x: 0, y: -1}, cellType: 1}, {coord: {x: 1, y: -1}, cellType: 1}, {coord: {x: 2, y: -1}, cellType: 1},
+        {coord: {x: -1, y:  0}, cellType: 1}, {coord: {x: 0, y:  0}, cellType: 1}, {coord: {x: 1, y:  0}, cellType: 1}, {coord: {x: 2, y:  0}, cellType: 1},
+        {coord: {x: -1, y:  1}, cellType: 1}, {coord: {x: 0, y:  1}, cellType: 1}, {coord: {x: 1, y:  1}, cellType: 1}, {coord: {x: 2, y:  1}, cellType: 1}
+      ],
+      buildings: [{coords: [{x: 1, y: 0}], buildingType: 1, direction: 1}],
+      roads: [{start: {x: 0, y: 0}, direction: 0}]
+    },
+    lastChange: null,
+    version: 2
+  }, (data) => {
+    it("adds a random name", () => {
+      var migratedData = migrateCityData(data);
+      expect(migratedData.name).to.have.length.above(1);
     });
   });
 });
