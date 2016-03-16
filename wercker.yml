@@ -5,6 +5,7 @@ build:
             name: Print env (for debugging)
             code: env
         - npm-install
+            use-cache: false
         - script:
             name: Install bower
             code: npm install -g bower
