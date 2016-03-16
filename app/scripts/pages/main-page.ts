@@ -47,7 +47,10 @@ class MainPageViewModel {
 
   cityName = ko.pureComputed({
     read: () => this.score.city.name,
-    write: (value) => this.score.city.name = value
+    write: (value) => {
+      this.score.city.name = value;
+      tracking.trackEvent("main-page.update-city-name", { name: value });
+    }
   });
 
   randomizeCityName() {

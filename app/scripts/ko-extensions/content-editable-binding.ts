@@ -24,8 +24,14 @@ ko.bindingHandlers['contentEditable'] = {
       }
     });
 
+    // Send changes through to the backing observable, but only after no changes have happened for 500ms.
+    var nextObservableUpdate: number = null;
     element.addEventListener("keyup", function () {
-      observableValue(element.textContent);
+      if (nextObservableUpdate) clearTimeout(nextObservableUpdate);
+      nextObservableUpdate = setTimeout(() => {
+        observableValue(element.textContent);
+        clearTimeout(nextObservableUpdate);
+      }, 500);
     });
 
     window.addEventListener("click", (e) => {
