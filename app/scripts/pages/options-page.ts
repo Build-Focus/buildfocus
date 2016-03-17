@@ -6,9 +6,21 @@ import score = require('score');
 import SettingsRepository = require('repositories/settings-repository');
 import Domain = require("url-monitoring/domain");
 import runTourIfRequired = require('pages/tour');
+
 import BadTabsWarningAction = require('components/bad-tabs-warning/bad-tabs-warning-action');
+import AutopauseMode = require("idle-monitoring/autopause-mode");
 
 import tracking = require('tracking/tracking');
+
+function enumSelection<T>(enumToUse: T, idToStringMap: {[id: number]: string}): {id: number, name: string}[] {
+  return Object.keys(enumToUse)
+    .map(actionKey => parseInt(actionKey, 10))
+    .filter(actionKey => !isNaN(actionKey))
+    .map(actionKey => { return {
+      id: actionKey,
+      name: idToStringMap[actionKey]
+    }});
+}
 
 // TODO: Once this grows bigger, refactor sites list and other settings into standalone components.
 class OptionsPageViewModel {
@@ -35,19 +47,19 @@ class OptionsPageViewModel {
 
   badTabsWarningAction = this.settings.badTabsWarningAction;
 
-  private badTabsWarningActionNames = {
+  allBadTabsWarningActions = enumSelection(BadTabsWarningAction, {
     [BadTabsWarningAction.Prompt]: "Ask you",
     [BadTabsWarningAction.CloseThem]: "Close them",
     [BadTabsWarningAction.LeaveThem]: "Leave them",
-  };
+  });
 
-  allBadTabsWarningActions = Object.keys(BadTabsWarningAction)
-     .map(actionKey => parseInt(actionKey, 10))
-     .filter(actionKey => !isNaN(actionKey))
-     .map(actionKey => { return {
-       id: actionKey,
-       name: this.badTabsWarningActionNames[actionKey]
-     }});
+  autopauseMode = this.settings.autopauseMode;
+
+  autopauseModes = enumSelection(AutopauseMode, {
+    [AutopauseMode.PauseOnIdleAndLock]: "Lock or idle",
+    [AutopauseMode.PauseOnLock]: "Lock",
+    [AutopauseMode.NeverPause]: "Never",
+  });
 
   onPageLoaded() {
     runTourIfRequired();

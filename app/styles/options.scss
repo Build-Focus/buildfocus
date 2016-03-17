@@ -1,15 +1,15 @@
 main.options {
-  padding: 76px;
+  padding: 140px 76px 76px 76px;
   box-sizing: border-box;
 
   h1, section {
     margin: 0 auto;
     text-align: left;
-    width: 600px;
   }
 
   h1 {
     font-size: 38pt;
+    width: 820px;
   }
 
   section {
@@ -22,84 +22,86 @@ main.options {
       padding: 0;
       margin: 0 0 10px 0;
     }
-  }
 
-  .bad-tabs-warning-action {
     p {
       font-family: 'Cabin', arial, sans-serif;
       width: 400px;
       font-size: 11pt;
     }
+  }
 
-    select {
-      font-size: 15pt;
-      padding: 3px;
+  .toggles, .domain-patterns {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .toggles {
+    margin-left: 30px;
+  }
+
+  .options-toggle {
+    display: flex;
+    width: 400px;
+    position: relative;
+    background-color: #000;
+
+    border-radius: 3px;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.2);
+
+    user-select: none;
+    -webkit-user-select: none;
+
+    input[type=radio] {
+      position: absolute;
+      left: -5000px;
+
+      &:checked:nth-of-type(1) ~ .toggle-highlight {
+        left: 0;
+      }
+
+      &:checked:nth-of-type(2) ~ .toggle-highlight {
+        left: 33%;
+      }
+
+      &:checked:nth-of-type(3) ~ .toggle-highlight {
+        left: 66%;
+      }
+
+      &:checked + label {
+        color: #000;
+      }
     }
 
-    .bad-tabs-warning-options {
-      display: flex;
-      width: 400px;
-      position: relative;
-      background-color: #000;
+    .toggle-highlight {
+      width: 34%;
+      padding: 0;
+      margin: 0;
 
-      border-radius: 3px;
-      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: all 0.2s ease-in;
 
-      user-select: none;
-      -webkit-user-select: none;
+      position: absolute;
+      top: -3px;
+      bottom: -3px;
+      border-radius: 2px;
 
-      input[type=radio] {
-        position: absolute;
-        left: -5000px;
+      background-color: #FBB840;
+      background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
+      border: 1px solid #333;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+    }
 
-        &:checked:nth-of-type(1) ~ .toggle-highlight {
-          left: 0;
-        }
+    label {
+      flex-grow: 1;
+      flex-basis: 0;
+      z-index: 1;
+      cursor: pointer;
 
-        &:checked:nth-of-type(2) ~ .toggle-highlight {
-          left: 33%;
-        }
+      color: #ddd;
+      font-size: 14pt;
+      padding: 8px;
+      text-align: center;
 
-        &:checked:nth-of-type(3) ~ .toggle-highlight {
-          left: 66%;
-        }
-
-        &:checked + label {
-          color: #000;
-        }
-      }
-
-      .toggle-highlight {
-        width: 34%;
-        padding: 0;
-        margin: 0;
-
-        transition: all 0.2s ease-in;
-
-        position: absolute;
-        top: -3px;
-        bottom: -3px;
-        border-radius: 2px;
-
-        background-color: #FBB840;
-        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
-        border: 1px solid #333;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.45);
-      }
-
-      label {
-        flex-grow: 1;
-        flex-basis: 0;
-        z-index: 1;
-        cursor: pointer;
-
-        color: #ddd;
-        font-size: 14pt;
-        padding: 8px;
-        text-align: center;
-
-        transition: all 0.18s ease-in;
-      }
+      transition: all 0.18s ease-in;
     }
   }
 

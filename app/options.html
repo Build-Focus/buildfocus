@@ -24,26 +24,6 @@
 
       <h1>Settings</h1>
 
-      <section class="bad-tabs-warning-action">
-        <h3>Default distracting tab action:</h3>
-        <p>
-          If you start focusing, and you've already got distracting tabs open in the
-          background, what should happen?
-        </p>
-        <div class="bad-tabs-warning-options">
-          <!-- ko foreach: allBadTabsWarningActions -->
-          <input name="bad-tabs-warning-options"
-                 type="radio"
-                 data-bind="attr: { id: 'badTabAction' + id },
-                            value: id,
-                            checked: $parent.badTabsWarningAction" />
-          <label data-bind="attr: { for: 'badTabAction' + id },
-                            text: name"></label>
-          <!-- /ko -->
-          <div class="toggle-highlight"></div>
-        </div>
-      </section>
-
       <section class="domain-patterns">
         <h3>Distracting sites:</h3>
 
@@ -65,6 +45,48 @@
           </li>
         </ul>
       </section>
+
+      <div class="toggles">
+        <section class="bad-tabs-warning-action">
+          <h3>Default distracting tab action:</h3>
+          <p>
+            If you start focusing, and you've already got distracting tabs open in the
+            background, what should happen?
+          </p>
+          <div class="options-toggle">
+            <!-- ko foreach: allBadTabsWarningActions -->
+            <input name="bad-tabs-warning-options"
+                   type="radio"
+                   data-bind="attr: { id: 'badTabAction' + id },
+                              value: id,
+                              checked: $parent.badTabsWarningAction" />
+            <label data-bind="attr: { for: 'badTabAction' + id },
+                              text: name"></label>
+            <!-- /ko -->
+            <div class="toggle-highlight"></div>
+          </div>
+        </section>
+
+        <section class="pause-mode">
+          <h3>Autopausing:</h3>
+          <p>
+            When should your focus session be paused? When your computer is idle for a while,
+            when you lock you computer, or never ever?
+          </p>
+          <div class="options-toggle">
+            <!-- ko foreach: autopauseModes -->
+            <input name="pause-mode-options"
+                   type="radio"
+                   data-bind="attr: { id: 'pauseMode' + id },
+                              value: id,
+                              checked: $parent.autopauseMode" />
+            <label data-bind="attr: { for: 'pauseMode' + id },
+                              text: name"></label>
+            <!-- /ko -->
+            <div class="toggle-highlight"></div>
+          </div>
+        </section>
+      </div>
     </main>
 
     <script src="bower_components/requirejs/require.js"></script>
