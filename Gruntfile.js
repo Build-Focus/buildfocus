@@ -352,8 +352,7 @@ module.exports = function (grunt) {
         "buildfocus": {
           "appID": "apckocnmlmkhhigodidbpiakommhmiik",
           "zip": "package/", // Uploads the most recent zip in this folder
-          "publish": true,
-          "publishTarget": "trustedTesters"
+          "publish": true
         }
       }
     }
