@@ -5,6 +5,7 @@ import _ = require('lodash');
 import synchronizedObservable = require('observables/synchronized-observable');
 import Domain = require('url-monitoring/domain');
 import BadTabsWarningAction = require('components/bad-tabs-warning/bad-tabs-warning-action');
+import AutopauseMode = require("idle-monitoring/autopause-mode");
 
 class SettingsRepository {
   private badDomainPatterns = synchronizedObservable("badDomainPatterns", [], "sync");
@@ -24,6 +25,8 @@ class SettingsRepository {
   });
 
   public badTabsWarningAction = synchronizedObservable("badTabsWarningAction", BadTabsWarningAction.Prompt, "sync");
+
+  public autopauseMode = synchronizedObservable("autopauseMode", AutopauseMode.PauseOnLock, "sync");
 }
 
 export = SettingsRepository;

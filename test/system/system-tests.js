@@ -59,7 +59,7 @@ describe("System tests - ", function () {
   });
 
   if (!process.env.WERCKER) {
-    it("Can pause a pomodoro", ()  => {
+    xit("Can pause a pomodoro", ()  => {
       // This test is especially weird: since there's no user, we start countnig
       // 'idle' from the very start. Works for now though, and it's close enough.
       // Needs to stay near the top of the test list, or this might get unstable.
