@@ -4,7 +4,10 @@ import ko = require("knockout");
 import _ = require("lodash");
 
 import tracking = require('tracking/tracking');
+import getUserIdentity = require("tracking/get-user-identity");
+
 import storeOnce = require('chrome-utilities/store-once');
+import reportChromeErrors = require('chrome-utilities/report-chrome-errors')
 
 import Score = require("score");
 import SettingsRepository = require("repositories/settings-repository");
@@ -84,5 +87,10 @@ export = function setupBackgroundPage() {
       showMainPage();
       tracking.trackEvent("first-install");
     }
+  });
+
+  getUserIdentity().then((userIdentity) => {
+    chrome.runtime.setUninstallURL(`https://buildfocus.typeform.com/to/UE6H0L?id=${userIdentity.userId}`,
+      () => reportChromeErrors("Error setting uninstall URL"));
   });
 }

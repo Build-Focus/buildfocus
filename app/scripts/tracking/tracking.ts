@@ -5,6 +5,8 @@ import config = require('config');
 import synchronizedObservable = require('observables/synchronized-observable');
 import storeOnceTrackingData = require("tracking/store-once-tracking-data");
 
+import getUserIdentity = require("tracking/get-user-identity");
+
 import Keen = require('keen');
 
 function setUpCalq() {
@@ -55,32 +57,6 @@ function setUpKeen(): KeenClient {
   return new Keen({
     projectId: config.trackingConfig.keenProjectId,
     writeKey: config.trackingConfig.keenWriteKey
-  });
-}
-
-interface UserIdentity {
-  machineId: string;
-  userId: string;
-  email: string;
-}
-
-function getUserIdentity(): Promise<UserIdentity> {
-  return Promise.all<string|chrome.identity.UserInfo>([
-    storeOnceTrackingData.getMachineId(),
-    storeOnceTrackingData.getUserId(),
-    new Promise<chrome.identity.UserInfo>((resolve, reject) => {
-      chrome.identity.getProfileUserInfo((userInfo) => resolve(userInfo));
-    })
-  ]).then((rawData) => {
-    var machineId = <string> rawData[0];
-    var userId = <string> rawData[1];
-    var chromeUserInfo = <chrome.identity.UserInfo> rawData[2];
-
-    return {
-      machineId: machineId,
-      userId: chromeUserInfo.id || userId,
-      email: chromeUserInfo.email
-    };
   });
 }
 
