@@ -151,7 +151,8 @@ if (config.trackingConfig.enabled) {
         calq.action.track(eventName, eventData);
         keenClient.addEvent(eventName, eventData, (err) => {
           if (err) {
-            rollbar.error("Tracking error", {err: err, name: eventName, data: eventData});
+            // TODO: Re-enable as an error once Keen is back
+            rollbar.info("Tracking error", {err: err, name: eventName, data: eventData});
           }
 
           if (timerId) {
