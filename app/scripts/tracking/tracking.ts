@@ -7,8 +7,6 @@ import storeOnceTrackingData = require("tracking/store-once-tracking-data");
 
 import getUserIdentity = require("tracking/get-user-identity");
 
-import Keen = require('keen');
-
 function setUpCalq() {
   (function(e, t) {
     if (!t.__SV) {
@@ -53,37 +51,11 @@ function setUpCalq() {
   calq.init(config.trackingConfig.calqWriteKey);
 }
 
-function setUpKeen(): KeenClient {
-  return new Keen({
-    projectId: config.trackingConfig.keenProjectId,
-    writeKey: config.trackingConfig.keenWriteKey
-  });
-}
-
-function identifyCurrentUser(keen: KeenClient) {
+function identifyCurrentUser() {
   return getUserIdentity().then((userIdentity) => {
     calq.user.identify(userIdentity.userId);
     if (userIdentity.email) calq.user.profile({ "$email": userIdentity.email });
     calq.action.setGlobalProperty(config.trackingConfig.extraInfo);
-
-    keen.setGlobalProperties((eventCollectionName) => {
-      return {
-        "email": userIdentity.email || "UNKNOWN",
-        "user_id": userIdentity.userId,
-        "machine_id": userIdentity.machineId,
-        "extra_info": config.trackingConfig.extraInfo,
-
-        "user_agent": "${keen.user_agent}",
-        "ip_address": "${keen.ip}",
-
-        "keen": {
-          "addons": [
-            { "name": "keen:ua_parser", "input": { "ua_string": "user_agent" }, "output": "parsed_user_agent"},
-            { "name": "keen:ip_to_geo", "input": { "ip": "ip_address" }, "output": "ip_geo_info"}
-          ]
-        }
-      };
-    });
   });
 }
 
@@ -114,33 +86,17 @@ var tracking: Tracking;
 
 if (config.trackingConfig.enabled) {
   setUpCalq();
-  var keenClient = setUpKeen();
 
   tracking = {
     trackEvent: function (eventName:string, eventData?:{ [key: string]: any }): Promise<void> {
       return new Promise<void>(function (resolve, reject) {
-        var timerId = setTimeout(() => {
-          timerId = null;
-          resolve();
-        }, 500);
-
+        setTimeout(resolve, 500);
         calq.action.track(eventName, eventData);
-        keenClient.addEvent(eventName, eventData, (err) => {
-          if (err) {
-            // TODO: Re-enable as an error once Keen is back
-            rollbar.info("Tracking error", {err: err, name: eventName, data: eventData});
-          }
-
-          if (timerId) {
-            clearTimeout(timerId);
-            resolve();
-          }
-        });
       });
     }
   };
 
-  identifyCurrentUser(keenClient).then(trackExtensionLoad).then(trackInstallsAndUpdates);
+  identifyCurrentUser().then(trackExtensionLoad).then(trackInstallsAndUpdates);
 } else {
   tracking = { trackEvent: () => Promise.resolve<void>() };
 }

@@ -19,7 +19,6 @@ requirejs.config({
     "heap": "../bower_components/heap/lib/heap",
     "hopscotch": "../bower_components/hopscotch/dist/js/hopscotch",
     "moment": "../bower_components/moment/moment",
-    "keen": "../bower_components/keen-js/dist/keen-tracker",
     "keyboardevent-key-polyfill": "dependencies/keyboardevent-key-polyfill-1.0.1",
 
     "raw-knockout": "../bower_components/knockout/dist/knockout",
@@ -62,8 +61,6 @@ interface ApplicationConfig {
   rollbarConfig: Object;
   trackingConfig: {
     enabled: boolean,
-    keenProjectId: string,
-    keenWriteKey: string,
     calqWriteKey: string,
     extraInfo: {}
   };

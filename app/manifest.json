@@ -33,6 +33,6 @@
   "web_accessible_resources": [
     "main.html"
   ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google.com https://api.keen.io; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFBAOCAQ8AMIIBCgKCAQEAzGs5OrC25oia2USb73XOKQi3KmgeO+gCiw4V0d924qvwMgDKiZyiwk2fVjFolwq72I/6rVptoXJq/iS1iB2bWB+tr1Sm+NSrjD+ydmdkcwxS4MGXH5/wmmli7Jz0g11+iPX3BLvACdwpOKi4Mw1XZ1uJRUj6n2xecn0mvWrJX4nOrWn5F50QjQyXhHXbG7JJbgx92hUeSSI0BVv/KAIDBnEXjmJNba8Um01b5OkCr151s4Tgwp6NPNDtuut+4z61MsmAoUdEAmJqL339C/3TFzwxiqhuJk1PC5g8Q0YQ+eMmBvG2Yals63VF8FgxTXksr8DLZvU5IdUh7unRXuqdIwIDAQAB"
 }

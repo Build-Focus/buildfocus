@@ -13,8 +13,7 @@
     "knockout-es5": "~0.2.1",
     "heap": "~0.2.6",
     "hopscotch": "~0.2.5",
-    "moment": "~2.11.1",
-    "keen-js": "^3.3.0"
+    "moment": "~2.11.1"
   },
   "devDependencies": {
     "chai": "~1.8.0",
