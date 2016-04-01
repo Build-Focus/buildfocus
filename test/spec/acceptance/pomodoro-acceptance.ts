@@ -2,13 +2,11 @@
 
 import NotificationHelper = require("test/helpers/notification-test-helper");
 
-import serialization = require('app/scripts/city/serialization/serialization-format');
-import Buildings = require('app/scripts/city/buildings/buildings');
-import BuildingType = require('app/scripts/city/buildings/building-type');
-
-import PomodoroState = require("app/scripts/pomodoro/pomodoro-state");
-
-import AutopauseMode = require("app/scripts/idle-monitoring/autopause-mode");
+import {
+  currentCityData,
+  currentCityValue,
+  currentCitySize
+} from "test/helpers/saved-state-helper";
 
 import {
   resetTabHelper,
@@ -26,54 +24,12 @@ import {
   badgeTextColour,
 } from "test/helpers/badge-helper";
 
-var POMODORO_DURATION = 1000 * 60 * 25;
-var BREAK_DURATION = 1000 * 60 * 5;
+const POMODORO_DURATION = 1000 * 60 * 25;
+const BREAK_DURATION = 1000 * 60 * 5;
 
 var clockStub: Sinon.SinonFakeTimers;
 var notificationHelper = new NotificationHelper(() => clockStub);
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
-
-function getLastSavedValue(valueKey: string, storageType: string = "local"): any {
-  return _(chromeStub.storage[storageType].set.args).map(args => args[0][valueKey]).reject(_.isUndefined).last();
-}
-
-var getCityData = () => <serialization.CityData> getLastSavedValue("city-data");
-var getPomodoroTimeRemaining = () => <number> getLastSavedValue("pomodoro-service-time-remaining");
-var isPomodoroActive = () => getLastSavedValue("pomodoro-service-state") === PomodoroState.Active;
-var isPomodoroPaused = () => getLastSavedValue("pomodoro-service-state") === PomodoroState.Paused;
-var isBreakActive =    () => getLastSavedValue("pomodoro-service-state") === PomodoroState.Break;
-
-function getCityValue() {
-  var lastStoredCityData = getCityData();
-
-  var buildingPointsValue = {
-    [BuildingType.BasicHouse]: 1,
-    [BuildingType.NiceHouse]: 2,
-    [BuildingType.FancyHouse]: 5
-  };
-
-  if (lastStoredCityData) {
-    return _.sum(lastStoredCityData.map.buildings, (building: Buildings.Building) => {
-      return buildingPointsValue[building.buildingType]
-    });
-  } else {
-    return 0;
-  }
-}
-
-function getCitySize() {
-  var lastStoredCityData = getCityData();
-  if (lastStoredCityData) {
-    return lastStoredCityData.map.buildings.length;
-  } else {
-    return 0;
-  }
-}
-
-function givenPauseSetting(pauseMode: AutopauseMode) {
-  chromeStub.storage.onChanged.trigger({"autopauseMode": {"newValue": pauseMode}});
-  chromeStub.storage.sync.get.withArgs("autopauseMode").yields({ "autopauseMode": pauseMode });
-}
 
 function startPomodoro() {
   chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
@@ -86,15 +42,16 @@ describe('Acceptance: Pomodoros', () => {
   var initialCityValue: number;
 
   beforeEach(() => {
-    // Make sure any active pomodoros are definitely finished
-    chromeStub.idle.onStateChanged.trigger("active");
-    clockStub.tick(POMODORO_DURATION);
-    clockStub.reset();
-
     resetTabHelper();
     notificationHelper.resetNotificationSpies();
 
-    initialCityValue = getCityValue();
+    initialCityValue = currentCityValue();
+  });
+
+  afterEach(() => {
+    // Make sure any active pomodoros are definitely finished
+    clockStub.tick(POMODORO_DURATION);
+    clockStub.reset();
   });
 
   it("should open the pomodoro page if the button is clicked", () => {
@@ -107,7 +64,7 @@ describe('Acceptance: Pomodoros', () => {
     startPomodoro();
     clockStub.tick(POMODORO_DURATION);
 
-    var resultingCityValue = getCityValue();
+    var resultingCityValue = currentCityValue();
 
     expect(resultingCityValue).to.equal(initialCityValue + 1);
   });
@@ -116,12 +73,12 @@ describe('Acceptance: Pomodoros', () => {
     givenBadDomains("twitter.com");
     startPomodoro();
     clockStub.tick(POMODORO_DURATION);
-    var initialCitySize = getCitySize();
+    var initialCitySize = currentCitySize();
 
     startPomodoro();
     activateTab("http://twitter.com");
 
-    var resultingCitySize = getCitySize();
+    var resultingCitySize = currentCitySize();
     expect(resultingCitySize).to.equal(initialCitySize - 1);
   });
 
@@ -132,7 +89,7 @@ describe('Acceptance: Pomodoros', () => {
     startPomodoro();
     clockStub.tick(1);
 
-    var resultingCityValue = getCityValue();
+    var resultingCityValue = currentCityValue();
     expect(resultingCityValue).to.equal(initialCityValue + 1);
     clockStub.tick(POMODORO_DURATION);
     expect(resultingCityValue).to.equal(initialCityValue + 1);
@@ -364,176 +321,5 @@ describe('Acceptance: Pomodoros', () => {
     });
   });
 
-  describe("autopause", () => {
-    const TIME_REMAINING_BEFORE_IDLE = POMODORO_DURATION - 10000;
-    const FIFTEEN_MINUTES = 60 * 15 * 1000;
 
-    describe("when you go idle", () => {
-      beforeEach(() => {
-        givenPauseSetting(AutopauseMode.PauseOnIdleAndLock);
-        startPomodoro();
-
-        clockStub.tick(POMODORO_DURATION - TIME_REMAINING_BEFORE_IDLE);
-        chromeStub.idle.onStateChanged.trigger("idle");
-      });
-
-      it("should pause the timer", () => {
-        var timeRemainingOnPause = getPomodoroTimeRemaining();
-        clockStub.tick(10000);
-        expect(getPomodoroTimeRemaining()).to.equal(timeRemainingOnPause);
-      });
-
-      it("should mark the pomodoro as paused", () => {
-        expect(isPomodoroPaused()).to.equal(true, "Pomodoro should be paused");
-        expect(isPomodoroActive()).to.equal(false, "Pomodoro should not be active");
-        expect(isBreakActive()).to.equal(false, "Break should not be active");
-      });
-
-      describe("and then go active again less than 15 minutes later", () => {
-        beforeEach(() => {
-          clockStub.tick(FIFTEEN_MINUTES - 1);
-          chromeStub.idle.onStateChanged.trigger("active");
-        });
-
-        it("should resume the timer from where it was", () => {
-          expect(getPomodoroTimeRemaining()).to.equal(TIME_REMAINING_BEFORE_IDLE);
-          clockStub.tick(1000);
-          expect(getPomodoroTimeRemaining()).to.equal(TIME_REMAINING_BEFORE_IDLE - 1000);
-        });
-
-        it("should mark the pomodoro as active", () => {
-          expect(isPomodoroActive()).to.equal(true, "Pomodoro should be active");
-          expect(isPomodoroPaused()).to.equal(false, "Pomodoro should not be paused");
-          expect(isBreakActive()).to.equal(false, "Break should not be active");
-        });
-
-        it("should not do anything else later when 15 minutes has indeed passed", () => {
-          clockStub.tick(1000);
-
-          expect(getPomodoroTimeRemaining()).to.equal(TIME_REMAINING_BEFORE_IDLE - 1000);
-          expect(getCityValue()).to.equal(initialCityValue, "City should not have been affected");
-          expect(isPomodoroActive()).to.equal(true, "Pomodoro should be active");
-          expect(isPomodoroPaused()).to.equal(false, "Pomodoro should not be paused");
-          expect(isBreakActive()).to.equal(false, "Break should not be active");
-          expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0, "No notifications should be fired");
-        });
-      });
-
-      describe("and then don't go active within 15 minutes", () => {
-        beforeEach(() => clockStub.tick(FIFTEEN_MINUTES));
-
-        it("should reset the pomodoro", () => {
-          expect(isPomodoroActive()).to.equal(false, "Pomodoro not should be paused");
-          expect(isPomodoroPaused()).to.equal(false, "Pomodoro should not be active");
-          expect(isBreakActive()).to.equal(false, "Break should not be active");
-          expect(getPomodoroTimeRemaining()).to.equal(null, "Time remaining should be nulled");
-        });
-
-        it("should not touch your city", () => {
-          expect(getCityValue()).to.equal(initialCityValue, "City should not have been affected by 15 minute idling");
-        });
-
-        it("should not fire a notification", () => {
-          expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
-        });
-
-        describe("when the user becomes active again", () => {
-          beforeEach(() => chromeStub.idle.onStateChanged.trigger("active"));
-
-          it("should keep the pomodoro cancelled", () => {
-            expect(isPomodoroActive()).to.equal(false, "Pomodoro not should be paused");
-            expect(isPomodoroPaused()).to.equal(false, "Pomodoro should not be active");
-            expect(isBreakActive()).to.equal(false, "Break should not be active");
-            expect(getPomodoroTimeRemaining()).to.equal(null, "Time remaining should be nulled");
-          });
-        });
-      });
-    });
-
-    describe("if set to lock only", () => {
-      beforeEach(() => {
-        givenPauseSetting(AutopauseMode.PauseOnLock);
-        startPomodoro();
-      });
-
-      it("doesn't pause on 'idle'", () => {
-        chromeStub.idle.onStateChanged.trigger("idle");
-        clockStub.tick(10000);
-
-        expect(getPomodoroTimeRemaining()).to.equal(POMODORO_DURATION - 10000);
-        expect(isPomodoroPaused()).to.equal(false);
-        expect(isPomodoroActive()).to.equal(true);
-      });
-
-      it("doesn't eventually reset on 'idle'", () => {
-        chromeStub.idle.onStateChanged.trigger("idle");
-        clockStub.tick(FIFTEEN_MINUTES);
-
-        expect(getPomodoroTimeRemaining()).to.equal(POMODORO_DURATION - FIFTEEN_MINUTES);
-        expect(isPomodoroPaused()).to.equal(false);
-        expect(isPomodoroActive()).to.equal(true);
-      });
-
-      it("still pauses on lock", () => {
-        chromeStub.idle.onStateChanged.trigger("locked");
-        clockStub.tick(10000);
-
-        expect(getPomodoroTimeRemaining()).to.equal(POMODORO_DURATION);
-        expect(isPomodoroPaused()).to.equal(true);
-        expect(isPomodoroActive()).to.equal(false);
-      });
-
-      it("still eventually resets on lock", () => {
-        chromeStub.idle.onStateChanged.trigger("locked");
-        clockStub.tick(FIFTEEN_MINUTES);
-
-        expect(getPomodoroTimeRemaining()).to.equal(null);
-        expect(isPomodoroPaused()).to.equal(false);
-        expect(isPomodoroActive()).to.equal(false);
-      });
-    });
-
-    describe("if set to never pause", () => {
-      beforeEach(() => {
-        givenPauseSetting(AutopauseMode.NeverPause);
-        startPomodoro();
-      });
-
-      it("doesn't pause on 'idle'", () => {
-        chromeStub.idle.onStateChanged.trigger("idle");
-        clockStub.tick(10000);
-
-        expect(getPomodoroTimeRemaining()).to.equal(POMODORO_DURATION - 10000);
-        expect(isPomodoroPaused()).to.equal(false);
-        expect(isPomodoroActive()).to.equal(true);
-      });
-
-      it("doesn't eventually reset on 'idle'", () => {
-        chromeStub.idle.onStateChanged.trigger("idle");
-        clockStub.tick(FIFTEEN_MINUTES);
-
-        expect(getPomodoroTimeRemaining()).to.equal(POMODORO_DURATION - FIFTEEN_MINUTES);
-        expect(isPomodoroPaused()).to.equal(false);
-        expect(isPomodoroActive()).to.equal(true);
-      });
-
-      it("doesn't pause on lock", () => {
-        chromeStub.idle.onStateChanged.trigger("idle");
-        clockStub.tick(10000);
-
-        expect(getPomodoroTimeRemaining()).to.equal(POMODORO_DURATION - 10000);
-        expect(isPomodoroPaused()).to.equal(false);
-        expect(isPomodoroActive()).to.equal(true);
-      });
-
-      it("doesn't reset on lock", () => {
-        chromeStub.idle.onStateChanged.trigger("idle");
-        clockStub.tick(FIFTEEN_MINUTES);
-
-        expect(getPomodoroTimeRemaining()).to.equal(POMODORO_DURATION - FIFTEEN_MINUTES);
-        expect(isPomodoroPaused()).to.equal(false);
-        expect(isPomodoroActive()).to.equal(true);
-      });
-    });
-  });
 });
