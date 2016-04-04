@@ -18,8 +18,11 @@ requirejs.config({
     "createjs": "../bower_components/easeljs/lib/easeljs-0.8.2.combined",
     "heap": "../bower_components/heap/lib/heap",
     "hopscotch": "../bower_components/hopscotch/dist/js/hopscotch",
-    "moment": "../bower_components/moment/moment",
     "keyboardevent-key-polyfill": "dependencies/keyboardevent-key-polyfill-1.0.1",
+
+    "raw-moment": "../bower_components/moment/moment",
+    "moment-convenient-dates": "dependencies/moment-convenient-dates",
+    "moment": "lib-wrappers/moment",
 
     "raw-knockout": "../bower_components/knockout/dist/knockout",
     "knockout-es5": "../bower_components/knockout-es5/dist/knockout-es5",
@@ -37,6 +40,9 @@ requirejs.config({
     'knockout-es5': {
       'knockout': 'raw-knockout'
     },
+    'moment-convenient-dates': {
+      'moment': 'raw-moment'
+    }
   },
   shim: {
     createjs: { exports: 'createjs' },
