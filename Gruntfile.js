@@ -123,16 +123,14 @@ module.exports = function (grunt) {
 
     ts: {
       options: {
-        module: 'amd',
-        target: 'es5',
-        inlineSources: true,
         fast: 'never',
         failOnTypeErrors: true
       },
 
       all: {
         src: ['app/scripts/**/*.ts', 'test/**/*.ts', 'typings/**/*.d.ts'],
-        outDir: 'build'
+        outDir: 'build',
+        tsconfig: true
       }
     },
 
