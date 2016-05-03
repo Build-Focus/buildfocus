@@ -48,7 +48,8 @@ module.exports = function (grunt) {
         options: {
           livereload: '<%= connect.options.livereload %>',
           atBegin: true,
-          livereloadOnError: false
+          livereloadOnError: false,
+          interrupt: true
         }
       },
       content: {
@@ -132,15 +133,6 @@ module.exports = function (grunt) {
       all: {
         src: ['app/scripts/**/*.ts', 'test/**/*.ts', 'typings/**/*.d.ts'],
         outDir: 'build'
-      },
-
-      // TODO: Renable somehow?
-      fast: {
-        src: ['app/scripts/**/*.ts', 'typings/**/*.d.ts'],
-        outDir: 'build/scripts',
-        options: {
-          fast: 'watch'
-        }
       }
     },
 
