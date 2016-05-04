@@ -1,3 +1,7 @@
+import {
+  givenBadDomains
+} from "test/helpers/saved-state-helper";
+
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
 export function resetTabHelper() {
@@ -25,9 +29,3 @@ export function givenTabs(...urls: string[]) {
   }));
   chromeStub.tabs.onActivated.trigger();
 }
-
-export function givenBadDomains(...urlPatterns: string[]) {
-  chromeStub.storage.onChanged.trigger({"badDomainPatterns": {"newValue": urlPatterns}});
-  chromeStub.storage.sync.get.withArgs("badDomainPatterns").yields({ "badDomainPatterns": urlPatterns });
-}
-

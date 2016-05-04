@@ -5,14 +5,14 @@ import NotificationHelper = require("test/helpers/notification-test-helper");
 import {
   currentCityData,
   currentCityValue,
-  currentCitySize
+  currentCitySize,
+  givenBadDomains
 } from "test/helpers/saved-state-helper";
 
 import {
   resetTabHelper,
   activateTab,
-  closeTab,
-  givenBadDomains
+  closeTab
 } from "test/helpers/tab-helper";
 
 import {

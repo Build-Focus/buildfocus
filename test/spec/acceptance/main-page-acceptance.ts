@@ -10,9 +10,10 @@ import {
   resetTabHelper,
   activateTab,
   givenTabs,
-  closeTab,
-  givenBadDomains
+  closeTab
 } from "test/helpers/tab-helper";
+
+import { givenBadDomains } from "test/helpers/saved-state-helper";
 
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 var clockStub;
