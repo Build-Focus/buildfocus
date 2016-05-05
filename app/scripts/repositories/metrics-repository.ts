@@ -28,10 +28,10 @@ export enum PomodoroResult {
 export class MetricsRepository {
   private rawEvents = ko.pureComputed<PomodoroEvent[]>({
     read: function() {
-      return this().map((e) => <PomodoroEvent> _.merge(e, { date: moment(e.date) }))
+      return this().map((e) => <PomodoroEvent> _.merge(_.clone(e), { date: moment(e.date) }))
     },
     write: function(newEvents) {
-      this(newEvents.map((e) => _.merge(e, { date: e.date.toISOString() })));
+      this(newEvents.map((e) => _.merge(_.clone(e), { date: e.date.toISOString() })));
     }
   }, synchronizedObservable<RawPomodoroEvent[]>("raw-metrics-events", [], "local"));
 

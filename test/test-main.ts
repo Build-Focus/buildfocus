@@ -28,6 +28,9 @@ interface Window {
     }
   });
 
+  var acceptanceTests = tests.filter((t) => t.indexOf("/acceptance/") !== -1);
+  var unitTests = tests.filter((t) => t.indexOf("/acceptance") === -1);
+  
   requirejs.config({
     baseUrl: "/base/build/app/scripts",
 
@@ -41,11 +44,13 @@ interface Window {
 
     urlArgs: "ts=" + Date.now(),
 
-    deps: tests.concat(["test/helpers/mocha-setup"]),
-    callback: window.__karma__.start
+    deps: ["test/helpers/mocha-setup"],
+    callback: function() {
+      // This is a terrible hack to force test ordering. TODO: Properly separate these
+      require(acceptanceTests, () => require(unitTests, () => window.__karma__.start()));
+    }
   });
 
-// Make Karma async (for RequireJS: stolen from karma-requirejs/adapter.wrapper
-  window.__karma__.loaded = function () {
-  };
+  // Make Karma async (for RequireJS: stolen from karma-requirejs/adapter.wrapper
+  window.__karma__.loaded = function () { };
 })();

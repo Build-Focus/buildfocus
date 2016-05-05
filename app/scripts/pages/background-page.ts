@@ -2,6 +2,7 @@
 
 import ko = require("knockout");
 import _ = require("lodash");
+import moment = require("moment");
 
 import tracking = require('tracking/tracking');
 import getUserIdentity = require("tracking/get-user-identity");
@@ -15,6 +16,7 @@ import TabsMonitor = require("url-monitoring/tabs-monitor");
 import PomodoroService = require("pomodoro/pomodoro-service");
 import FocusButton = require("focus-button");
 import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
+import { MetricsRepository } from "repositories/metrics-repository";
 
 import IdleMonitor = require("idle-monitoring/idle-monitor");
 import GoneMonitor = require("idle-monitoring/gone-monitor");
@@ -69,6 +71,12 @@ function setupFocusButton(pomodoroService: PomodoroService) {
   });
 }
 
+function setupMetrics(pomodoroService: PomodoroService) {
+  var metrics = new MetricsRepository();
+  pomodoroService.onPomodoroSuccess(() => metrics.recordSuccess(moment()));
+  pomodoroService.onPomodoroFailure(() => metrics.recordFailure(moment()));
+}
+
 export = function setupBackgroundPage() {
   var settings = new SettingsRepository();
   var badBehaviourMonitor = new BadBehaviourMonitor(new TabsMonitor().activeTabs, settings);
@@ -79,6 +87,7 @@ export = function setupBackgroundPage() {
   setupBreaks(notificationService, pomodoroService);
   setupIdleHandling(settings, pomodoroService);
   setupFocusButton(pomodoroService);
+  setupMetrics(pomodoroService);
 
   notificationService.onShowResult(showMainPage);
 

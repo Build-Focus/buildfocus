@@ -14,6 +14,10 @@ function setSavedValue(valueKey: string, newValue: any, storageType: string = "l
   chromeStub.storage[storageType].get.withArgs(valueKey).yields({ [valueKey]: newValue })
 }
 
+function distributeLastSavedValue(valueKey: string, storageType: string = "local") {
+  setSavedValue(valueKey, getLastSavedValue(valueKey, storageType), storageType);
+}
+
 export var givenBadDomains = (...domains: string[]) => setSavedValue("badDomainPatterns", domains, "sync");
 
 export var pomodoroTimeRemaining = () => <number> getLastSavedValue("pomodoro-service-time-remaining");
@@ -23,6 +27,7 @@ export var isBreakActive =         () => getLastSavedValue("pomodoro-service-sta
 
 export var metricsEvents =         () => <{date: string}[]> getLastSavedValue("raw-metrics-events");
 export var setMetricsEvents =      (events) => setSavedValue("raw-metrics-events", events);
+export var distributeMetricsData = () => distributeLastSavedValue("raw-metrics-events");
 
 export var currentCityData =       () => <serialization.CityData> getLastSavedValue("city-data");
 
