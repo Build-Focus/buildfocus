@@ -6,6 +6,7 @@
   <link rel="icon" href="/images/icon-32.png" />
 
   <link rel="import" href="/scripts/components/bad-tabs-warning/bad-tabs-warning-template.html" />
+  <link rel="import" href="/scripts/components/metrics-panel/metrics-panel-template.html" />
 </head>
 <body>
   <main style="display: none" data-bind="visible: true, css: { faded: warningPopup.isShowing() }">
@@ -68,6 +69,8 @@
         </div>
       </div>
     </section>
+
+    <metrics-panel></metrics-panel>
 
     <a class="feedback" href="https://buildfocus.userecho.com" target="_blank" rel="noopener">
       Feedback &nbsp;<i class="fa fa-bullhorn"></i>

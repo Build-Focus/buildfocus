@@ -1,0 +1,18 @@
+<template id="metrics-panel-template">
+  <h3>Successes</h3>
+
+  <div class="metric-block">
+    <div class="metric-title">Today</div>
+    <div class="metric-value" data-bind="text: successesToday"></div>
+  </div>
+
+  <div class="metric-block">
+    <div class="metric-title">Last 7 Days</div>
+    <div class="metric-value" data-bind="text: successesThisWeek"></div>
+  </div>
+
+  <div class="metric-block">
+    <div class="metric-title">Previous 7 Days</div>
+    <div class="metric-value" data-bind="text: successesLastWeek"></div>
+  </div>
+</template>

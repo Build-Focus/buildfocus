@@ -1,4 +1,4 @@
-'use strict';
+///<amd-dependency path="components/metrics-panel/metrics-panel-viewmodel" />
 
 import ko = require('knockout');
 import Score = require('score');
