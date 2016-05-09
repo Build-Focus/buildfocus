@@ -7,7 +7,7 @@ function showFailureInPage(tabId: number, failingUrl: string, onSuccess: () => v
     if (chrome.runtime.lastError) {
       onError(chrome.runtime.lastError.message);
     } else {
-      setTimeout(() => checkFailureInjectionWorked(tabId, onSuccess, onError), 100);
+      setTimeout(() => checkFailureInjectionWorked(tabId, onSuccess, onError), 200);
     }
   });
 }
