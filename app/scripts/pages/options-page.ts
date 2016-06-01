@@ -22,7 +22,6 @@ function enumSelection<T>(enumToUse: T, idToStringMap: {[id: number]: string}): 
     }});
 }
 
-// TODO: Once this grows bigger, refactor sites list and other settings into standalone components.
 class OptionsPageViewModel {
   private settings = new SettingsRepository();
 
