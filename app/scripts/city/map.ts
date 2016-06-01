@@ -162,12 +162,16 @@ class Map {
 
     var cells = data.cells.map(Cell.deserialize);
     var buildings = data.buildings.map(Buildings.deserialize);
+
+    function isEndlessRoadData(roadData: serialization.RoadData): roadData is serialization.EndlessRoadData {
+      return (<any>roadData).end === undefined;
+    }
+
     var roads = data.roads.map((roadData) => {
-      // TODO: Use TS1.6 'is' functions to clear this up?
-      if (!(<any>roadData).end) {
-        return EndlessRoadEdge.deserialize(<serialization.EndlessRoadData> roadData, map);
+      if (isEndlessRoadData(roadData)) {
+        return EndlessRoadEdge.deserialize(roadData, map);
       } else {
-        return SpecificRoadEdge.deserialize(<serialization.SpecificRoadData> roadData);
+        return SpecificRoadEdge.deserialize(roadData);
       }
     });
 
