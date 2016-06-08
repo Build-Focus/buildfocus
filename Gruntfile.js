@@ -48,8 +48,7 @@ module.exports = function (grunt) {
         options: {
           livereload: '<%= connect.options.livereload %>',
           atBegin: true,
-          livereloadOnError: false,
-          interrupt: true
+          livereloadOnError: false
         }
       },
       content: {
@@ -168,7 +167,7 @@ module.exports = function (grunt) {
           'build/app/bower_components/requirejs/require.js',
 
           'build/app/scripts/config/base-config.js',
-          'build/test/test-main.js',
+          'build/test/karma-test-main.js',
 
           'build/app/scripts/pages/background-page-binding.js',
           { pattern: "build/test/**/*.js", included: false },

@@ -16,21 +16,9 @@ interface Window {
     return filename.replace(/^\/base\/build\/|\.js$/g, '');
   });
 
-  var testRequirePathMapping: { [id: string]: string } = {};
-  karmaFiles.forEach(function (filename) {
-    var scriptFileRegex = /\/base\/build\/(app\/scripts\/([^\/]+))/;
-    var matcherResult = scriptFileRegex.exec(filename);
-
-    if (matcherResult) {
-      var testRequirePath = matcherResult[1].replace(/\.js$|\.js\.map$/, "");
-      var correctRequirePath = matcherResult[2].replace(/\.js$|\.js\.map$/, "");
-      testRequirePathMapping[testRequirePath] = correctRequirePath;
-    }
-  });
-
   var acceptanceTests = tests.filter((t) => t.indexOf("/acceptance/") !== -1);
   var unitTests = tests.filter((t) => t.indexOf("/acceptance") === -1);
-  
+
   requirejs.config({
     baseUrl: "/base/build/app/scripts",
 
@@ -39,7 +27,9 @@ interface Window {
     },
 
     map: {
-      test: testRequirePathMapping
+      test: {
+        'app/scripts': ''
+      }
     },
 
     urlArgs: "ts=" + Date.now(),

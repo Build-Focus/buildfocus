@@ -6,7 +6,7 @@
     "knockout": "~3.3.0",
     "lodash": "~3.6.0",
     "uri.js": "~1.15.0",
-    "requirejs": "~2.1.17",
+    "requirejs": "https://github.com/pimterry/requirejs.git#7fbb28e46b5020",
     "rollbar": "~1.2.2",
     "easeljs": "0.8.2",
     "jquery": "~2.1.4",

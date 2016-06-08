@@ -27,7 +27,9 @@ function startPomodoro() {
   chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
 }
 
-describe("Acceptance: Autopause", () => {
+describe("Acceptance: Autopause", function () {
+  this.timeout(5000);
+
   before(() => clockStub = sinon.useFakeTimers());
   after(() => clockStub.restore());
 
