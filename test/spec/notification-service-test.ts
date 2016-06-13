@@ -1,16 +1,17 @@
-import SinonFakeTimers = Sinon.SinonFakeTimers;
 'use strict';
 
 import NotificationService = require("app/scripts/notification-service");
 import NotificationHelper = require("test/helpers/notification-test-helper");
+import Buildings = require("app/scripts/city/buildings/buildings");
 
-var notifications;
+var notifications: NotificationService;
 
 var onStartCallback;
 var onBreakCallback;
 var onShowResultCallback;
+var onRejectResultCallback;
 
-var clockStub: SinonFakeTimers;
+var clockStub: Sinon.SinonFakeTimers;
 var notificationHelper = new NotificationHelper(() => clockStub);
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
@@ -33,14 +34,16 @@ describe('Notification service', function () {
     onStartCallback = sinon.stub();
     onBreakCallback = sinon.stub();
     onShowResultCallback = sinon.stub();
+    onRejectResultCallback = sinon.stub();
 
     notifications.onPomodoroStart(onStartCallback);
     notifications.onBreak(onBreakCallback);
     notifications.onShowResult(onShowResultCallback);
+    notifications.onRejectResult(onRejectResultCallback);
   });
 
   describe("success notifications", () => {
-    beforeEach(() => notifications.showSuccessNotification());
+    beforeEach(() => notifications.showSuccessNotification(<Buildings.Building> {}));
 
     it('should show the success result', function () {
       expect(notificationHelper.spyForResultNotificationCreation().callCount).to.equal(1);
@@ -83,6 +86,19 @@ describe('Notification service', function () {
       expect(onShowResultCallback.calledOnce).to.equal(true);
     });
 
+    it('should call onRejectResult callbacks when the I Got Distracted button is clicked', function () {
+      notificationHelper.clickIGotDistracted();
+      expect(onRejectResultCallback.calledOnce).to.equal(true);
+    });
+
+    it('should pass the last result to onRejectResult callbacks when called', function () {
+      var building = <Buildings.Building> { };
+      notifications.showSuccessNotification(building);
+      notificationHelper.clickIGotDistracted();
+
+      expect(onRejectResultCallback.calledWith(building)).to.equal(true);
+    });
+
     it('should not call onClick callbacks when some other notification is clicked', function () {
       notificationHelper.clickUnrelatedNotification();
       expect(onStartCallback.called).to.equal(false);
@@ -104,12 +120,12 @@ describe('Notification service', function () {
 
   describe("notification dismissal", function () {
     it("should clear both notifications initially when a new notification arrives", function () {
-      notifications.showSuccessNotification();
+      notifications.showSuccessNotification(<Buildings.Building> {});
       expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
     });
 
     it("should cancel both notifications after a pomodoro is started", function () {
-      notifications.showSuccessNotification();
+      notifications.showSuccessNotification(<Buildings.Building> {});
       chromeStub.notifications.clear.reset();
 
       notificationHelper.clickStartPomodoro();
@@ -117,7 +133,7 @@ describe('Notification service', function () {
     });
 
     it("should cancel both notifications after a break is started", function () {
-      notifications.showSuccessNotification();
+      notifications.showSuccessNotification(<Buildings.Building> {});
       chromeStub.notifications.clear.reset();
 
       notificationHelper.clickTakeABreak();
@@ -125,7 +141,7 @@ describe('Notification service', function () {
     });
 
     it("should cancel both notifications after a not now is clicked", function () {
-      notifications.showSuccessNotification();
+      notifications.showSuccessNotification(<Buildings.Building> {});
       chromeStub.notifications.clear.reset();
 
       notificationHelper.clickNotNow();
@@ -133,7 +149,7 @@ describe('Notification service', function () {
     });
 
     it("should cancel both notifications after the city is viewed", function () {
-      notifications.showSuccessNotification();
+      notifications.showSuccessNotification(<Buildings.Building> {});
       chromeStub.notifications.clear.reset();
 
       notificationHelper.clickViewCity();
@@ -172,7 +188,7 @@ describe('Notification service', function () {
       });
     }
 
-    shouldReissueNotificationOnlyIfUntouched("success", () => notifications.showSuccessNotification());
+    shouldReissueNotificationOnlyIfUntouched("success", () => notifications.showSuccessNotification(<Buildings.Building> {}));
     shouldReissueNotificationOnlyIfUntouched("break", () => notifications.showBreakNotification());
   });
 });

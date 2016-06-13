@@ -28,7 +28,6 @@ class NotificationHelper {
     this.clockStub().tick(1);
   }
 
-
   // Notification button click helpers
   clickTakeABreak() {
     chromeStub.notifications.onButtonClicked.trigger(ACTION_NOTIFICATION_ID, 0);
@@ -37,6 +36,11 @@ class NotificationHelper {
 
   clickNotNow() {
     chromeStub.notifications.onButtonClicked.trigger(ACTION_NOTIFICATION_ID, 1);
+    this.clockStub().tick(1);
+  }
+
+  clickIGotDistracted() {
+    chromeStub.notifications.onButtonClicked.trigger(RESULT_NOTIFICATION_ID, 0);
     this.clockStub().tick(1);
   }
 

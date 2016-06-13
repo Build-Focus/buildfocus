@@ -43,6 +43,11 @@ class Score {
     return randomUpgrade;
   }
 
+  rejectSuccess(lastSuccess: Buildings.Building) {
+    this.city.remove(lastSuccess);
+    this.addFailure();
+  }
+
   addFailure() {
     var buildingToRemove = _.sample(this.city.getBuildings());
     if (buildingToRemove) this.city.remove(buildingToRemove);

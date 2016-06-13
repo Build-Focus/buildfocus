@@ -29,6 +29,10 @@ function showMainPage() {
   chrome.tabs.create({url: chrome.extension.getURL("main.html")});
 }
 
+function showFailurePage() {
+  chrome.tabs.create({url: chrome.extension.getURL("main.html?failed=true")});
+}
+
 function setupPomodoroWorkflow(notificationService: NotificationService, pomodoroService: PomodoroService) {
   var score = new Score();
 
@@ -43,6 +47,11 @@ function setupPomodoroWorkflow(notificationService: NotificationService, pomodor
   pomodoroService.onPomodoroFailure(function (tabId, url) {
     score.addFailure();
     indicateFailure(tabId, url);
+  });
+
+  notificationService.onRejectResult((building) => {
+    score.rejectSuccess(building);
+    showFailurePage();
   });
 }
 

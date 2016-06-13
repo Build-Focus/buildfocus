@@ -37,7 +37,7 @@ function startPomodoro() {
 
 describe('Acceptance: Pomodoros', function () {
   this.timeout(5000);
-  
+
   before(() => clockStub = sinon.useFakeTimers());
   after(() => clockStub.restore());
 
@@ -156,7 +156,6 @@ describe('Acceptance: Pomodoros', function () {
     it("should let you cancel pomodoro-ing after your pomodoro", () => {
       notificationHelper.clickNotNow();
 
-      clockStub.tick(1);
       expect(badgeTextColour()).to.be.rgbPixel(BADGE_TEXT_COLOUR);
       expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
 
@@ -165,6 +164,16 @@ describe('Acceptance: Pomodoros', function () {
       expect(notificationHelper.spyForNotificationCreation().callCount).to.equal(0);
 
       expect(chromeStub.tabs.create.callCount).to.equal(0);
+    });
+
+    it("should let you punish yourself", () => {
+      var initialCitySize = currentCitySize();
+
+      notificationHelper.clickIGotDistracted();
+
+      var resultingCitySize = currentCitySize();
+      expect(resultingCitySize).to.equal(initialCitySize - 2);
+      expect(chromeStub.tabs.create.calledOnce).to.equal(true);
     });
   });
 

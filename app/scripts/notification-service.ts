@@ -20,7 +20,11 @@ class NotificationService {
 
   public onPomodoroStart = SubscribableEvent();
   public onBreak = SubscribableEvent();
+
   public onShowResult = SubscribableEvent();
+  public onRejectResult = SubscribableEvent<Buildings.Building>();
+
+  private lastResult: Buildings.Building = null;
 
   constructor(private renderableConfigLoader: BuildingImageConfigSource) {
     chrome.notifications.onClicked.addListener((clickedNotificationId) => {
@@ -47,6 +51,13 @@ class NotificationService {
         } else if (buttonIndex === 1) {
           tracking.trackEvent("close-notification-from-not-now");
         }
+      } else if (clickedNotificationId === RESULT_NOTIFICATION_ID) {
+        this.clearNotifications();
+
+        if (buttonIndex === 0) {
+          tracking.trackEvent("reject-result");
+          this.onRejectResult.trigger(this.lastResult);
+        }
       }
     });
 
@@ -59,12 +70,16 @@ class NotificationService {
   }
 
   public showSuccessNotification = (building: Buildings.Building) => {
+    this.lastResult = building;
     var buildingConfig = this.renderableConfigLoader.getBuildingConfig(building);
 
     var buildingNotification = this.buildNotification(
       "Success! Great work.",
       "Your city's getting bigger and better. Click here to take a look.",
-      [],
+      [{
+        title: "Actually, I got distracted...",
+        iconUrl: "images/warning.svg"
+      }],
       buildingConfig ? buildingConfig.imagePath : undefined
     );
 
