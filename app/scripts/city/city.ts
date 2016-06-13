@@ -92,7 +92,7 @@ class City {
                .concat(this.getPossibleBuildingUpgrades())
                .map((building) => { return {
                  building: building,
-                 cost: this.roadPlanner.getCost(this.map, building)
+                 cost: this.roadPlanner.plan(this.map, building).cost
                } })
                .filter((upgrade) => upgrade.cost < Number.POSITIVE_INFINITY);
   }
@@ -116,7 +116,7 @@ class City {
 
     this.map.construct(building);
 
-    var requiredRoads = this.roadPlanner.getRoadsRequired(this.map, building);
+    var requiredRoads = this.roadPlanner.plan(this.map, building).roadsRequired;
     requiredRoads.forEach((road) => this.map.addRoad(road));
 
     this.announceChange(change.Type.Created, building);

@@ -61,5 +61,15 @@ describe("Graph", () => {
     expect(_.findWhere(expandedCoords, c(-2, -2))).to.equal(undefined);
   });
 
-  it("finds the shortest route from any of the given start points");
+  it("finds the shortest route from any of the given start points", () => {
+    var routeA = searchGraph(matchOnly(c(0, -2)), always(false), always(1), always(0), [
+      c(0, 0), c(100, 0)
+    ]);
+    var routeB = searchGraph(matchOnly(c(0, -2)), always(false), always(1), always(0), [
+      c(100, 0), c(0, 0)
+    ]);
+
+    expect(routeA).to.deep.equal(costedRoute([c(0, 0), c(0, -1), c(0, -2)]));
+    expect(routeB).to.deep.equal(costedRoute([c(0, 0), c(0, -1), c(0, -2)]));
+  });
 });

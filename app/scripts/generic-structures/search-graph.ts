@@ -3,14 +3,7 @@ import Heap = require('heap');
 
 import Coord = require('city/coord');
 
-interface CostedCoord {
-  coord: Coord;
-  cost: number;
-}
-
-interface CostedRoute extends Array<Coord> {
-  cost: number;
-}
+import {CostedCoord, CostedRoute} from 'city/roads/costed-route';
 
 function findCostedCoord(costedCoordArray: CostedCoord[], coordWanted: Coord): CostedCoord {
   for (let costedCoord of costedCoordArray) {
