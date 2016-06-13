@@ -40,10 +40,10 @@ export class MetricsRepository {
   }
 
   private recordEvent(newEvent: PomodoroEvent) {
-    var rawEvents = this.rawEvents();
-    var indexForNewEvent = _.sortedIndex(rawEvents, newEvent, timestamp);
-    rawEvents.splice(indexForNewEvent, 0, newEvent);
-    this.rawEvents(rawEvents);
+    var events = this.rawEvents();
+    var indexForNewEvent = _.sortedIndex(events, newEvent, timestamp);
+    events.splice(indexForNewEvent, 0, newEvent);
+    this.rawEvents(events);
   }
 
   recordSuccess(time: moment.Moment) {
@@ -52,6 +52,15 @@ export class MetricsRepository {
 
   recordFailure(time: moment.Moment) {
     this.recordEvent({ result: PomodoroResult.failure, date: time });
+  }
+
+  // Replaces the last successful result with a failure result at the same moment.
+  recordRejectedSuccess() {
+    var events = this.rawEvents();
+    var lastSuccessIndex = _.findLastIndex(events, (e) => e.result === PomodoroResult.success);
+    var lastSuccess = events[lastSuccessIndex];
+    events[lastSuccessIndex] = { result: PomodoroResult.failure, date: lastSuccess.date };
+    this.rawEvents(events);
   }
 
   get successes(): QueryableEventStream<PomodoroEvent> {

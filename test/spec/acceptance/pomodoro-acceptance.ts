@@ -170,10 +170,22 @@ describe('Acceptance: Pomodoros', function () {
       var initialCitySize = currentCitySize();
 
       notificationHelper.clickIGotDistracted();
+      notificationHelper.clickConfirmIGotDistracted();
 
       var resultingCitySize = currentCitySize();
       expect(resultingCitySize).to.equal(initialCitySize - 2);
       expect(chromeStub.tabs.create.calledOnce).to.equal(true);
+    });
+
+    it("should not punish you if you can punishing yourself half-way through", () => {
+      var initialCitySize = currentCitySize();
+
+      notificationHelper.clickIGotDistracted();
+      notificationHelper.cancelConfirmIGotDistracted();
+
+      var resultingCitySize = currentCitySize();
+      expect(resultingCitySize).to.equal(initialCitySize);
+      expect(chromeStub.tabs.create.calledOnce).to.equal(false);
     });
   });
 
@@ -186,10 +198,10 @@ describe('Acceptance: Pomodoros', function () {
       expect(badgeTextColour()).to.be.rgbPixel(POMODORO_COLOUR);
     });
 
-    it("should clear notifications when a start pomodoro message is received", () => {
+    it("should clear all notifications when a start pomodoro message is received", () => {
       startPomodoro();
 
-      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(3);
     });
 
     it("should start a break when a break message is received", () => {
@@ -204,10 +216,10 @@ describe('Acceptance: Pomodoros', function () {
       expect(notificationHelper.spyForNotificationCreation().args[0][1].title).to.equal("Break time's over");
     });
 
-    it("should clear notifications when a start break message is received", () => {
+    it("should clear all notifications when a start break message is received", () => {
       chromeStub.runtime.onMessage.trigger({"action": "start-break"});
 
-      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(3);
     });
   });
 

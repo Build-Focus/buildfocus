@@ -80,10 +80,11 @@ function setupFocusButton(pomodoroService: PomodoroService) {
   });
 }
 
-function setupMetrics(pomodoroService: PomodoroService) {
+function setupMetrics(notificationService: NotificationService, pomodoroService: PomodoroService) {
   var metrics = new MetricsRepository();
   pomodoroService.onPomodoroSuccess(() => metrics.recordSuccess(moment()));
   pomodoroService.onPomodoroFailure(() => metrics.recordFailure(moment()));
+  notificationService.onRejectResult(() => metrics.recordRejectedSuccess());
 }
 
 export = function setupBackgroundPage() {
@@ -96,7 +97,7 @@ export = function setupBackgroundPage() {
   setupBreaks(notificationService, pomodoroService);
   setupIdleHandling(settings, pomodoroService);
   setupFocusButton(pomodoroService);
-  setupMetrics(pomodoroService);
+  setupMetrics(notificationService, pomodoroService);
 
   notificationService.onShowResult(showMainPage);
 

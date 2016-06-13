@@ -86,19 +86,6 @@ describe('Notification service', function () {
       expect(onShowResultCallback.calledOnce).to.equal(true);
     });
 
-    it('should call onRejectResult callbacks when the I Got Distracted button is clicked', function () {
-      notificationHelper.clickIGotDistracted();
-      expect(onRejectResultCallback.calledOnce).to.equal(true);
-    });
-
-    it('should pass the last result to onRejectResult callbacks when called', function () {
-      var building = <Buildings.Building> { };
-      notifications.showSuccessNotification(building);
-      notificationHelper.clickIGotDistracted();
-
-      expect(onRejectResultCallback.calledWith(building)).to.equal(true);
-    });
-
     it('should not call onClick callbacks when some other notification is clicked', function () {
       notificationHelper.clickUnrelatedNotification();
       expect(onStartCallback.called).to.equal(false);
@@ -118,77 +105,140 @@ describe('Notification service', function () {
     });
   });
 
-  describe("notification dismissal", function () {
-    it("should clear both notifications initially when a new notification arrives", function () {
-      notifications.showSuccessNotification(<Buildings.Building> {});
-      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
+  describe("when I Got Distracted is clicked", () => {
+    var building = <Buildings.Building> { };
+    beforeEach(() => {
+      notifications.showSuccessNotification(building);
+      notificationHelper.clickIGotDistracted()
     });
 
-    it("should cancel both notifications after a pomodoro is started", function () {
+    it("should not immediately call the reject result callback", () => {
+      expect(onRejectResultCallback.called).to.equal(false);
+    });
+
+    it("should show a confirmation notification", () => {
+      expect(notificationHelper.spyForConfirmDistractedNotificationCreation().callCount).to.equal(1);
+    });
+
+    describe("and the confirmation notification is clicked", () => {
+      beforeEach(() => notificationHelper.clickConfirmIGotDistracted());
+
+      it("should call the reject result callback with the rejected result", () => {
+        expect(onRejectResultCallback.called).to.equal(true);
+        expect(onRejectResultCallback.calledWith(building)).to.equal(true);
+      });
+    });
+
+    describe("and the confirmation notification is cancelled", () => {
+      beforeEach(() => notificationHelper.cancelConfirmIGotDistracted());
+
+      it("should retrigger the initial notifications", () => {
+        expect(notificationHelper.spyForActionNotificationCreation().callCount).to.equal(2);
+        expect(notificationHelper.spyForResultNotificationCreation().callCount).to.equal(2);
+      });
+    });
+  });
+
+  describe("notification dismissal", function () {
+    it("should clear all notifications initially when a new notification arrives", function () {
+      notifications.showSuccessNotification(<Buildings.Building> {});
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(3);
+    });
+
+    it("should cancel all notifications after a pomodoro is started", function () {
       notifications.showSuccessNotification(<Buildings.Building> {});
       chromeStub.notifications.clear.reset();
 
       notificationHelper.clickStartPomodoro();
-      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(3);
     });
 
-    it("should cancel both notifications after a break is started", function () {
+    it("should cancel all notifications after a break is started", function () {
       notifications.showSuccessNotification(<Buildings.Building> {});
       chromeStub.notifications.clear.reset();
 
       notificationHelper.clickTakeABreak();
-      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(3);
     });
 
-    it("should cancel both notifications after a not now is clicked", function () {
+    it("should cancel all notifications after a not now is clicked", function () {
       notifications.showSuccessNotification(<Buildings.Building> {});
       chromeStub.notifications.clear.reset();
 
       notificationHelper.clickNotNow();
-      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(3);
     });
 
-    it("should cancel both notifications after the city is viewed", function () {
+    it("should cancel all notifications after the city is viewed", function () {
       notifications.showSuccessNotification(<Buildings.Building> {});
       chromeStub.notifications.clear.reset();
 
       notificationHelper.clickViewCity();
-      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(2);
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(3);
+    });
+
+    it("should cancel all notifications when initially rejecting a result", function () {
+      notifications.showSuccessNotification(<Buildings.Building> {});
+      notificationHelper.spyForNotificationClearing().reset();
+
+      notificationHelper.clickIGotDistracted();
+      // All cleared when clicking the button, and again when spawning the new notification
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(6);
+    });
+
+    it("should cancel all notifications when confirming rejection of a result", function () {
+      notifications.showSuccessNotification(<Buildings.Building> {});
+      chromeStub.notifications.clear.reset();
+
+      notificationHelper.clickConfirmIGotDistracted();
+      expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(3);
     });
   });
 
   describe("notification persistence", function () {
+    function waitForReissue() {
+      clockStub.tick(8000);
+    }
+
     function shouldReissueNotificationOnlyIfUntouched(name, showNotification) {
       describe(`of ${name} notifications`, () => {
-        beforeEach(showNotification);
+        beforeEach(() => {
+          showNotification();
+          notificationHelper.spyForNotificationCreation().reset();
+        });
 
         it(`should cancel and reissue ${name} notifications that aren't touched within 8 seconds`, function () {
-          clockStub.tick(8000);
-          expect(notificationHelper.spyForActionNotificationCreation().callCount).to.equal(2);
+          waitForReissue();
+          expect(notificationHelper.spyForNotificationCreation().called).to.equal(true);
         });
 
         it(`should not reissue ${name} notifications if they're clicked within 8 seconds`, function () {
           notificationHelper.clickStartPomodoro();
-          clockStub.tick(8000);
-          expect(notificationHelper.spyForActionNotificationCreation().callCount).to.equal(1);
+          waitForReissue();
+          expect(notificationHelper.spyForNotificationCreation().called).to.equal(false);
         });
 
         it(`should not reissue ${name} notifications if they're closed within 8 seconds`, function () {
           notificationHelper.closeActionsNotification();
-          clockStub.tick(8000);
-          expect(notificationHelper.spyForActionNotificationCreation().callCount).to.equal(1);
+          waitForReissue();
+          expect(notificationHelper.spyForNotificationCreation().called).to.equal(false);
         });
 
-        it(`should reissue ${name} notifications if they're closed by the reissue itself`, function () {
-          clockStub.tick(8000);
+        it(`should not reissue ${name} notifications if they're closed by the user`, function () {
+          waitForReissue();
+          notificationHelper.spyForNotificationCreation().reset();
+
           notificationHelper.closeResultNotification();
 
-          expect(notificationHelper.spyForActionNotificationCreation().callCount).to.equal(2);
+          expect(notificationHelper.spyForNotificationCreation().called).to.equal(false);
         });
       });
     }
 
     shouldReissueNotificationOnlyIfUntouched("success", () => notifications.showSuccessNotification(<Buildings.Building> {}));
     shouldReissueNotificationOnlyIfUntouched("break", () => notifications.showBreakNotification());
+    shouldReissueNotificationOnlyIfUntouched("rejection confirmation", () => {
+      notificationHelper.clickIGotDistracted();
+    });
   });
 });

@@ -2,6 +2,7 @@ import SinonFakeTimers = Sinon.SinonFakeTimers;
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
 const RESULT_NOTIFICATION_ID = "buildfocus-result-notification";
+const CONFIRM_RESULT_REJECTED_NOTIFICATION_ID = "buildfocus-confirm-result-rejected-notification";
 const ACTION_NOTIFICATION_ID = "buildfocus-action-notification";
 
 class NotificationHelper {
@@ -41,6 +42,16 @@ class NotificationHelper {
 
   clickIGotDistracted() {
     chromeStub.notifications.onButtonClicked.trigger(RESULT_NOTIFICATION_ID, 0);
+    this.clockStub().tick(1);
+  }
+
+  clickConfirmIGotDistracted() {
+    chromeStub.notifications.onClicked.trigger(CONFIRM_RESULT_REJECTED_NOTIFICATION_ID);
+    this.clockStub().tick(1);
+  }
+
+  cancelConfirmIGotDistracted() {
+    chromeStub.notifications.onButtonClicked.trigger(CONFIRM_RESULT_REJECTED_NOTIFICATION_ID, 0);
     this.clockStub().tick(1);
   }
 
@@ -86,6 +97,11 @@ class NotificationHelper {
   spyForResultNotificationCreation() {
     this.clockStub().tick(1);
     return chromeStub.notifications.create.withArgs(RESULT_NOTIFICATION_ID);
+  }
+
+  spyForConfirmDistractedNotificationCreation() {
+    this.clockStub().tick(1);
+    return chromeStub.notifications.create.withArgs(CONFIRM_RESULT_REJECTED_NOTIFICATION_ID);
   }
 }
 export = NotificationHelper;

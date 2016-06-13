@@ -1,5 +1,6 @@
 import moment = require("moment");
 
+import NotificationHelper = require("test/helpers/notification-test-helper");
 import { activateTab, resetTabHelper } from "test/helpers/tab-helper";
 import { givenBadDomains, distributeMetricsData } from "test/helpers/saved-state-helper";
 import { MetricsRepository } from "app/scripts/repositories/metrics-repository";
@@ -8,6 +9,7 @@ const POMODORO_DURATION = 1000 * 60 * 25;
 
 var clockStub: Sinon.SinonFakeTimers;
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
+var notificationHelper = new NotificationHelper(() => clockStub);
 
 function startPomodoro() {
   chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
@@ -26,6 +28,12 @@ function failPomodoro() {
   distributeMetricsData();
 }
 
+function rejectSuccessfulPomodoro() {
+  notificationHelper.clickIGotDistracted();
+  notificationHelper.clickConfirmIGotDistracted();
+  distributeMetricsData();
+}
+
 // TODO: Lots of time based tests here that might fail if you run these tests
 // at *exactly* midnight. Probably just going to ignore for now.
 
@@ -38,6 +46,16 @@ function failPomodoro() {
 
 describe("Acceptance: Metrics", () => {
   var metrics = new MetricsRepository();
+  var initialSuccesses: number;
+  var initialFailures: number;
+
+  function successesToday() {
+    return metrics.successes.on(moment.today()).length;
+  }
+
+  function failuresToday() {
+    return metrics.failures.on(moment.today()).length;
+  }
 
   before(() => clockStub = sinon.useFakeTimers());
   after(() => clockStub.restore());
@@ -45,6 +63,9 @@ describe("Acceptance: Metrics", () => {
   beforeEach(() => {
     resetTabHelper();
     distributeMetricsData();
+
+    initialFailures = failuresToday();
+    initialSuccesses = successesToday();
   });
 
   afterEach(() => {
@@ -54,30 +75,30 @@ describe("Acceptance: Metrics", () => {
   });
 
   it("should add successful pomodoros to today's successes", () => {
-    var initialSuccesses = metrics.successes.on(moment.today()).length;
-
     completePomodoro();
 
-    var resultingSuccesses = metrics.successes.on(moment.today()).length;
-    expect(resultingSuccesses).to.equal(initialSuccesses + 1);
+    expect(successesToday()).to.equal(initialSuccesses + 1);
   });
 
   it("should not add failed pomodoros to today's successes", () => {
-    var initialSuccesses = metrics.successes.on(moment.today()).length;
-
     failPomodoro();
 
-    var resultingSuccesses = metrics.successes.on(moment.today()).length;
-    expect(resultingSuccesses).to.equal(initialSuccesses);
+    expect(successesToday()).to.equal(initialSuccesses);
   });
 
   it("should add failed pomodoros to today's failures", () => {
-    var initialFailures = metrics.failures.on(moment.today()).length;
-
     failPomodoro();
 
-    var resultingFailures = metrics.failures.on(moment.today()).length;
-    expect(resultingFailures).to.equal(initialFailures + 1);
+    expect(failuresToday()).to.equal(initialFailures + 1);
+  });
+
+  it("should add rejected successful pomodoros to today's failures", () => {
+    completePomodoro();
+
+    rejectSuccessfulPomodoro();
+
+    expect(successesToday()).to.equal(initialSuccesses);
+    expect(failuresToday()).to.equal(initialFailures + 1);
   });
 
   it("should not include today's today in past metrics", () => {

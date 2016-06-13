@@ -61,6 +61,24 @@ describe("Metrics repository", () => {
     expect(successesYesterday).to.equal(2);
   });
 
+  describe("when a success is rejected", () => {
+    beforeEach(() => {
+      repo.recordSuccess(moment.yesterday());
+      repo.recordSuccess(moment.today());
+      repo.recordRejectedSuccess();
+    });
+
+    it("should replace the most recent success with a failure", () => {
+      expect(repo.successes.on(moment.today()).length).to.equal(0);
+      expect(repo.failures.on(moment.today()).length).to.equal(1);
+    });
+
+    it("should not affect any other previous successes", () => {
+      expect(repo.successes.on(moment.yesterday()).length).to.equal(1);
+      expect(repo.failures.on(moment.yesterday()).length).to.equal(0);
+    });
+  });
+
   it("should synchronize data to chrome", () => {
     var successMoment = moment.today();
     repo.recordSuccess(successMoment.clone());
