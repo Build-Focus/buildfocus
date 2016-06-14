@@ -134,7 +134,8 @@ class NotificationService {
     var notification = this.buildNotification(
       "Oh no!",
       "Click here to confirm you got distracted.\nThis will replace your last success with a failure.",
-      [{"title": "Cancel"}]
+      [{"title": "Cancel"}],
+      "images/warning.svg"
     );
 
     this.clearNotifications();
