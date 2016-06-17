@@ -1,0 +1,44 @@
+digraph {
+  fontname="Oswald";
+
+  node [style=filled, color=lightgrey, shape=box, fontname="Oswald"];
+  edge [color=darkgrey, fontname="Oswald"];
+
+  start [label="Start", style=bold, color=black]
+  running [label="Work until\ncompletion"]
+  undoable [label="Show undo\nbutton"]
+  warn [label="Show warning\nmessage"]
+  check [label="Check for\nopen bad tabs"]
+  successful [label="Show success\nnotifications"]
+  failed [label="Open\nfailure page"]
+  break [label="Relax"]
+
+  subgraph cluster_active {
+    undoable;
+    running;
+    check;
+    warn;
+
+    label="Pomodoro active";
+  }
+
+  start -> break [label="Click Take\nA Break"];
+  break -> start [label="5m"];
+
+  start -> check [label="Click\nFocus", color=green];
+  check -> undoable [label="All\ngood", color=green];
+  undoable -> running [label="10s", color=green];
+  running -> successful [label="24m50s", color=green];
+  running -> failed [label="Get\ndistracted"];
+
+  successful -> start [color=green];
+  failed -> start;
+
+  check -> warn [label="Bad tabs!"];
+  warn -> undoable [label="Automatically\nclose/leave tabs"];
+  warn -> undoable [label="Click to\nclose/leave tabs"];
+  warn -> undoable [label="Close the\nwarning page"];
+
+  undoable -> start;
+  running -> start;
+}
