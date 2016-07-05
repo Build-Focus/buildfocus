@@ -12,19 +12,19 @@ interface Callback2<T1, T2> {
   (arg1: T1, arg2: T2): void
 }
 
-interface SubscribableEvent {
+export interface SubscribableEvent {
   (callback: Callback): Callback;
   trigger: () => void;
   remove(callback: Callback): void;
 }
 
-interface SubscribableEvent1<T> {
+export interface SubscribableEvent1<T> {
   (callback: Callback1<T>): Callback1<T>;
   trigger: (arg: T) => void;
   remove(callback: Callback1<T>): void;
 }
 
-interface SubscribableEvent2<T1, T2> {
+export interface SubscribableEvent2<T1, T2> {
   (callback: Callback2<T1, T2>): Callback2<T1, T2>;
   trigger: (arg1: T1, arg2: T2) => void;
   remove(callback: Callback2<T1, T2>): void;
@@ -60,4 +60,4 @@ function SubscribableEventConstructor(): SubscribableEvent {
   return <SubscribableEvent> eventSubscribeFunction;
 }
 
-export = SubscribableEventConstructor;
+export { SubscribableEventConstructor as subscribableEvent };

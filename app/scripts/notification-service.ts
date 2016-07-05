@@ -1,7 +1,7 @@
 'use strict';
 
 import _ = require('lodash');
-import SubscribableEvent = require('subscribable-event');
+import { subscribableEvent } from "subscribable-event";
 
 import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
 import tracking = require('tracking/tracking');
@@ -28,11 +28,11 @@ function isOurNotification(notificationId: string): boolean {
 class NotificationService {
   private notificationReissueTimeoutId: number;
 
-  public onPomodoroStart = SubscribableEvent();
-  public onBreak = SubscribableEvent();
+  public onPomodoroStart = subscribableEvent();
+  public onBreak = subscribableEvent();
 
-  public onShowResult = SubscribableEvent();
-  public onRejectResult = SubscribableEvent<Buildings.Building>();
+  public onShowResult = subscribableEvent();
+  public onRejectResult = subscribableEvent<Buildings.Building>();
 
   private lastResult: Buildings.Building = null;
 

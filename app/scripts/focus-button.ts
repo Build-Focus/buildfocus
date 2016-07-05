@@ -2,7 +2,7 @@
 
 import ko = require("knockout");
 import _ = require("lodash");
-import subscribableEvent = require("subscribable-event");
+import { subscribableEvent } from "subscribable-event";
 import observableImage = require('observables/observable-image');
 import PomodoroState = require("pomodoro/pomodoro-state");
 

@@ -2,7 +2,7 @@
 
 import ko = require("knockout");
 import _ = require("lodash");
-import SubscribableEvent = require("subscribable-event");
+import { subscribableEvent } from "subscribable-event";
 import SettingsRepository = require('repositories/settings-repository');
 import Tab = require('url-monitoring/tab');
 

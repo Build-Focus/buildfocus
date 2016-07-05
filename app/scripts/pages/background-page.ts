@@ -8,7 +8,8 @@ import tracking = require('tracking/tracking');
 import getUserIdentity = require("tracking/get-user-identity");
 
 import storeOnce = require('chrome-utilities/store-once');
-import reportChromeErrors = require('chrome-utilities/report-chrome-errors')
+import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
+import messageEvent = require("chrome-utilities/message-event");
 
 import Score = require("score");
 import SettingsRepository = require("repositories/settings-repository");
@@ -33,18 +34,23 @@ function showFailurePage() {
   chrome.tabs.create({url: chrome.extension.getURL("main.html?failed=true")});
 }
 
+var onStartPomodoroMessage = messageEvent({ action: "start-pomodoro" });
+var onStartBreakMessage = messageEvent({ action: "start-break" });
+
 function setupPomodoroWorkflow(notificationService: NotificationService, pomodoroService: PomodoroService) {
   var score = new Score();
 
   notificationService.onPomodoroStart(pomodoroService.start);
+  onStartPomodoroMessage(pomodoroService.start);
+
   pomodoroService.onPomodoroStart(notificationService.clearNotifications);
 
-  pomodoroService.onPomodoroSuccess(function () {
+  pomodoroService.onPomodoroSuccess(() => {
     var newBuilding = score.addSuccess();
     notificationService.showSuccessNotification(newBuilding);
   });
 
-  pomodoroService.onPomodoroFailure(function (tabId, url) {
+  pomodoroService.onPomodoroFailure((tabId, url) => {
     score.addFailure();
     indicateFailure(tabId, url);
   });
@@ -57,6 +63,8 @@ function setupPomodoroWorkflow(notificationService: NotificationService, pomodor
 
 function setupBreaks(notificationService: NotificationService, pomodoroService: PomodoroService) {
   notificationService.onBreak(pomodoroService.takeABreak);
+  onStartBreakMessage(pomodoroService.takeABreak);
+
   pomodoroService.onBreakStart(notificationService.clearNotifications);
   pomodoroService.onBreakEnd(notificationService.showBreakNotification);
 }

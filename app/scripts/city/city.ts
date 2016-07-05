@@ -3,7 +3,7 @@
 import _ = require("lodash");
 import ko = require("knockout");
 
-import subscribableEvent = require('subscribable-event');
+import { subscribableEvent } from "subscribable-event";
 import Map = require('city/map');
 import Coord = require('city/coord');
 import Cell = require('city/cell');

@@ -2,7 +2,7 @@
 
 import ko = require("knockout");
 import subscribedObservable = require("observables/subscribed-observable");
-import subscribableEvent = require("subscribable-event");
+import { subscribableEvent } from "subscribable-event";
 import PomodoroState = require("pomodoro/pomodoro-state");
 
 class ProxyPomodoroService {

@@ -2,7 +2,7 @@
 
 import ko = require("knockout");
 import publishedObservable = require("observables/published-observable");
-import subscribableEvent = require("subscribable-event");
+import { subscribableEvent } from "subscribable-event";
 import Timer = require("pomodoro/timer");
 import config = require("config");
 import PomodoroState = require("pomodoro/pomodoro-state");
@@ -54,13 +54,7 @@ class PomodoroService {
     }
   });
 
-  constructor(private badBehaviourMonitor: BadBehaviourMonitor) {
-    // TODO: This should probably be refactored out elsewhere:
-    chrome.runtime.onMessage.addListener((message) => {
-      if (message.action === "start-pomodoro") this.start();
-      else if (message.action === "start-break") this.takeABreak();
-    });
-  }
+  constructor(private badBehaviourMonitor: BadBehaviourMonitor) { }
 
   private badTabSubscription: TriggerableKnockoutSubscription;
 
