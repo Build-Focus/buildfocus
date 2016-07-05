@@ -120,6 +120,7 @@ export = function setupBackgroundPage() {
 
   notificationService.onShowResult(showMainPage);
 
+  // TODO: Refactor this into a tracking.initialize style method?
   storeOnce.isSetLocally("first-install-time", true).then((hasBeenInstalled) => {
     if (!hasBeenInstalled) {
       showMainPage();
