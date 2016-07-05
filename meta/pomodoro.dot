@@ -39,6 +39,6 @@ digraph {
   warn -> undoable [label="Click to\nclose/leave tabs"];
   warn -> undoable [label="Close the\nwarning page"];
 
-  undoable -> start;
-  running -> start;
+  undoable -> start [label="Click\nundo"];
+  running -> start [label="Away timeout\nor lock"];
 }
