@@ -1,6 +1,6 @@
 'use strict';
 
-import indicateFailure = require('app/scripts/failure-notification/failure-indicator');
+import indicateFailure = require('app/scripts/ui-components/failure-indicator');
 
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 var clockStub: Sinon.SinonFakeTimers;

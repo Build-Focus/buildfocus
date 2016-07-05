@@ -2,7 +2,7 @@ import rollbar = require('rollbar');
 
 import _ = require('lodash');
 import config = require('config');
-import synchronizedObservable = require('observables/synchronized-observable');
+import synchronizedObservable = require('data-synchronization/synchronized-observable');
 import storeOnceTrackingData = require("tracking/store-once-tracking-data");
 
 import getUserIdentity = require("tracking/get-user-identity");

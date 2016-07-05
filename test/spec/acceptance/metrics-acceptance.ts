@@ -4,7 +4,7 @@ import NotificationHelper = require("test/helpers/notification-test-helper");
 import { activateTab, resetTabHelper } from "test/helpers/tab-helper";
 import { givenBadDomains, distributeMetricsData } from "test/helpers/saved-state-helper";
 import { startPomodoro } from "test/helpers/messaging-helper";
-import { MetricsRepository } from "app/scripts/repositories/metrics-repository";
+import { MetricsRepository } from "app/scripts/metrics/metrics-repository";
 
 const POMODORO_DURATION = 1000 * 60 * 25;
 

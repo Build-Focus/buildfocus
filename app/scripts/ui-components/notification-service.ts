@@ -1,7 +1,7 @@
 'use strict';
 
 import _ = require('lodash');
-import { subscribableEvent } from "subscribable-event";
+import { subscribableEvent } from "data-synchronization/subscribable-event";
 
 import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
 import tracking = require('tracking/tracking');
@@ -38,7 +38,7 @@ class NotificationService {
 
   constructor(private renderableConfigLoader: BuildingImageConfigSource) {
     chrome.notifications.onClicked.addListener((clickedNotificationId) => {
-      if (isOurNotification(clickedNotificationId)) this.clearNotifications();
+      if (isOurNotification(clickedNotificationId)) this.reset();
 
       if (clickedNotificationId === ACTIONS_NOTIFICATION_ID) {
         tracking.trackEvent("start-from-notification");
@@ -57,7 +57,7 @@ class NotificationService {
     });
 
     chrome.notifications.onButtonClicked.addListener((clickedNotificationId, buttonIndex) => {
-      if (isOurNotification(clickedNotificationId)) this.clearNotifications();
+      if (isOurNotification(clickedNotificationId)) this.reset();
 
       if (clickedNotificationId === ACTIONS_NOTIFICATION_ID) {
         if (buttonIndex === 0) {
@@ -81,7 +81,7 @@ class NotificationService {
 
     chrome.notifications.onClosed.addListener((closedNotificationid, byUser) => {
       if (byUser && isOurNotification(closedNotificationid)) {
-        this.clearNotifications();
+        this.reset();
         tracking.trackEvent("close-notification", {id: closedNotificationid});
       }
     });
@@ -107,7 +107,7 @@ class NotificationService {
       [{title: "Take a break"}, {"title": "Stop for now"}]
     );
 
-    this.clearNotifications();
+    this.reset();
     chrome.notifications.create(ACTIONS_NOTIFICATION_ID, continueNotification, () => reportChromeErrors());
 
     // Push the other one async - this ensures they always appear in the correct order (result above actions)
@@ -125,7 +125,7 @@ class NotificationService {
       [{"title": "Just one more break"}, {"title": "Stop for now"}]
     );
 
-    this.clearNotifications();
+    this.reset();
     chrome.notifications.create(ACTIONS_NOTIFICATION_ID, notification, () => reportChromeErrors());
     this.notificationReissueTimeoutId = setTimeout(this.showBreakNotification.bind(this), 7500);
   };
@@ -138,12 +138,12 @@ class NotificationService {
       "images/warning.svg"
     );
 
-    this.clearNotifications();
+    this.reset();
     chrome.notifications.create(CONFIRM_RESULT_REJECTED_NOTIFICATION_ID, notification, () => reportChromeErrors());
     this.notificationReissueTimeoutId = setTimeout(this.confirmResultRejection.bind(this), 7500);
   }
 
-  public clearNotifications = () => {
+  public reset = () => {
     clearTimeout(this.notificationReissueTimeoutId);
     chrome.notifications.clear(RESULT_NOTIFICATION_ID, () => reportChromeErrors());
     chrome.notifications.clear(ACTIONS_NOTIFICATION_ID, () => reportChromeErrors());

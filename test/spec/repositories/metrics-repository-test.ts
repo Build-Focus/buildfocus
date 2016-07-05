@@ -8,7 +8,7 @@ import {
 import {
   MetricsRepository,
   PomodoroResult
-} from "app/scripts/repositories/metrics-repository";
+} from "app/scripts/metrics/metrics-repository";
 
 describe("Metrics repository", () => {
   var repo: MetricsRepository;

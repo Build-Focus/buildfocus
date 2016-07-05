@@ -1,7 +1,7 @@
 import moment = require("moment");
 import ko = require("raw-knockout");
 
-import { MetricsRepository } from "repositories/metrics-repository";
+import { MetricsRepository } from "metrics/metrics-repository";
 
 // Make 'today' observable, to ensure the below
 // updates when the day ticks over.

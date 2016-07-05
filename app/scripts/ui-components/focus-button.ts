@@ -2,8 +2,8 @@
 
 import ko = require("knockout");
 import _ = require("lodash");
-import { subscribableEvent } from "subscribable-event";
-import observableImage = require('observables/observable-image');
+import { subscribableEvent } from "data-synchronization/subscribable-event";
+import observableImage = require('ko-extensions/observable-image');
 import PomodoroState = require("pomodoro/pomodoro-state");
 
 interface PresentablePomodoroService {

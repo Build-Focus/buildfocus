@@ -1,7 +1,7 @@
 'use strict';
 
 import ko = require('knockout');
-import SettingsRepository = require("app/scripts/repositories/settings-repository");
+import SettingsRepository = require("app/scripts/settings-repository");
 import BadBehaviourMonitor = require("app/scripts/url-monitoring/bad-behaviour-monitor")
 
 function allDomainsBad() {

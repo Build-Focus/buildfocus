@@ -1,4 +1,4 @@
-import { subscribableEvent } from "app/scripts/subscribable-event";
+import { subscribableEvent } from "app/scripts/data-synchronization/subscribable-event";
 import GoneMonitor = require("app/scripts/idle-monitoring/gone-monitor");
 
 const TOTALLY_IDLE_TIMEOUT = 1000 * 60 * 15;

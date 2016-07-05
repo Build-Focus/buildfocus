@@ -22,17 +22,17 @@ requirejs.config({
 
     "raw-moment": "../bower_components/moment/moment",
     "moment-convenient-dates": "dependencies/moment-convenient-dates",
-    "moment": "lib-wrappers/moment",
+    "moment": "dependencies/wrappers/moment",
 
     "raw-knockout": "../bower_components/knockout/dist/knockout",
     "knockout-es5": "../bower_components/knockout-es5/dist/knockout-es5",
-    "knockout": "lib-wrappers/knockout",
+    "knockout": "dependencies/wrappers/knockout",
 
     "raw-rollbar": "../bower_components/rollbar/dist/rollbar.amd",
-    "rollbar": "lib-wrappers/rollbar",
+    "rollbar": "dependencies/wrappers/rollbar",
 
     "raw-lodash": "../bower_components/lodash/lodash",
-    "lodash": "lib-wrappers/lodash",
+    "lodash": "dependencies/wrappers/lodash",
 
     "config": "config/" + configPrefix + "-config"
   },

@@ -1,8 +1,8 @@
 'use strict';
 
 import ko = require("knockout");
-import subscribedObservable = require("observables/subscribed-observable");
-import { subscribableEvent } from "subscribable-event";
+import subscribedObservable = require("data-synchronization/subscribed-observable");
+import { subscribableEvent } from "data-synchronization/subscribable-event";
 import PomodoroState = require("pomodoro/pomodoro-state");
 
 class ProxyPomodoroService {

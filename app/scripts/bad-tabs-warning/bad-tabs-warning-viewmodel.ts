@@ -1,6 +1,6 @@
 import ko = require('raw-knockout');
 
-import SettingsRepository = require("repositories/settings-repository");
+import SettingsRepository = require("settings-repository");
 import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
 import Tab = require("url-monitoring/tab");
 import ProxyPomodoroService = require("pomodoro/proxy-pomodoro-service");
@@ -9,7 +9,7 @@ import closeCurrentTab = require("chrome-utilities/close-current-tab");
 import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
 import tracking = require('tracking/tracking');
 
-import BadTabsWarningAction = require('components/bad-tabs-warning/bad-tabs-warning-action');
+import BadTabsWarningAction = require('bad-tabs-warning/bad-tabs-warning-action');
 
 class BadTabsWarningViewModel {
   private badBehaviourMonitor = new BadBehaviourMonitor(this.tabsToMonitor, this.settings);

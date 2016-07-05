@@ -2,9 +2,9 @@ import _ = require("lodash");
 import ko = require("knockout");
 import moment = require("moment");
 
-import synchronizedObservable = require('observables/synchronized-observable');
+import synchronizedObservable = require('data-synchronization/synchronized-observable');
 
-import QueryableEventStream = require('repositories/queryable-event-stream');
+import QueryableEventStream = require('metrics/queryable-event-stream');
 
 interface RawPomodoroEvent {
   result: PomodoroResult;

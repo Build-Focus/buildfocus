@@ -1,10 +1,10 @@
 import ko = require("knockout");
 
-import BadTabsWarningViewModel = require("app/scripts/components/bad-tabs-warning/bad-tabs-warning-viewmodel");
-import BadTabsWarningAction = require("app/scripts/components/bad-tabs-warning/bad-tabs-warning-action");
+import BadTabsWarningViewModel = require("app/scripts/bad-tabs-warning/bad-tabs-warning-viewmodel");
+import BadTabsWarningAction = require("app/scripts/bad-tabs-warning/bad-tabs-warning-action");
 import ProxyPomodoroService = require("app/scripts/pomodoro/proxy-pomodoro-service");
 import Tab = require("app/scripts/url-monitoring/tab");
-import SettingsRepository = require("app/scripts/repositories/settings-repository");
+import SettingsRepository = require("app/scripts/settings-repository");
 import Domain = require("app/scripts/url-monitoring/domain");
 
 var chromeStub = <typeof SinonChrome> <any> window.chrome;

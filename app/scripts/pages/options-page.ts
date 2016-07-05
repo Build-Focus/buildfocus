@@ -3,11 +3,11 @@
 import ko = require('knockout');
 import score = require('score');
 
-import SettingsRepository = require('repositories/settings-repository');
+import SettingsRepository = require('settings-repository');
 import Domain = require("url-monitoring/domain");
-import runTourIfRequired = require('pages/tour');
+import runTourIfRequired = require('ui-components/tour');
 
-import BadTabsWarningAction = require('components/bad-tabs-warning/bad-tabs-warning-action');
+import BadTabsWarningAction = require('bad-tabs-warning/bad-tabs-warning-action');
 import AutopauseMode = require("idle-monitoring/autopause-mode");
 
 import tracking = require('tracking/tracking');

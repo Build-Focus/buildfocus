@@ -1,5 +1,5 @@
 import moment = require("moment");
-import QueryableEventStream = require("app/scripts/repositories/queryable-event-stream");
+import QueryableEventStream = require("app/scripts/metrics/queryable-event-stream");
 
 interface Event {
   date: moment.Moment

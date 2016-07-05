@@ -1,4 +1,4 @@
-///<amd-dependency path="components/metrics-panel/metrics-panel-viewmodel" />
+///<amd-dependency path="metrics/metrics-panel-viewmodel" />
 
 import ko = require('knockout');
 import Score = require('score');
@@ -8,13 +8,13 @@ import tracking = require('tracking/tracking');
 import ProxyPomodoroService = require('pomodoro/proxy-pomodoro-service');
 import CityRenderer = require('city/rendering/city-renderer');
 import TabsMonitor = require('url-monitoring/tabs-monitor');
-import SettingsRepository = require("repositories/settings-repository");
+import SettingsRepository = require("settings-repository");
 import generateCityName = require("city/generate-city-name");
 
-import BadTabsWarningViewModel = require('components/bad-tabs-warning/bad-tabs-warning-viewmodel');
+import BadTabsWarningViewModel = require('bad-tabs-warning/bad-tabs-warning-viewmodel');
 
 import closeCurrentTab = require("chrome-utilities/close-current-tab");
-import runTourIfRequired = require('pages/tour');
+import runTourIfRequired = require('ui-components/tour');
 
 function getQueryParameter(name: string) {
   var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);

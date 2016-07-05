@@ -1,6 +1,6 @@
 'use strict';
 
-import NotificationService = require("app/scripts/notification-service");
+import NotificationService = require("app/scripts/ui-components/notification-service");
 import NotificationHelper = require("test/helpers/notification-test-helper");
 import Buildings = require("app/scripts/city/buildings/buildings");
 

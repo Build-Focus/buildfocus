@@ -4,7 +4,7 @@ import ko = require('knockout');
 import _ = require('lodash');
 
 import weightUpgrades = require('city/weight-upgrades');
-import synchronizedObservable = require('observables/synchronized-observable');
+import synchronizedObservable = require('data-synchronization/synchronized-observable');
 
 import Buildings = require('city/buildings/buildings');
 import City = require('city/city');

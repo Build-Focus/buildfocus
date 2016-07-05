@@ -1,6 +1,6 @@
 import _ = require("lodash");
 
-import { subscribableEvent, SubscribableEvent1 } from "subscribable-event";
+import { subscribableEvent, SubscribableEvent1 } from "data-synchronization/subscribable-event";
 
 interface NonTriggerableEvent<T> {
   (callback: (arg: T) => void): (arg: T) => void;

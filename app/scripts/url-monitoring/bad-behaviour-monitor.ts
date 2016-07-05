@@ -2,8 +2,8 @@
 
 import ko = require("knockout");
 import _ = require("lodash");
-import { subscribableEvent } from "subscribable-event";
-import SettingsRepository = require('repositories/settings-repository');
+import { subscribableEvent } from "data-synchronization/subscribable-event";
+import SettingsRepository = require('settings-repository');
 import Tab = require('url-monitoring/tab');
 
 class BadBehaviourMonitor {

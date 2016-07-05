@@ -1,7 +1,7 @@
 'use strict';
 
 import ko = require("knockout");
-import synchronizedObservable = require("app/scripts/observables/synchronized-observable");
+import synchronizedObservable = require("app/scripts/data-synchronization/synchronized-observable");
 
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 

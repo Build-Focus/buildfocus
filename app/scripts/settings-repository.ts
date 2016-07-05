@@ -2,9 +2,9 @@
 
 import ko = require('knockout');
 import _ = require('lodash');
-import synchronizedObservable = require('observables/synchronized-observable');
+import synchronizedObservable = require('data-synchronization/synchronized-observable');
 import Domain = require('url-monitoring/domain');
-import BadTabsWarningAction = require('components/bad-tabs-warning/bad-tabs-warning-action');
+import BadTabsWarningAction = require('bad-tabs-warning/bad-tabs-warning-action');
 import AutopauseMode = require("idle-monitoring/autopause-mode");
 
 class SettingsRepository {

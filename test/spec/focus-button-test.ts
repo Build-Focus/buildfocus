@@ -1,6 +1,6 @@
 import ko = require("knockout");
 
-import FocusButton = require("app/scripts/focus-button");
+import FocusButton = require("app/scripts/ui-components/focus-button");
 
 import {
   POMODORO_COLOUR,

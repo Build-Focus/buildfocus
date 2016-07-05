@@ -9,21 +9,24 @@ import getUserIdentity = require("tracking/get-user-identity");
 
 import storeOnce = require('chrome-utilities/store-once');
 import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
-import messageEvent = require("chrome-utilities/message-event");
+import messageEvent = require("data-synchronization/message-event");
 
 import Score = require("score");
-import SettingsRepository = require("repositories/settings-repository");
-import TabsMonitor = require("url-monitoring/tabs-monitor");
+import SettingsRepository = require("settings-repository");
 import PomodoroService = require("pomodoro/pomodoro-service");
-import FocusButton = require("focus-button");
+
+import TabsMonitor = require("url-monitoring/tabs-monitor");
 import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
-import { MetricsRepository } from "repositories/metrics-repository";
+
+import { MetricsRepository } from "metrics/metrics-repository";
 
 import IdleMonitor = require("idle-monitoring/idle-monitor");
 import GoneMonitor = require("idle-monitoring/gone-monitor");
 
-import NotificationService = require("notification-service");
-import indicateFailure = require("failure-notification/failure-indicator");
+import FocusButton = require("ui-components/focus-button");
+import NotificationService = require("ui-components/notification-service");
+import indicateFailure = require("ui-components/failure-indicator");
+
 import renderableConfigLoader = require('city/rendering/config/config-loader');
 
 function showMainPage() {
@@ -37,13 +40,15 @@ function showFailurePage() {
 var onStartPomodoroMessage = messageEvent({ action: "start-pomodoro" });
 var onStartBreakMessage = messageEvent({ action: "start-break" });
 
-function setupPomodoroWorkflow(notificationService: NotificationService, pomodoroService: PomodoroService) {
+function setupPomodoroWorkflow(notificationService: NotificationService,
+                               pomodoroService: PomodoroService,
+                               resetPrompts: () => void) {
   var score = new Score();
 
-  notificationService.onPomodoroStart(pomodoroService.start);
   onStartPomodoroMessage(pomodoroService.start);
+  notificationService.onPomodoroStart(pomodoroService.start);
 
-  pomodoroService.onPomodoroStart(notificationService.clearNotifications);
+  pomodoroService.onPomodoroStart(resetPrompts);
 
   pomodoroService.onPomodoroSuccess(() => {
     var newBuilding = score.addSuccess();
@@ -61,11 +66,11 @@ function setupPomodoroWorkflow(notificationService: NotificationService, pomodor
   });
 }
 
-function setupBreaks(notificationService: NotificationService, pomodoroService: PomodoroService) {
+function setupBreaks(notificationService: NotificationService, pomodoroService: PomodoroService, resetPrompts: () => void) {
   notificationService.onBreak(pomodoroService.takeABreak);
   onStartBreakMessage(pomodoroService.takeABreak);
 
-  pomodoroService.onBreakStart(notificationService.clearNotifications);
+  pomodoroService.onBreakStart(resetPrompts);
   pomodoroService.onBreakEnd(notificationService.showBreakNotification);
 }
 
@@ -100,9 +105,15 @@ export = function setupBackgroundPage() {
   var badBehaviourMonitor = new BadBehaviourMonitor(new TabsMonitor().activeTabs, settings);
   var pomodoroService = new PomodoroService(badBehaviourMonitor);
   var notificationService = new NotificationService(renderableConfigLoader);
+  var badTabsWarningService: any;
 
-  setupPomodoroWorkflow(notificationService, pomodoroService);
-  setupBreaks(notificationService, pomodoroService);
+  var resetPrompts = () => {
+    notificationService.reset();
+  };
+
+  setupPomodoroWorkflow(notificationService, pomodoroService, resetPrompts);
+  setupBreaks(notificationService, pomodoroService, resetPrompts);
+
   setupIdleHandling(settings, pomodoroService);
   setupFocusButton(pomodoroService);
   setupMetrics(notificationService, pomodoroService);

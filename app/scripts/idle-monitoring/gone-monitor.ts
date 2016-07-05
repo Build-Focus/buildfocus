@@ -1,5 +1,5 @@
 import config = require("config");
-import { subscribableEvent } from "subscribable-event";
+import { subscribableEvent } from "data-synchronization/subscribable-event";
 import tracking = require("tracking/tracking");
 
 import IdleMonitor = require("idle-monitoring/idle-monitor");

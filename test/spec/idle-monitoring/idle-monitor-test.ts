@@ -1,7 +1,7 @@
 import ko = require("knockout");
 
 import IdleMonitor = require("app/scripts/idle-monitoring/idle-monitor");
-import SettingsRepository = require("app/scripts/repositories/settings-repository");
+import SettingsRepository = require("app/scripts/settings-repository");
 import AutopauseMode = require("app/scripts/idle-monitoring/autopause-mode");
 
 var chromeStub = <typeof SinonChrome> <any> window.chrome;

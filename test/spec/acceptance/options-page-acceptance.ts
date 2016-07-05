@@ -2,7 +2,7 @@
 
 import OptionsPageViewModel = require('app/scripts/pages/options-page');
 import Domain = require('app/scripts/url-monitoring/domain');
-import BadTabsWarningActions = require('app/scripts/components/bad-tabs-warning/bad-tabs-warning-action');
+import BadTabsWarningActions = require('app/scripts/bad-tabs-warning/bad-tabs-warning-action');
 
 describe('Acceptance: Options page', () => {
   describe("Distracting sites", () => {

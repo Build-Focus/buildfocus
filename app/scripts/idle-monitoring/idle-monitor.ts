@@ -1,8 +1,8 @@
 import rollbar = require("rollbar");
 import config = require("config");
-import { subscribableEvent } from "subscribable-event";
+import { subscribableEvent } from "data-synchronization/subscribable-event";
 
-import SettingsRepository = require("repositories/settings-repository");
+import SettingsRepository = require("settings-repository");
 import AutopauseMode = require("idle-monitoring/autopause-mode");
 
 class IdleMonitor {
