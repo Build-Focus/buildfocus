@@ -10,6 +10,11 @@ import {
 } from "test/helpers/saved-state-helper";
 
 import {
+  startPomodoro,
+  startBreak
+} from "test/helpers/messaging-helper";
+
+import {
   resetTabHelper,
   activateTab,
   closeTab
@@ -30,10 +35,6 @@ const BREAK_DURATION = 1000 * 60 * 5;
 var clockStub: Sinon.SinonFakeTimers;
 var notificationHelper = new NotificationHelper(() => clockStub);
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
-
-function startPomodoro() {
-  chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
-}
 
 describe('Acceptance: Pomodoros', function () {
   this.timeout(5000);
@@ -205,7 +206,7 @@ describe('Acceptance: Pomodoros', function () {
     });
 
     it("should start a break when a break message is received", () => {
-      chromeStub.runtime.onMessage.trigger({"action": "start-break"});
+      startBreak();
 
       expect(badgeTextColour()).to.be.rgbPixel(BREAK_COLOUR);
       expect(chromeStub.notifications.create.called).to.equal(false);
@@ -217,7 +218,7 @@ describe('Acceptance: Pomodoros', function () {
     });
 
     it("should clear all notifications when a start break message is received", () => {
-      chromeStub.runtime.onMessage.trigger({"action": "start-break"});
+      startBreak();
 
       expect(notificationHelper.spyForNotificationClearing().callCount).to.equal(3);
     });
@@ -312,12 +313,12 @@ describe('Acceptance: Pomodoros', function () {
 
     describe("for breaks", () => {
       it("should be 0% after starting a break", () => {
-        chromeStub.runtime.onMessage.trigger({"action": "start-break"});
+        startBreak();
         expect(getBadgePixel(0, 0)).to.be.transparent();
       });
 
       it("should be 50% half way through a break", () => {
-        chromeStub.runtime.onMessage.trigger({"action": "start-break"});
+        startBreak();
         clockStub.tick(BREAK_DURATION / 2);
 
         expect(getBadgePixel(0, 0)).to.be.rgbPixel(BREAK_COLOUR);
@@ -326,7 +327,7 @@ describe('Acceptance: Pomodoros', function () {
       });
 
       it("should be 99% when a break is nearly completed", () => {
-        chromeStub.runtime.onMessage.trigger({"action": "start-break"});
+        startBreak();
         clockStub.tick(BREAK_DURATION - 1);
 
         expect(getBadgePixel(0, 0)).to.be.rgbPixel(BREAK_COLOUR);
@@ -336,7 +337,7 @@ describe('Acceptance: Pomodoros', function () {
       });
 
       it("shouldn't be shown after a break is completed", () => {
-        chromeStub.runtime.onMessage.trigger({"action": "start-break"});
+        startBreak();
         clockStub.tick(BREAK_DURATION);
 
         expect(getBadgePixel(0, 0)).to.be.rgbPixel(BADGE_BACKGROUND_COLOUR);

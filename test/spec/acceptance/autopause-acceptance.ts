@@ -8,6 +8,8 @@ import {
   currentCityValue
 } from "test/helpers/saved-state-helper";
 
+import { startPomodoro } from "test/helpers/messaging-helper";
+
 import AutopauseMode = require("app/scripts/idle-monitoring/autopause-mode");
 
 const POMODORO_DURATION = 1000 * 60 * 25;
@@ -21,10 +23,6 @@ var chromeStub = <typeof SinonChrome> <any> window.chrome;
 function givenPauseSetting(pauseMode: AutopauseMode) {
   chromeStub.storage.onChanged.trigger({"autopauseMode": {"newValue": pauseMode}});
   chromeStub.storage.sync.get.withArgs("autopauseMode").yields({ "autopauseMode": pauseMode });
-}
-
-function startPomodoro() {
-  chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
 }
 
 describe("Acceptance: Autopause", function () {

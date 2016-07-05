@@ -3,6 +3,7 @@ import moment = require("moment");
 import NotificationHelper = require("test/helpers/notification-test-helper");
 import { activateTab, resetTabHelper } from "test/helpers/tab-helper";
 import { givenBadDomains, distributeMetricsData } from "test/helpers/saved-state-helper";
+import { startPomodoro } from "test/helpers/messaging-helper";
 import { MetricsRepository } from "app/scripts/repositories/metrics-repository";
 
 const POMODORO_DURATION = 1000 * 60 * 25;
@@ -10,10 +11,6 @@ const POMODORO_DURATION = 1000 * 60 * 25;
 var clockStub: Sinon.SinonFakeTimers;
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 var notificationHelper = new NotificationHelper(() => clockStub);
-
-function startPomodoro() {
-  chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
-}
 
 function completePomodoro() {
   startPomodoro();
