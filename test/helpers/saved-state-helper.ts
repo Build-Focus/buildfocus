@@ -2,6 +2,7 @@ import PomodoroState = require("app/scripts/pomodoro/pomodoro-state");
 import serialization = require('app/scripts/city/serialization/serialization-format');
 import Buildings = require('app/scripts/city/buildings/buildings');
 import BuildingType = require('app/scripts/city/buildings/building-type');
+import BadTabsWarningAction = require("app/scripts/bad-tabs-warning/bad-tabs-warning-action");
 
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
@@ -21,11 +22,14 @@ function distributeLastSavedValue(valueKey: string, defaultValue: any = undefine
 }
 
 export var givenBadDomains = (...domains: string[]) => setSavedValue("badDomainPatterns", domains, "sync");
+export var givenBadTabsSetting = (setting: BadTabsWarningAction) => setSavedValue("badTabsWarningAction", setting, "sync");
 
 export var pomodoroTimeRemaining = () => <number> getLastSavedValue("pomodoro-service-time-remaining");
 export var isPomodoroActive =      () => getLastSavedValue("pomodoro-service-state") === PomodoroState.Active;
 export var isPomodoroPaused =      () => getLastSavedValue("pomodoro-service-state") === PomodoroState.Paused;
 export var isBreakActive =         () => getLastSavedValue("pomodoro-service-state") === PomodoroState.Break;
+
+export var isBadTabWarningActive = () => <boolean> getLastSavedValue("bad-tab-warning-active");
 
 export var metricsEvents =         () => <{date: string}[]> getLastSavedValue("raw-metrics-events");
 export var setMetricsEvents =      (events) => setSavedValue("raw-metrics-events", events);

@@ -15,7 +15,7 @@ class TabsMonitor {
     this.updateCurrentTabs();
   }
 
-  updateCurrentTabs = () => {
+  private updateCurrentTabs = () => {
     chrome.tabs.query({}, (tabs: Array<chrome.tabs.Tab>) => {
       this.allTabs(tabs);
       this.activeTabs(_.where(tabs, {active: true}));

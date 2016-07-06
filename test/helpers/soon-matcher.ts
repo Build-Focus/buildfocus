@@ -71,7 +71,7 @@ define(function () {
 
     makeAssertionsCheckForDelay();
 
-    // Asserts on a canvas and takes an image path, ensures they contain the exact same data
+    // Runs the following assertion 500ms (or a configured delay) later, async.
     chai.Assertion.addChainableMethod('soon', function asMethod(duration) {
       var assertion = this;
       setDelay(assertion, duration);

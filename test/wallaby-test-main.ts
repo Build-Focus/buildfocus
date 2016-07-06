@@ -12,9 +12,6 @@ interface Require {
   wallaby.delayStart();
 
   requirejs.config({
-    // score -> /app/scripts/score.ts
-    // /app/scripts/score -> /app/scripts/score.ts
-    // /test/a.ts -> /test/a.ts
     baseUrl: "/app/scripts",
 
     paths: {

@@ -55,6 +55,18 @@
     },
     "es6-promise/es6-promise.d.ts": {
       "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
+    },
+    "chai-as-promised/chai-as-promised.d.ts": {
+      "commit": "8df97176d2f27399ffc562098409223fef6c2304"
+    },
+    "chai/chai.d.ts": {
+      "commit": "8df97176d2f27399ffc562098409223fef6c2304"
+    },
+    "assertion-error/assertion-error.d.ts": {
+      "commit": "8df97176d2f27399ffc562098409223fef6c2304"
+    },
+    "promises-a-plus/promises-a-plus.d.ts": {
+      "commit": "8df97176d2f27399ffc562098409223fef6c2304"
     }
   }
 }

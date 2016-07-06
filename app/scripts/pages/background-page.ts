@@ -26,6 +26,7 @@ import GoneMonitor = require("idle-monitoring/gone-monitor");
 import FocusButton = require("ui-components/focus-button");
 import NotificationService = require("ui-components/notification-service");
 import indicateFailure = require("ui-components/failure-indicator");
+import BadTabsWarningService = require("bad-tabs-warning/bad-tabs-warning-service");
 
 import renderableConfigLoader = require('city/rendering/config/config-loader');
 
@@ -35,6 +36,7 @@ var onStartPomodoroMessage = messageEvent({ action: "start-pomodoro" });
 var onStartBreakMessage = messageEvent({ action: "start-break" });
 
 function setupPomodoroWorkflow(notificationService: NotificationService,
+                               badTabsWarningService: BadTabsWarningService,
                                pomodoroService: PomodoroService,
                                resetPrompts: () => void) {
   var score = new Score();
@@ -96,16 +98,19 @@ function setupMetrics(notificationService: NotificationService, pomodoroService:
 
 export = function setupBackgroundPage() {
   var settings = new SettingsRepository();
-  var badBehaviourMonitor = new BadBehaviourMonitor(new TabsMonitor().activeTabs, settings);
-  var pomodoroService = new PomodoroService(badBehaviourMonitor);
+  var activeTabs = new TabsMonitor().activeTabs;
+  var allTabs = new TabsMonitor().allTabs;
+
+  var pomodoroService = new PomodoroService(new BadBehaviourMonitor(activeTabs, settings));
   var notificationService = new NotificationService(renderableConfigLoader);
-  var badTabsWarningService: any;
+  var badTabsWarningService = new BadTabsWarningService(new BadBehaviourMonitor(allTabs, settings), allTabs, showMainPage);
 
   var resetPrompts = () => {
+    badTabsWarningService.reset();
     notificationService.reset();
   };
 
-  setupPomodoroWorkflow(notificationService, pomodoroService, resetPrompts);
+  setupPomodoroWorkflow(notificationService, badTabsWarningService, pomodoroService, resetPrompts);
   setupBreaks(notificationService, pomodoroService, resetPrompts);
 
   setupIdleHandling(settings, pomodoroService);

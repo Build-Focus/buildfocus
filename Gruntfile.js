@@ -156,6 +156,7 @@ module.exports = function (grunt) {
         },
         files: withNoCache([
           'build/app/bower_components/chai/chai.js',
+          'build/app/bower_components/chai-as-promised/lib/chai-as-promised.js',
           'build/app/bower_components/resemblejs/resemble.js',
 
           'build/app/bower_components/sinonjs/sinon.js',

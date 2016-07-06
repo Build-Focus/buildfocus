@@ -12,6 +12,7 @@ module.exports = (wallaby) => {
     files: [
       // These are the only bits Wallaby loads; it requirejs's everything else
       uninstrumentedLoad('app/bower_components/chai/chai.js'),
+      uninstrumentedLoad('app/bower_components/chai-as-promised/lib/chai-as-promised.js'),
       uninstrumentedLoad('app/bower_components/resemblejs/resemble.js'),
       uninstrumentedLoad('app/bower_components/sinonjs/sinon.js'),
       uninstrumentedLoad('app/bower_components/sinon-chrome/src/chrome-alarms.js'),
