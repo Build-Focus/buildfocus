@@ -29,13 +29,7 @@ import indicateFailure = require("ui-components/failure-indicator");
 
 import renderableConfigLoader = require('city/rendering/config/config-loader');
 
-function showMainPage() {
-  chrome.tabs.create({url: chrome.extension.getURL("main.html")});
-}
-
-function showFailurePage() {
-  chrome.tabs.create({url: chrome.extension.getURL("main.html?failed=true")});
-}
+import { showMainPage, showFailurePage } from "chrome-utilities/page-opener";
 
 var onStartPomodoroMessage = messageEvent({ action: "start-pomodoro" });
 var onStartBreakMessage = messageEvent({ action: "start-break" });
