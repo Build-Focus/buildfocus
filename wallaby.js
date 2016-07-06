@@ -12,11 +12,11 @@ module.exports = (wallaby) => {
     files: [
       // These are the only bits Wallaby loads; it requirejs's everything else
       uninstrumentedLoad('app/bower_components/chai/chai.js'),
-      uninstrumentedLoad('build/app/bower_components/resemblejs/resemble.js'),
-      uninstrumentedLoad('build/app/bower_components/sinonjs/sinon.js'),
-      uninstrumentedLoad('build/app/bower_components/sinon-chrome/src/chrome-alarms.js'),
-      uninstrumentedLoad('build/app/bower_components/sinon-chrome/src/chrome-event.js'),
-      uninstrumentedLoad('build/app/bower_components/sinon-chrome/src/chrome.js'),
+      uninstrumentedLoad('app/bower_components/resemblejs/resemble.js'),
+      uninstrumentedLoad('app/bower_components/sinonjs/sinon.js'),
+      uninstrumentedLoad('app/bower_components/sinon-chrome/src/chrome-alarms.js'),
+      uninstrumentedLoad('app/bower_components/sinon-chrome/src/chrome-event.js'),
+      uninstrumentedLoad('app/bower_components/sinon-chrome/src/chrome.js'),
 
       uninstrumentedLoad('app/bower_components/requirejs/require.js'),
       { pattern: 'app/scripts/config/base-config.ts', load: true },
