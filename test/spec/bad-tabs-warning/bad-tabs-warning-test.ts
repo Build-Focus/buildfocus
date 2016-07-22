@@ -9,7 +9,7 @@ import Domain = require("app/scripts/url-monitoring/domain");
 
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
-describe('Bad tabs warning popup', () => {
+xdescribe('Bad tabs warning popup', () => {
   var viewModel: BadTabsWarningViewModel;
   var pomodoroService: ProxyPomodoroService;
   var tabs: KnockoutObservableArray<Tab>;

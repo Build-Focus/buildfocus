@@ -16,27 +16,6 @@ define(["test/helpers/image-matcher", "test/helpers/colour-matchers", "test/help
       mocha.timeout(2000);
     }
 
-    function wrapWithPromises(name: string) {
-      var originalFunction = <any> window[name];
-
-      var newFunction = <any> function () {
-        var args = [].slice.call(arguments);
-
-        var testCallback = args[args.length - 1];
-        args[args.length - 1] = function () {
-          return asPromise(testCallback, this);
-        };
-
-        return originalFunction.apply(this, args);
-      };
-
-      newFunction.only = originalFunction.only;
-
-      window[name] = newFunction;
-    }
-
-    ['before', 'after', 'beforeEach', 'afterEach', 'it', 'describe'].forEach(wrapWithPromises);
-
     beforeEach(() => {
       var chromeStub = <typeof SinonChrome> <any> window.chrome;
 

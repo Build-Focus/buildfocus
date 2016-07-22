@@ -11,8 +11,6 @@ import TabsMonitor = require('url-monitoring/tabs-monitor');
 import SettingsRepository = require("settings-repository");
 import generateCityName = require("city/generate-city-name");
 
-import BadTabsWarningViewModel = require('bad-tabs-warning/bad-tabs-warning-viewmodel');
-
 import closeCurrentTab = require("chrome-utilities/close-current-tab");
 import runTourIfRequired = require('ui-components/tour');
 
@@ -38,8 +36,6 @@ class MainPageViewModel {
   private score = new Score();
   private cityRenderer = new CityRenderer(this.score.city);
   private settings = new SettingsRepository();
-
-  warningPopup = new BadTabsWarningViewModel(this.pomodoroService, new TabsMonitor().allTabs, this.settings);
 
   failed = (getQueryParameter("failed") === "true");
   failingUrl = getQueryParameter("failingUrl");
@@ -98,14 +94,11 @@ class MainPageViewModel {
   canSayNotNow     = ko.pureComputed(() => this.inactive());
 
   startPomodoro() {
-    this.pomodoroService.start();
+    this.pomodoroService.start().then((closePage) => {
+      if (closePage) closeCurrentTab();
+    });
 
-    if (this.warningPopup.shouldShowIfTriggered()) {
-      tracking.trackEvent("start-from-main-page");
-      this.warningPopup.trigger();
-    } else {
-      tracking.trackEvent("start-from-main-page").then(() => closeCurrentTab());
-    }
+    tracking.trackEvent("start-from-main-page");
   }
 
   startBreak() {

@@ -14,6 +14,7 @@ import {
 } from "test/helpers/tab-helper";
 
 import { givenBadDomains } from "test/helpers/saved-state-helper";
+import { respondToLastMessageWith } from "test/helpers/messaging-helper";
 
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 var clockStub;
@@ -40,12 +41,15 @@ describe('Acceptance: Main page', () => {
 
   beforeEach(() => {
     resetTabHelper();
+    givenTabs("http://google.com", chrome.runtime.getURL("main.html"));
     givenBadDomains("twitter.com");
   });
 
+  var viewModel;
+
   describe("city", () => {
     it("should be empty initially", () => {
-      var viewModel = new MainPageViewModel();
+      viewModel = new MainPageViewModel();
 
       var renderedOutput = viewModel.renderCity();
 
@@ -57,7 +61,7 @@ describe('Acceptance: Main page', () => {
       var city = new City();
       city.construct(city.getPossibleUpgrades()[0].building);
 
-      var viewModel = new MainPageViewModel();
+      viewModel = new MainPageViewModel();
       chromeStub.storage.local.get.yield({ "city-data": city.toJSON() });
       var renderedOutput = viewModel.renderCity();
 
@@ -69,7 +73,7 @@ describe('Acceptance: Main page', () => {
       var cityWithNewBuilding = new City();
       cityWithNewBuilding.construct(cityWithNewBuilding.getPossibleUpgrades()[0].building);
 
-      var viewModel = new MainPageViewModel();
+      viewModel = new MainPageViewModel();
       chromeStub.storage.onChanged.trigger(
         { "city-data": { "newValue": cityWithNewBuilding.toJSON() } }
       );
@@ -81,59 +85,49 @@ describe('Acceptance: Main page', () => {
   });
 
   it("should let you start anything initially", () => {
-    var viewModel = new MainPageViewModel();
+    viewModel = new MainPageViewModel();
 
     expect(viewModel.canStartPomodoro()).to.equal(true);
     expect(viewModel.canStartBreak()).to.equal(true);
     expect(viewModel.canSayNotNow()).to.equal(true);
   });
 
-  function shouldCloseTabsIffOtherTabsArePresent(triggerMethodName) {
-    it("should close the tab, if other tabs are present", () => {
-      givenTabs("http://google.com", "chrome-extension://this-extension/main.html");
-      var viewModel = new MainPageViewModel();
-
-      return asPromise(() => {
-        viewModel[triggerMethodName]()
-      }).then(() => {
-        expect(chromeStub.tabs.remove.called).to.equal(true);
-      });
-    });
-
-    it("should not close the tab if it's the only tab", () => {
-      givenTabs("chrome-extension://this-extension/main.html");
-      var viewModel = new MainPageViewModel();
-
-      viewModel[triggerMethodName]();
-
-      expect(chromeStub.tabs.remove.called).to.equal(false);
-    });
-  }
-
-  function shouldSendMessage(triggerMethodName, messageAction) {
-    it("should send a " + messageAction + " message when clicked", () => {
-      var viewModel = new MainPageViewModel();
-
-      viewModel[triggerMethodName]();
-
-      expect(chromeStub.runtime.sendMessage.calledOnce).to.equal(true);
-      expect(chromeStub.runtime.sendMessage.calledWith({action: messageAction})).to.equal(true);
-    });
-  }
-
   describe("When start pomodoro is pressed", () => {
-    shouldSendMessage('startPomodoro', 'start-pomodoro');
-    shouldCloseTabsIffOtherTabsArePresent('startPomodoro');
+    beforeEach(() => {
+      viewModel = new MainPageViewModel();
+      viewModel.startPomodoro();
+    });
+
+    it("should send a startPomodoro message", () => {
+      expect(chromeStub.runtime.sendMessage.calledOnce).to.equal(true);
+      expect(chromeStub.runtime.sendMessage.calledWith({action: 'start-pomodoro'})).to.equal(true);
+    });
+
+    it("should close the window if 'true' is sent back from the 'start' message", () => {
+      respondToLastMessageWith(true);
+
+      return asPromise(() => expect(chromeStub.tabs.remove.called).to.equal(true));
+    });
+
+    it("should not close the window if 'false' is sent back from the 'start' message", () => {
+      respondToLastMessageWith(false);
+
+      return asPromise(() => expect(chromeStub.tabs.remove.called).to.equal(false));
+    });
   });
 
   describe("When take a break is pressed", () => {
-    shouldSendMessage('startBreak', 'start-break');
-    shouldCloseTabsIffOtherTabsArePresent('startBreak');
+    it("should send a startBreak message", () => {
+      viewModel = new MainPageViewModel();
+
+      viewModel.startBreak();
+
+      expect(chromeStub.runtime.sendMessage.calledOnce).to.equal(true);
+      expect(chromeStub.runtime.sendMessage.calledWith({action: 'start-break'})).to.equal(true);
+    });
   });
 
   describe("When a pomodoro is active", () => {
-    var viewModel: MainPageViewModel;
-
     beforeEach(() => {
       viewModel = new MainPageViewModel();
       pomodoroIsActive();
@@ -156,20 +150,9 @@ describe('Acceptance: Main page', () => {
 
       expect(viewModel.timeRemaining()).to.equal(1000);
     });
-
-    it("should not show a 'Look out!' popup, if there are no distracting tabs open", () => {
-      expect(viewModel.warningPopup.isShowing()).to.equal(false, "Should not show a warning popup");
-    });
-
-    it("should not show a 'Look out!' popup, if distracting appear later whilst focusing", () => {
-      givenTabs("http://twitter.com");
-      expect(viewModel.warningPopup.isShowing()).to.equal(false, "Should not show a warning popup");
-    });
   });
 
   describe("When a pomodoro is paused", () => {
-    var viewModel: MainPageViewModel;
-
     beforeEach(() => {
       viewModel = new MainPageViewModel();
       pomodoroIsPaused();
@@ -195,8 +178,6 @@ describe('Acceptance: Main page', () => {
   });
 
   describe("When a break is active", () => {
-    var viewModel: MainPageViewModel;
-
     beforeEach(() => {
       viewModel = new MainPageViewModel();
       breakIsActive();
@@ -218,49 +199,6 @@ describe('Acceptance: Main page', () => {
       countdownAt(1000);
 
       expect(viewModel.timeRemaining()).to.equal(1000);
-    });
-  });
-
-  describe("If there are distracting tabs already open", () => {
-    var viewModel: MainPageViewModel;
-
-    beforeEach(() => {
-      givenTabs("chrome-extension://this-extension/main.html", "http://twitter.com");
-      viewModel = new MainPageViewModel();
-    });
-
-    it("a 'Look out!' popup should not be shown before the pomodoro is started", () => {
-      expect(viewModel.warningPopup.isShowing()).to.equal(false, "Should not show a warning popup");
-    });
-
-    describe("and a pomodoro is started", () => {
-      beforeEach(() => viewModel.startPomodoro());
-
-      it("starting a pomodoro should not close the tab", () => {
-        expect(chromeStub.tabs.remove.called).to.equal(false, "Tab should not autoclose if there are distractions open");
-      });
-
-      it("a 'Look out!' popup should appear when a pomodoro is started", () => {
-        expect(viewModel.warningPopup.isShowing()).to.equal(true, "Should show a warning popup");
-      });
-
-      it("'Leave them' leaves the tabs alone", () => {
-        return asPromise(() => {
-          viewModel.warningPopup.leaveDistractingTabs();
-        }).then(() => {
-          expect(chromeStub.tabs.remove.called).to.equal(false, "Should not close anything if distracting tabs are left");
-        });
-      });
-
-      it("'Close them' closes the distracting tabs and this tab", () => {
-        return asPromise(() => {
-          viewModel.warningPopup.closeDistractingTabs()
-        }).then(() => {
-          expect(chromeStub.tabs.remove.calledWith([1])).to.equal(true, "Should close distracting tabs");
-          expect(chromeStub.tabs.remove.calledWith("current-tab-id")).to.equal(true,
-            "Should auto-close own tab and distracting tabs");
-        });
-      });
     });
   });
 });

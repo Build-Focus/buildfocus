@@ -1,10 +1,10 @@
 import rollbar = require('rollbar');
 
-export = function reportChromeErrors(msg: string = "Error"): boolean {
+export = function reportChromeErrors(msg: string = "Error"): chrome.runtime.LastError {
   if (chrome.runtime.lastError) {
     rollbar.error(msg, {chromeError: chrome.runtime.lastError.message});
-    return true;
+    return chrome.runtime.lastError;
   } else {
-    return false;
+    return null;
   }
 }

@@ -11,3 +11,7 @@ export function startBreak() {
 export function dismissBadTabsWarning() {
     chromeStub.runtime.onMessage.trigger({"action": "dismiss-bad-tabs-warning"});
 }
+
+export function respondToLastMessageWith(response) {
+    chromeStub.runtime.sendMessage.lastCall.yield(response);
+}

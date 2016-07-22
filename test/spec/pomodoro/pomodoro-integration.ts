@@ -243,8 +243,6 @@ describe('Pomodoro Integration - Pomodoro service', () => {
     });
   });
 
-
-
   describe(".timeRemaining()", () => {
     it("should be null initially", () => {
       expect(pomodoroService.timeRemaining()).to.equal(null);
