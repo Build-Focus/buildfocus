@@ -9,7 +9,7 @@
   <link rel="import" href="/scripts/metrics/metrics-panel-template.html" />
 </head>
 <body>
-  <main style="display: none" data-bind="visible: true, css: { faded: warningPopup.isShowing() }">
+  <main style="display: none" data-bind="visible: true">
     <a href="/main.html">
       <div class="logo">
         <img src="/images/logo.png" />
@@ -76,11 +76,6 @@
       Feedback &nbsp;<i class="fa fa-bullhorn"></i>
     </a>
   </main>
-
-  <div data-bind="template: {
-    name: 'bad-tabs-warning-popup-template',
-    data: warningPopup
-  }"></div>
 
   <script src="bower_components/requirejs/require.js"></script>
   <script src="scripts/config/base-config.js"></script>
