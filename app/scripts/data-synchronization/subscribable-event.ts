@@ -12,22 +12,26 @@ interface Callback2<T1, T2> {
   (arg1: T1, arg2: T2): void
 }
 
+interface SubscriptionToken {
+  (...args: any[]): void;
+}
+
 export interface SubscribableEvent {
-  (callback: Callback): Callback;
+  (callback: Callback): SubscriptionToken;
   trigger: () => void;
-  remove(callback: Callback): void;
+  remove(callback: SubscriptionToken): void;
 }
 
 export interface SubscribableEvent1<T> {
-  (callback: Callback1<T>): Callback1<T>;
+  (callback: Callback1<T>): SubscriptionToken;
   trigger: (arg: T) => void;
-  remove(callback: Callback1<T>): void;
+  remove(callback: SubscriptionToken): void;
 }
 
 export interface SubscribableEvent2<T1, T2> {
-  (callback: Callback2<T1, T2>): Callback2<T1, T2>;
+  (callback: Callback2<T1, T2>): SubscriptionToken;
   trigger: (arg1: T1, arg2: T2) => void;
-  remove(callback: Callback2<T1, T2>): void;
+  remove(callback: SubscriptionToken): void;
 }
 
 function SubscribableEventConstructor(): SubscribableEvent;
@@ -37,27 +41,24 @@ function SubscribableEventConstructor<T1, T2>(): SubscribableEvent2<T1, T2>;
 function SubscribableEventConstructor(): SubscribableEvent {
   var callbacks: Array<(...args: any[]) => void> = [];
 
-  var eventSubscribeFunction = <SubscribableEvent> function (callback) {
+  return <SubscribableEvent> _.merge(function (callback: Callback): SubscriptionToken {
     callbacks.push(callback);
     return callback;
-  };
-
-  eventSubscribeFunction.trigger = function (...args: any[]) {
-    _.forEach(callbacks, function (callback) { callback.apply(null, args); });
-  };
-
-  eventSubscribeFunction.remove = function (callback) {
-    var callbackIndex = callbacks.indexOf(callback);
-    if (callbackIndex > -1) {
-      callbacks = _.reject(callbacks, function (value, index) {
-        return index === callbackIndex;
-      });
-    } else {
-      throw new Error("Attempted to remove callback that wasn't registered");
+  }, {
+    trigger: function (...args: any[]) {
+      _.forEach(callbacks, function (callback) { callback.apply(null, args); });
+    },
+    remove: function (subscriptionToken: SubscriptionToken) {
+      var callbackIndex = callbacks.indexOf(subscriptionToken);
+      if (callbackIndex > -1) {
+        callbacks = _.reject(callbacks, function (value, index) {
+          return index === callbackIndex;
+        });
+      } else {
+        throw new Error("Attempted to remove callback that wasn't registered");
+      }
     }
-  };
-
-  return <SubscribableEvent> eventSubscribeFunction;
+  });
 }
 
 export { SubscribableEventConstructor as subscribableEvent };
