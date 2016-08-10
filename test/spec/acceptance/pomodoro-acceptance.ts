@@ -249,19 +249,6 @@ describe('Acceptance: Pomodoros', function () {
     expect(chromeStub.tabs.create.calledOnce).to.equal(true, "should open new failure tab when tab update doesn't work");
   });
 
-  it("should show a failure page if a pomodoro is started with a failing page already open", () => {
-    givenBadDomains("twitter.com");
-    activateTab("http://twitter.com");
-
-    startPomodoro();
-    clockStub.tick(500);
-
-    expect(chromeStub.tabs.update.calledOnce).to.equal(true, "should update tab url to failure page");
-    expect(chromeStub.tabs.update.args[0][1].url).to.contain("main.html?failed=true&failingUrl=http%3A%2F%2Ftwitter.com");
-
-    expect(chromeStub.tabs.create.calledOnce).to.equal(false, "should not open new failure tab");
-  });
-
   describe("Progress bar", () => {
     describe("for pomodoros", () => {
       it("shouldn't be shown initially", async () => {

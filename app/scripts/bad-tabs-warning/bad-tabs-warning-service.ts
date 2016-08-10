@@ -7,16 +7,14 @@ import BadBehaviourMonitor = require("url-monitoring/bad-behaviour-monitor");
 
 class BadTabsWarningService {
     constructor(private badBehaviourMonitor: BadBehaviourMonitor,
-                private allTabs: KnockoutObservableArray<Tab>,
-                private openMainPageCallback: () => void) { }
+                private allTabs: KnockoutObservableArray<Tab>) { }
 
-    private isWarningActive = publishedObservable("bad-tab-warning-active",
-                                                  ko.observable(false));
+    isWarningActive = publishedObservable("bad-tabs.warning-active",
+                                          ko.observable(false));
 
     warnIfRequired(): Promise<void> {
         if (this.badBehaviourMonitor.currentBadTabs().length > 0) {
             this.isWarningActive(true);
-            this.openMainPageCallback();
         }
 
         // This promise may *never* resolve, by design. If the warning service
@@ -27,9 +25,7 @@ class BadTabsWarningService {
                 this.resetEvent.remove(resetSubscription);
             }
 
-            var resetSubscription = this.resetEvent(() => {
-                unsubscribePromise();
-            });
+            var resetSubscription = this.resetEvent(unsubscribePromise);
 
             var badTabsObservable = this.badBehaviourMonitor.currentBadTabs;
             var badTabSubscription = badTabsObservable.triggerableSubscribe((badTabs) => {
@@ -45,6 +41,10 @@ class BadTabsWarningService {
         });
     }
 
+    /**
+     * Reset disables any existing warnings, and ensures that any currently outstanding
+     * requests for operations to occur after bad tabs have been warned about *never* fire.
+     */
     reset() {
         this.resetEvent.trigger();
         this.isWarningActive(false);

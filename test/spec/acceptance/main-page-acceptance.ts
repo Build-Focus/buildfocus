@@ -103,16 +103,16 @@ describe('Acceptance: Main page', () => {
       expect(chromeStub.runtime.sendMessage.calledWith({action: 'start-pomodoro'})).to.equal(true);
     });
 
-    it("should close the window if 'true' is sent back from the 'start' message", () => {
+    it("should keep the window open if 'true' is sent back from the 'start' message", () => {
       respondToLastMessageWith(true);
 
-      return asPromise(() => expect(chromeStub.tabs.remove.called).to.equal(true));
+      return asPromise(() => expect(chromeStub.tabs.remove.called).to.equal(false));
     });
 
-    it("should not close the window if 'false' is sent back from the 'start' message", () => {
+    it("should close the window if 'false' is sent back from the 'start' message", () => {
       respondToLastMessageWith(false);
 
-      return asPromise(() => expect(chromeStub.tabs.remove.called).to.equal(false));
+      return asPromise(() => expect(chromeStub.tabs.remove.called).to.equal(true));
     });
   });
 

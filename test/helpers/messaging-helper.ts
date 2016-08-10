@@ -1,5 +1,7 @@
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
+// Note that this returns a promise, because you have to .then() to ensure
+// you wait until the warning service promise in background page has resolved.
 export function startPomodoro(): Promise<void> {
     chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"}, null, () => {});
     return Promise.resolve(null);

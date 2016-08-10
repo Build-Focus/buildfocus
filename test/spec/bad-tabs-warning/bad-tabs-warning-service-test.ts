@@ -11,7 +11,6 @@ import BadTabsWarningService = require("app/scripts/bad-tabs-warning/bad-tabs-wa
 describe("Bad tabs warning service", () => {
     var allTabs: KnockoutObservableArray<Tab>;
     var badTabs: KnockoutObservableArray<Tab>;
-    var showMainPage: Sinon.SinonStub;
 
     var service: BadTabsWarningService;
 
@@ -20,9 +19,8 @@ describe("Bad tabs warning service", () => {
         badTabs = ko.observableArray([]);
 
         var badBehaviourMonitor = <BadBehaviourMonitor> <any> { currentBadTabs: badTabs };
-        showMainPage = sinon.stub();
 
-        service = new BadTabsWarningService(badBehaviourMonitor, allTabs, showMainPage);
+        service = new BadTabsWarningService(badBehaviourMonitor, allTabs);
     });
 
     it("should initially not be showing a warning", () => {
@@ -39,10 +37,6 @@ describe("Bad tabs warning service", () => {
             allTabs(badTabs());
         });
 
-        it("should open a warning page when one is opened", () => {
-            expect(showMainPage.called).to.equal(true);
-        });
-
         it("should close the Build Focus page when distracting tabs disappear");
 
         it("should close the Build Focus page when the warning is dismissed");
@@ -52,10 +46,6 @@ describe("Bad tabs warning service", () => {
         beforeEach(() => {
             badTabs(["http://twitter.com"]);
             allTabs(badTabs().concat([chrome.runtime.getURL("main.html")]));
-        });
-
-        it("should not open a warning page when one is opened", () => {
-            expect(showMainPage.called).to.equal(false);
         });
 
         it("should not close the Build Focus page when distracting tabs disappear");

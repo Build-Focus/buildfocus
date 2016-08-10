@@ -41,8 +41,13 @@ function setupPomodoroWorkflow(notificationService: NotificationService,
                                resetPrompts: () => void) {
   var score = new Score();
 
-  onStartPomodoroMessage(pomodoroService.start);
-  notificationService.onPomodoroStart(pomodoroService.start);
+  var safelyStartPomodoro = () => badTabsWarningService.warnIfRequired().then(pomodoroService.start);
+
+  onStartPomodoroMessage((message, keepPageOpenIf) => {
+    safelyStartPomodoro();
+    keepPageOpenIf(badTabsWarningService.isWarningActive());
+  });
+  notificationService.onPomodoroStart(safelyStartPomodoro);
 
   pomodoroService.onPomodoroStart(resetPrompts);
 
@@ -103,7 +108,7 @@ export = function setupBackgroundPage() {
 
   var pomodoroService = new PomodoroService(new BadBehaviourMonitor(activeTabs, settings));
   var notificationService = new NotificationService(renderableConfigLoader);
-  var badTabsWarningService = new BadTabsWarningService(new BadBehaviourMonitor(allTabs, settings), allTabs, showMainPage);
+  var badTabsWarningService = new BadTabsWarningService(new BadBehaviourMonitor(allTabs, settings), allTabs);
 
   var resetPrompts = () => {
     badTabsWarningService.reset();

@@ -29,7 +29,7 @@ export var isPomodoroActive =      () => getLastSavedValue("pomodoro-service-sta
 export var isPomodoroPaused =      () => getLastSavedValue("pomodoro-service-state") === PomodoroState.Paused;
 export var isBreakActive =         () => getLastSavedValue("pomodoro-service-state") === PomodoroState.Break;
 
-export var isBadTabWarningActive = () => <boolean> getLastSavedValue("bad-tab-warning-active");
+export var isBadTabWarningActive = () => <boolean> getLastSavedValue("bad-tabs.warning-active");
 
 export var metricsEvents =         () => <{date: string}[]> getLastSavedValue("raw-metrics-events");
 export var setMetricsEvents =      (events) => setSavedValue("raw-metrics-events", events);

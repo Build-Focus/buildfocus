@@ -94,8 +94,8 @@ class MainPageViewModel {
   canSayNotNow     = ko.pureComputed(() => this.inactive());
 
   startPomodoro() {
-    this.pomodoroService.start().then((closePage) => {
-      if (closePage) closeCurrentTab();
+    this.pomodoroService.start().then((stayOpen) => {
+      if (!stayOpen) closeCurrentTab();
     });
 
     tracking.trackEvent("start-from-main-page");
