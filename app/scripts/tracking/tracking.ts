@@ -98,7 +98,7 @@ if (config.trackingConfig.enabled) {
 
   identifyCurrentUser().then(trackExtensionLoad).then(trackInstallsAndUpdates);
 } else {
-  tracking = { trackEvent: () => Promise.resolve<void>() };
+  tracking = { trackEvent: () => Promise.resolve<void>(null) };
 }
 
 export = tracking;

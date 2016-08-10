@@ -1,11 +1,12 @@
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 
-export function startPomodoro() {
-    chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"});
+export function startPomodoro(): Promise<void> {
+    chromeStub.runtime.onMessage.trigger({"action": "start-pomodoro"}, null, () => {});
+    return Promise.resolve(null);
 }
 
 export function startBreak() {
-    chromeStub.runtime.onMessage.trigger({"action": "start-break"});
+    chromeStub.runtime.onMessage.trigger({"action": "start-break"}, null, () => {});
 }
 
 export function dismissBadTabsWarning() {

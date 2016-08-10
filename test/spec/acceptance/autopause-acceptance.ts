@@ -47,9 +47,9 @@ describe("Acceptance: Autopause", function () {
   });
 
   describe("when you go idle", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       givenPauseSetting(AutopauseMode.PauseOnIdleAndLock);
-      startPomodoro();
+      await startPomodoro();
 
       clockStub.tick(IDLE_TIMEOUT);
       chromeStub.idle.onStateChanged.trigger("idle");
@@ -124,9 +124,9 @@ describe("Acceptance: Autopause", function () {
   });
 
   describe("if set to lock only", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       givenPauseSetting(AutopauseMode.PauseOnLock);
-      startPomodoro();
+      await startPomodoro();
     });
 
     it("doesn't pause on 'idle'", () => {
@@ -167,9 +167,9 @@ describe("Acceptance: Autopause", function () {
   });
 
   describe("if set to never pause", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       givenPauseSetting(AutopauseMode.NeverPause);
-      startPomodoro();
+      await startPomodoro();
     });
 
     it("doesn't pause on 'idle'", () => {

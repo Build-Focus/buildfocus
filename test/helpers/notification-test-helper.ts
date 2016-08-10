@@ -22,6 +22,7 @@ class NotificationHelper {
   clickStartPomodoro() {
     chromeStub.notifications.onClicked.trigger(ACTION_NOTIFICATION_ID);
     this.clockStub().tick(1);
+    return Promise.resolve<void>(null);
   }
 
   clickUnrelatedNotification() {

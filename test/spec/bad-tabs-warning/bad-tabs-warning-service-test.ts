@@ -29,8 +29,8 @@ describe("Bad tabs warning service", () => {
         expect(isBadTabWarningActive()).to.equal(false);
     });
 
-    it("should immediately resolve the warning promise when no bad tabs are open", () => {
-        return expect(service.warnIfRequired()).to.eventually.be.fulfilled;
+    it("should immediately resolve the warning promise when no bad tabs are open", async () => {
+        await expect(service.warnIfRequired()).to.eventually.be.fulfilled;
     });
 
     xdescribe("if a distracting page is open, and no Build Focus pages", () => {
@@ -65,7 +65,7 @@ describe("Bad tabs warning service", () => {
 
     describe("when a warning is triggered", () => {
         var warningPromise: Promise<void>;
-        
+
         beforeEach(() => {
             badTabs(["http://twitter.com"]);
             allTabs(badTabs());

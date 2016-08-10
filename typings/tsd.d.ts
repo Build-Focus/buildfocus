@@ -13,7 +13,6 @@
 /// <reference path="calq/calq.d.ts" />
 /// <reference path="moment/moment-node.d.ts" />
 /// <reference path="moment/moment.d.ts" />
-/// <reference path="es6-promise/es6-promise.d.ts" />
 /// <reference path="filesystem/filesystem.d.ts" />
 /// <reference path="filewriter/filewriter.d.ts" />
 /// <reference path="assertion-error/assertion-error.d.ts" />

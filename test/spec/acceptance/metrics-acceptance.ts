@@ -12,15 +12,15 @@ var clockStub: Sinon.SinonFakeTimers;
 var chromeStub = <typeof SinonChrome> <any> window.chrome;
 var notificationHelper = new NotificationHelper(() => clockStub);
 
-function completePomodoro() {
-  startPomodoro();
+async function completePomodoro() {
+  await startPomodoro();
   clockStub.tick(POMODORO_DURATION);
   distributeMetricsData();
 }
 
-function failPomodoro() {
+async function failPomodoro() {
   givenBadDomains("twitter.com");
-  startPomodoro();
+  await startPomodoro();
   activateTab("http://twitter.com");
   distributeMetricsData();
 }
@@ -71,26 +71,26 @@ describe("Acceptance: Metrics", () => {
     clockStub.reset();
   });
 
-  it("should add successful pomodoros to today's successes", () => {
-    completePomodoro();
+  it("should add successful pomodoros to today's successes", async () => {
+    await completePomodoro();
 
     expect(successesToday()).to.equal(initialSuccesses + 1);
   });
 
-  it("should not add failed pomodoros to today's successes", () => {
-    failPomodoro();
+  it("should not add failed pomodoros to today's successes", async () => {
+    await failPomodoro();
 
     expect(successesToday()).to.equal(initialSuccesses);
   });
 
-  it("should add failed pomodoros to today's failures", () => {
-    failPomodoro();
+  it("should add failed pomodoros to today's failures", async () => {
+    await failPomodoro();
 
     expect(failuresToday()).to.equal(initialFailures + 1);
   });
 
-  it("should add rejected successful pomodoros to today's failures", () => {
-    completePomodoro();
+  it("should add rejected successful pomodoros to today's failures", async () => {
+    await completePomodoro();
 
     rejectSuccessfulPomodoro();
 
@@ -98,9 +98,9 @@ describe("Acceptance: Metrics", () => {
     expect(failuresToday()).to.equal(initialFailures + 1);
   });
 
-  it("should not include today's today in past metrics", () => {
+  it("should not include today's today in past metrics", async () => {
     var initialFailuresBeforeToday = metrics.failures.between(moment.aYearAgo(), moment.yesterday()).length;
-    failPomodoro();
+    await failPomodoro();
 
     var failuresBeforeToday = metrics.failures.between(moment.aYearAgo(), moment.yesterday()).length;
     expect(failuresBeforeToday).to.equal(initialFailuresBeforeToday);
