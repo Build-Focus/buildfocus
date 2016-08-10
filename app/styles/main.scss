@@ -1,4 +1,3 @@
-@import 'libs/pure-min.css';
 @import 'libs/font-awesome.min.css';
 @import '../bower_components/hopscotch/dist/css/hopscotch.min.css';
 
@@ -51,6 +50,13 @@ a {
   color: inherit;
 }
 
+button, input, select, textarea {
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  margin: 0;
+}
+
 input[type=text] {
   color: #222;
 }
@@ -63,6 +69,11 @@ button {
   display: inline-block;
   cursor: pointer;
   user-select: none;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 button:focus, button:hover {
@@ -158,8 +169,6 @@ nav {
 }
 
 .feedback {
-  @extend .pure-button;
-
   position: absolute;
   left: 0;
   bottom: 285px;

@@ -56,10 +56,6 @@ module.exports = function (grunt) {
                 'app/**/*.html'],
         tasks: ['build-content']
       },
-      gruntfile: {
-        files: ['Gruntfile.js'],
-        tasks: ['jshint']
-      },
       livereload: {
         options: {
           livereload: '<%= connect.options.livereload %>'
@@ -110,14 +106,6 @@ module.exports = function (grunt) {
           ]
         }
       }
-    },
-
-    jshint: {
-      options: {
-        jshintrc: '.jshintrc',
-        reporter: require('jshint-stylish')
-      },
-      all: [ 'Gruntfile.js' ]
     },
 
     ts: {
@@ -380,7 +368,6 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('run-quick-tests', [
-    'jshint',
     'karma:once'
   ]);
 

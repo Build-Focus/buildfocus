@@ -1,4 +1,3 @@
-var sw = require('selenium-webdriver');
 var webdriverio = require('webdriverio');
 
 var chai = require('chai');
