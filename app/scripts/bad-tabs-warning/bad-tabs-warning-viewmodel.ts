@@ -1,7 +1,5 @@
 import ko = require('raw-knockout');
 
-import ProxyPomodoroService = require("pomodoro/proxy-pomodoro-service");
-
 import reportChromeErrors = require('chrome-utilities/report-chrome-errors');
 import tracking = require('tracking/tracking');
 
@@ -30,7 +28,13 @@ class BadTabsWarningViewModel {
       remember: this.rememberInFuture()
     });
   }
-
 }
+
+ko.components.register("bad-tabs-warning", {
+  viewModel: function (params) {
+    return new BadTabsWarningViewModel(new ProxyBadTabsWarningService());
+  },
+  template: { element: "bad-tabs-warning-template" }
+});
 
 export = BadTabsWarningViewModel;

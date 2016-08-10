@@ -1,4 +1,5 @@
 ///<amd-dependency path="metrics/metrics-panel-viewmodel" />
+///<amd-dependency path="bad-tabs-warning/bad-tabs-warning-viewmodel" />
 
 import ko = require('knockout');
 import Score = require('score');
