@@ -11,8 +11,12 @@ export function startBreak() {
     chromeStub.runtime.onMessage.trigger({"action": "start-break"}, null, () => {});
 }
 
-export function dismissBadTabsWarning() {
-    chromeStub.runtime.onMessage.trigger({"action": "dismiss-bad-tabs-warning"});
+export function closeBadTabs(remember = false) {
+    chromeStub.runtime.onMessage.trigger({"action": "bad-tabs.close", remember}, null, () => {});
+}
+
+export function leaveBadTabs(remember = false) {
+    chromeStub.runtime.onMessage.trigger({"action": "bad-tabs.leave", remember}, null, () => {});
 }
 
 export function respondToLastMessageWith(response) {

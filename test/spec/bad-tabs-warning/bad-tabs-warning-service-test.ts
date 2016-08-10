@@ -1,7 +1,7 @@
 import ko = require("knockout");
 
 import { isBadTabWarningActive } from "test/helpers/saved-state-helper";
-import { dismissBadTabsWarning } from "test/helpers/messaging-helper";
+import { leaveBadTabs } from "test/helpers/messaging-helper";
 
 import Tab = require("app/scripts/url-monitoring/tab");
 import BadBehaviourMonitor = require("app/scripts/url-monitoring/bad-behaviour-monitor");
@@ -106,7 +106,7 @@ describe("Bad tabs warning service", () => {
             });
 
             it("should never resolve outstanding promises", () => {
-                dismissBadTabsWarning();
+                leaveBadTabs();
                 badTabs([]);
 
                 return expect(warningPromise).to.be.pending;
