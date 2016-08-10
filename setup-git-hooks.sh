@@ -1,4 +1,5 @@
-curl https://cdn.rawgit.com/pimterry/git-confirm/v0.2.1/hook.sh > ./.git/hooks/pre-commit
+curl https://cdn.rawgit.com/pimterry/git-confirm/v0.2.1/hook.sh > .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
 
 git config --unset-all hooks.confirm.match
 
